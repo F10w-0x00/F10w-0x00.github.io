@@ -38,29 +38,30 @@ math: true
   <div class="embedded-post-card">
     <!-- 头部 [>>] 与标题 -->
     <header class="embedded-post-header">
-      <h3 class="embedded-title">
-        <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title }}</a>
-      </h3>
-  </div>
-  <div class="post-meta" style="margin-left: 2.5rem; margin-bottom: 1.5rem;">
-    <time datetime="{{ latest_post.date | date_to_xmlschema }}">{{ latest_post.date | date: "%Y.%m.%d" }}</time>
-    {% if latest_post.tags %}
-    <span class="post-tag-badge">{{ latest_post.tags | first }}</span>
-    {% endif %}
-    {% assign words = latest_post.content | number_of_words %}
-    {% assign minutes = words | divided_by: 200 %}
-    {% if minutes < 1 %}{% assign minutes=1 %}{% endif %} <span>{{ minutes }} MIN READ</span>
-  </div>
-  </header>
+      <div class="embedded-prompt-line">
+        <h3 class="embedded-title">
+          <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title }}</a>
+        </h3>
+      </div>
+      <div class="post-meta" style="margin-left: 2.5rem; margin-bottom: 1.5rem;">
+        <time datetime="{{ latest_post.date | date_to_xmlschema }}">{{ latest_post.date | date: "%Y.%m.%d" }}</time>
+        {% if latest_post.tags %}
+        <span class="post-tag-badge">{{ latest_post.tags | first }}</span>
+        {% endif %}
+        {% assign words = latest_post.content | number_of_words %}
+        {% assign minutes = words | divided_by: 200 %}
+        {% if minutes < 1 %}{% assign minutes=1 %}{% endif %} <span>{{ minutes }} MIN READ</span>
+      </div>
+    </header>
 
-  <!-- 原文完整内联嵌入渲染 (Transclusion) -->
-  <article class="post-content embedded-post-body">
-    {{ latest_post.content }}
-  </article>
+    <!-- 原文完整内联嵌入渲染 (Transclusion) -->
+    <article class="post-content embedded-post-body">
+      {{ latest_post.content }}
+    </article>
 
-  <footer class="embedded-post-footer">
-    <a href="{{ latest_post.url | relative_url }}" class="embedded-permalink">PERMALINK &rarr;</a>
-  </footer>
+    <footer class="embedded-post-footer">
+      <a href="{{ latest_post.url | relative_url }}" class="embedded-permalink">PERMALINK &rarr;</a>
+    </footer>
   </div>
 </section>
 {% endif %}

@@ -165,26 +165,27 @@ a.accompany-link {
     color: $color-text;
   }
 
-  // 缩小公式和表格尺寸以适应 40% 分栏
   table {
     font-size: 0.88rem;
   }
 }
 
-// 移动端背景遮罩
+// 移动端背景遮罩（仅限手机/平板小屏幕，桌面端分屏对照绝对不出现遮罩）
 .accompany-backdrop {
-  display: none;
+  display: none !important;
 
-  &.active {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(15, 23, 42, 0.45);
-    backdrop-filter: blur(2px);
-    z-index: 9999;
+  @media (max-width: 1023px) {
+    &.active {
+      display: block !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 9999;
+    }
   }
 }
 

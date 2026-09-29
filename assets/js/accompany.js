@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     panel.classList.add('open');
     wrapper.classList.add('split-view-active');
-    if (backdrop) backdrop.classList.add('active');
+
+    // 仅在移动端（屏幕宽度 <= 1023px）才激活遮罩，桌面端对照阅读绝不遮罩
+    if (backdrop && window.innerWidth <= 1023) {
+      backdrop.classList.add('active');
+    }
 
     fetch(url)
       .then(function (res) {
@@ -70,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (closeBtn) closeBtn.addEventListener('click', closePanel);
   if (backdrop) backdrop.addEventListener('click', closePanel);
 
-  // 按 Esc 键也可便捷关闭分屏
+  // 按 Esc 键关闭分屏
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && panel.classList.contains('open')) {
       closePanel();

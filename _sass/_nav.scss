@@ -54,7 +54,7 @@
   }
 }
 
-// 极简纯粹的右上角 Blog 导航文字（彻底剔除多余方框、胶囊底色与土气蓝色）
+// 最朴素、最干净的纯文本 Blog 按钮（无边框、无底色、彻底移除那条黑线）
 .nav-links {
   display: flex;
   align-items: center;
@@ -67,46 +67,15 @@
   }
 
   a {
-    font-family: $font-main;
     font-size: 0.95rem;
     font-weight: 500;
-    color: #71717a !important;       // 纯正冷灰，绝不带蓝
-    text-decoration: none !important;
-    border: none !important;         // 绝对无边框
-    background: transparent !important; // 绝对透明无底色
-    outline: none !important;
-    box-shadow: none !important;
-    padding: 0.35rem 0.2rem;
-    position: relative;
+    color: #64748b;
+    text-decoration: none;
     transition: color 0.15s ease;
 
-    &:hover {
-      color: #09090b !important;     // 悬停时深黑，质感干净高级
-      background: transparent !important;
-    }
-
+    &:hover,
     &.active {
-      color: #09090b !important;     // 激活时纯黑
-      font-weight: 600;
-      background: transparent !important;
-
-      // 仅保留底部精致的 1.5px 极细下划线
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: 0px;
-        left: 0;
-        width: 100%;
-        height: 1.5px;
-        background-color: #09090b;
-      }
-    }
-
-    &:focus,
-    &:focus-visible {
-      outline: none !important;
-      background: transparent !important;
-      box-shadow: none !important;
+      color: #0f172a;
     }
   }
 }

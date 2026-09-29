@@ -1,0 +1,67 @@
+@import "variables";
+
+// Rouge Syntax Highlighting & Code Copy Button
+.highlight {
+  position: relative;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-family: $font-code;
+  font-size: 0.9rem;
+  line-height: 1.6;
+
+  pre {
+    margin: 0;
+  }
+}
+
+div.highlighter-rouge {
+  position: relative;
+  margin: 1.5rem 0;
+
+  .highlight {
+    margin: 0;
+  }
+
+  .copy-code-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: $font-main;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    backdrop-filter: blur(4px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.28);
+      color: #ffffff;
+    }
+
+    &.copied {
+      background: $color-accent;
+      color: #ffffff;
+      border-color: $color-accent;
+    }
+  }
+}
+
+code.highlighter-rouge {
+  background: $color-bg-light;
+  color: #e11d48;
+  padding: 0.2em 0.45em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: $font-code;
+  border: 1px solid $color-border;
+}

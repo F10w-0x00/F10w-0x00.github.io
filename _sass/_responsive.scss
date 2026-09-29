@@ -1,0 +1,19 @@
+@import "variables";
+
+@media (max-width: $bp-tablet) {
+  .dashboard-header .dashboard-greeting {
+    font-size: 1.8rem;
+  }
+
+  .post-title {
+    font-size: 1.8rem;
+  }
+
+  .chart-card {
+    padding: 1rem 0.5rem;
+  }
+
+  .quick-nav-grid {
+    grid-template-columns: 1fr;
+  }
+}

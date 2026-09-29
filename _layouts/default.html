@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    {% include head.html %}
+  </head>
+  <body>
+    <!-- 顶部极简沉浸式阅读进度条 -->
+    <div id="reading-progress" class="reading-progress-bar"></div>
+
+    {% include nav.html %}
+    <main class="page-content">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+
+    {% if page.url contains '/blog' or layout.layout == 'post' %}
+    <script src="{{ '/assets/js/blog-filter.js' | relative_url }}"></script>
+    {% endif %}
+
+    <!-- 极轻量全局滚动进度监听（手机端+电脑端通用） -->
+    <script>
+      (function () {
+        var bar = document.getElementById('reading-progress');
+        if (!bar) return;
+        function updateProgress() {
+          var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+          var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+          bar.style.width = scrolled + '%';
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress, { passive: true });
+      })();
+    </script>
+  </body>
+</html>

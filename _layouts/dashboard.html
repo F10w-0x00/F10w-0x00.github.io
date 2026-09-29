@@ -1,0 +1,32 @@
+---
+layout: default
+---
+<div class="post-layout-wrapper">
+  <!-- 首页主内容流 -->
+  <main class="post-main-column">
+    <div class="dashboard-container">
+      {{ content }}
+    </div>
+  </main>
+
+  <!-- 右侧伴随笔记分栏 (支持首页内联文章点击唤起分屏) -->
+  <aside id="accompany-panel" class="accompany-panel" aria-hidden="true">
+    <div class="accompany-panel-header">
+      <div class="accompany-title-wrap">
+        <svg class="accompany-split-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+          <line x1="15" y1="3" x2="15" y2="21"></line>
+        </svg>
+        <span id="accompany-panel-title">伴随笔记</span>
+      </div>
+      <button type="button" id="accompany-close-btn" class="accompany-close-btn" title="关闭分屏 (Esc)">✕</button>
+    </div>
+    <div id="accompany-panel-body" class="accompany-panel-body"></div>
+  </aside>
+</div>
+
+<!-- 移动端背景遮罩 -->
+<div id="accompany-backdrop" class="accompany-backdrop"></div>
+
+<script src="{{ '/assets/js/copy-code.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/accompany.js' | relative_url }}"></script>

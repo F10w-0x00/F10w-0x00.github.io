@@ -1,0 +1,69 @@
+---
+layout: dashboard
+title: Dashboard
+permalink: /
+math: true
+---
+
+<header class="dashboard-header">
+  <h1 class="dashboard-greeting">Dashboard</h1>
+  <p class="dashboard-subtitle">Personal data records, GitHub velocity, and knowledge archive.</p>
+</header>
+
+<!-- GitHub 活跃热力图板块（经典贪吃蛇动效） -->
+<section class="dashboard-section">
+  <div class="section-header">
+    <h2 class="section-title">GitHub Activity</h2>
+    <span class="section-tag">Snake Heatmap</span>
+  </div>
+  <div class="chart-card">
+    <a href="https://github.com/f10w-0x00" target="_blank" rel="noopener">
+      <img src="https://raw.githubusercontent.com/f10w-0x00/f10w-0x00.github.io/output/github-contribution-grid-snake.svg" 
+           onerror="this.src='https://ghchart.rshah.org/2563eb/f10w-0x00'" 
+           alt="f10w-0x00 GitHub Snake Contributions" 
+           loading="lazy">
+    </a>
+  </div>
+</section>
+
+<!-- [>>] 最新文章内联嵌入展示（Obsidian ![[]] 嵌入原文） -->
+{% assign latest_post = site.posts.first %}
+{% if latest_post %}
+<section class="dashboard-section">
+  <div class="section-header">
+    <h2 class="section-title">Latest Note</h2>
+    <a href="{{ '/blog/' | relative_url }}" class="section-tag" style="color: #2563EB;">All Posts &rarr;</a>
+  </div>
+
+  <div class="embedded-post-card">
+    <!-- 头部 [>>] 与标题 -->
+    <header class="embedded-post-header">
+      <div class="embedded-prompt-line">
+        <span class="latest-prompt">[&gt;&gt;]</span>
+        <h3 class="embedded-title">
+          <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title }}</a>
+        </h3>
+      </div>
+      <div class="post-meta" style="margin-left: 2.8rem; margin-bottom: 1.5rem;">
+        <time datetime="{{ latest_post.date | date_to_xmlschema }}">{{ latest_post.date | date: "%Y-%m-%d" }}</time>
+        {% if latest_post.tags %}
+          <span class="post-tag-badge">{{ latest_post.tags | first }}</span>
+        {% endif %}
+        {% assign words = latest_post.content | number_of_words %}
+        {% assign minutes = words | divided_by: 200 %}
+        {% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}
+        <span>{{ minutes }} min read</span>
+      </div>
+    </header>
+
+    <!-- 原文完整内联嵌入渲染 (Transclusion) -->
+    <article class="post-content embedded-post-body">
+      {{ latest_post.content }}
+    </article>
+
+    <footer class="embedded-post-footer">
+      <a href="{{ latest_post.url | relative_url }}" class="embedded-permalink">Permalink / 独立页面 &rarr;</a>
+    </footer>
+  </div>
+</section>
+{% endif %}

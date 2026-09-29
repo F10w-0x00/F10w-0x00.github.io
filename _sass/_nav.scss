@@ -1,0 +1,79 @@
+@import "variables";
+
+// 顶部轻量阅读进度条
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2.5px;
+  width: 0%;
+  background: $color-primary;
+  z-index: 9999;
+  pointer-events: none;
+  transition: width 0.05s ease-out;
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid $color-border;
+  height: $nav-height;
+}
+
+.nav-container {
+  max-width: $max-page-width;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid $color-border;
+    transition: all 0.2s ease;
+    display: block;
+
+    &:hover {
+      border-color: $color-primary;
+      transform: scale(1.08);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    }
+  }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+
+  a {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $color-text-muted;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+
+    &:hover,
+    &.active {
+      color: $color-primary;
+      background-color: $color-primary-light;
+    }
+  }
+}

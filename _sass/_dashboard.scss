@@ -6,24 +6,29 @@
 }
 
 .dashboard-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid $color-border;
 
   .dashboard-greeting {
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
     color: $color-text;
+    line-height: 1.15;
     margin-bottom: 0.5rem;
   }
 
   .dashboard-subtitle {
-    font-size: 1.05rem;
+    font-family: $font-code;
+    font-size: 0.9rem;
     color: $color-text-muted;
+    letter-spacing: -0.01em;
   }
 }
 
 .dashboard-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .section-header {
@@ -31,36 +36,44 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
 
   .section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: $font-code;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: $color-text;
   }
 
   .section-tag {
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 0.2rem 0.65rem;
-    background: $color-bg-light;
-    color: $color-text-muted;
-    border-radius: 999px;
+    font-family: $font-code;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2em 0.6em;
+    background: transparent;
+    color: $color-text;
     border: 1px solid $color-border;
-    text-decoration: none;
+    border-radius: $radius-none;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
     transition: all 0.15s ease;
 
     &:hover {
       border-color: $color-primary;
+      color: $color-primary;
     }
   }
 }
 
+// 贪吃蛇热力图容器（网格直角卡片）
 .chart-card {
   background: $color-card-bg;
   border: 1px solid $color-border;
-  border-radius: 12px;
+  border-radius: $radius-none;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: none;
   overflow-x: auto;
   text-align: center;
 
@@ -71,13 +84,13 @@
   }
 }
 
-// [>>] 最新文章内联嵌入卡片 (Obsidian Transclusion ![[]] 风格)
+// [>>] 最新文章内联嵌入卡片 (Swiss Typographic Block)
 .embedded-post-card {
   background: $color-card-bg;
   border: 1px solid $color-border;
-  border-radius: 12px;
-  padding: 2rem 2.2rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  border-radius: $radius-none;
+  padding: 2.2rem 2.4rem;
+  box-shadow: none;
 }
 
 .embedded-prompt-line {
@@ -97,9 +110,9 @@
   }
 
   .embedded-title {
-    font-size: 1.65rem;
+    font-size: 1.7rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     margin: 0;
     line-height: 1.3;
 
@@ -118,20 +131,21 @@
 .embedded-post-footer {
   margin-top: 2.5rem;
   padding-top: 1.25rem;
-  border-top: 1px dashed $color-border;
+  border-top: 1px solid $color-border;
   display: flex;
   justify-content: flex-end;
 
   .embedded-permalink {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-family: $font-code;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: $color-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     text-decoration: none;
-    transition: opacity 0.15s ease;
 
     &:hover {
       text-decoration: underline;
-      opacity: 0.85;
     }
   }
 }

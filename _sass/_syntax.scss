@@ -1,17 +1,18 @@
 @import "variables";
 
-// Rouge Syntax Highlighting & Code Copy Button
+// Rouge Syntax Highlighting & Code Copy Button (Swiss Brutalism / Stark Geometry)
 .highlight {
   position: relative;
-  background: #0f172a;
-  color: #e2e8f0;
-  border-radius: 8px;
+  background: #09090b;
+  color: #f4f4f5;
+  border: 1px solid #27272a;
+  border-radius: $radius-none;
   margin: 1.5rem 0;
-  padding: 1.25rem;
+  padding: 1.25rem 1.4rem;
   overflow-x: auto;
   font-family: $font-code;
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.65;
 
   pre {
     margin: 0;
@@ -31,37 +32,39 @@ div.highlighter-rouge {
     top: 10px;
     right: 10px;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.15);
-    color: #cbd5e1;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    font-family: $font-main;
+    background: transparent;
+    color: #a1a1aa;
+    border: 1px solid #3f3f46;
+    border-radius: $radius-none;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: $font-code;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     cursor: pointer;
     transition: all 0.15s ease;
-    backdrop-filter: blur(4px);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.28);
+      background: #27272a;
       color: #ffffff;
+      border-color: #52525b;
     }
 
     &.copied {
-      background: $color-accent;
+      background: $color-primary;
       color: #ffffff;
-      border-color: $color-accent;
+      border-color: $color-primary;
     }
   }
 }
 
 code.highlighter-rouge {
   background: $color-bg-light;
-  color: #e11d48;
+  color: #09090b;
   padding: 0.2em 0.45em;
-  border-radius: 4px;
-  font-size: 0.9em;
+  border-radius: $radius-none;
+  font-size: 0.88em;
   font-family: $font-code;
   border: 1px solid $color-border;
 }

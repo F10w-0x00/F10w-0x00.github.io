@@ -39,19 +39,19 @@ a.accompany-link {
   }
 }
 
-// 伴随笔记分屏主容器（默认单栏居中，激活后展开 6:4 黄金分屏）
+// 伴随笔记分屏主容器（未分屏时宽达 980px，分屏激活时舒展至 1560px 宽屏视野）
 .post-layout-wrapper {
   max-width: $max-content-width;
   margin: 0 auto;
   transition: max-width 0.25s ease;
 
   &.split-view-active {
-    max-width: 1440px;
+    max-width: 1560px; // 解锁宽屏布局上限
 
     @media (min-width: $bp-desktop) {
       display: grid;
-      grid-template-columns: 6fr 4fr; // 6:4 黄金比例
-      gap: 2.2rem;
+      grid-template-columns: 63% 37%; // 左侧主文章占 63%（约 950px 宽大视野），右侧占 37%
+      gap: 2.5rem;
       align-items: start;
     }
   }
@@ -59,6 +59,7 @@ a.accompany-link {
 
 .post-main-column {
   min-width: 0;
+  width: 100%;
 }
 
 // 伴随笔记右侧分栏（Sidecar Panel - 瑞士直角结构框）
@@ -89,7 +90,7 @@ a.accompany-link {
     top: 0;
     right: 0;
     width: 90vw;
-    max-width: 480px;
+    max-width: 500px;
     height: 100vh;
     z-index: 10000;
     border-radius: $radius-none;
@@ -145,7 +146,7 @@ a.accompany-link {
 
 // 伴随笔记正文内容区域
 .accompany-panel-body {
-  padding: 1.5rem;
+  padding: 1.5rem 1.8rem;
   overflow-y: auto;
   flex: 1;
   font-size: 0.95rem;

@@ -3,6 +3,12 @@
 .dashboard-container {
   max-width: $max-content-width;
   margin: 0 auto;
+  width: 100%;
+}
+
+// 分屏激活时，解除首页容器宽度束缚，铺满左侧 63% 空间
+.split-view-active .dashboard-container {
+  max-width: 100%;
 }
 
 .dashboard-header {

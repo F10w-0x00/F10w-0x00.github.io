@@ -2,11 +2,12 @@
   <div class="nav-container">
     <a class="nav-brand" href="{{ '/' | relative_url }}" title="{{ site.title }}">
       <img src="https://github.com/{{ site.author.github }}.png?size=80" alt="{{ site.title }}" class="nav-avatar">
+      <span class="nav-brand-label">{{ site.author.name }}</span>
     </a>
-    <ul class="nav-links">
-      <li>
-        <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Blog</a>
-      </li>
-    </ul>
+    <div class="nav-actions">
+      <a href="{{ '/blog/' | relative_url }}" class="nav-blog-btn {% if page.url contains '/blog' %}active{% endif %}">
+        [BLOG]
+      </a>
+    </div>
   </div>
 </nav>

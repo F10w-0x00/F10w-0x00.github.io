@@ -4,7 +4,7 @@
 // ==========================================
 
 // 配色方案 (Palette)
-$color-bg: #fcfcfc;               // 纯净冷灰白画画布
+$color-bg: #fcfcfc;               // 纯净冷灰白画布
 $color-card-bg: #ffffff;          // 纯白结构块
 $color-bg-light: #f4f4f5;         // 浅色网格填充
 $color-text: #09090b;             // 墨黑 (近绝对黑，极致排版对比度)
@@ -12,7 +12,7 @@ $color-text-muted: #71717a;       // 中性冷灰元数据
 $color-border: #e4e4e7;           // 细线结构边框
 $color-border-dark: #09090b;      // 强结构线
 
-// 瑞士重点色 (Swiss Accent: 国际克莱因蓝，高辨识度与理性冷峻)
+// 瑞士重点色 (Swiss Accent: 国际克莱因蓝)
 $color-primary: #0038ff;
 $color-primary-light: #eff4ff;
 $color-primary-hover: #0022cc;
@@ -25,12 +25,13 @@ $radius-none: 0px;                // 彻底抛弃圆角，回归纯粹理性几�
 $font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
 $font-code: "JetBrains Mono", "SF Mono", Menlo, Consolas, Monaco, monospace;
 
-// 页面尺度 (Grid & Layout)
-$max-content-width: 880px;
-$max-page-width: 1140px;
+// 页面尺度 (Grid & Layout - 大幅拓宽阅读宽度与分屏尺度)
+$max-content-width: 980px;        // 默认单栏阅读宽度由 880px 扩展至 980px
+$max-page-width: 1560px;          // 全局最大容器宽度扩展至 1560px（彻底解绑分屏宽度上限）
 $nav-height: 60px;
 
 // 断点 (Breakpoints)
 $bp-mobile: 640px;
 $bp-tablet: 768px;
 $bp-desktop: 1024px;
+$bp-wide: 1280px;

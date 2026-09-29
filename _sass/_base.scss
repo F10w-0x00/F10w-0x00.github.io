@@ -27,9 +27,9 @@ a {
 
 .page-content {
   min-height: calc(100vh - #{$nav-height} - 80px);
-  max-width: $max-page-width;
+  max-width: $max-page-width; // 扩展至 1560px
   margin: 0 auto;
-  padding: 2.5rem 1.5rem;
+  padding: 2.5rem 2rem;
 }
 
 .page-title {
@@ -40,7 +40,6 @@ a {
   color: $color-text;
 }
 
-// 瑞士冷峻水平分割线
 hr {
   border: none;
   border-top: 1px solid $color-border;

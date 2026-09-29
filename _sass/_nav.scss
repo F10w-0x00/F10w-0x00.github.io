@@ -17,7 +17,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(252, 252, 252, 0.95);
+  background: rgba(252, 252, 252, 0.98);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid $color-border;
@@ -28,7 +28,7 @@
   max-width: $max-page-width;
   height: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,44 +37,59 @@
 .nav-brand {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
   text-decoration: none;
 
   .nav-avatar {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid $color-border;
-    transition: border-color 0.15s ease;
+    border: 1px solid $color-border-dark;
+    transition: all 0.15s ease;
     display: block;
 
     &:hover {
       border-color: $color-primary;
     }
   }
+
+  .nav-brand-label {
+    font-family: $font-code;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: $color-text;
+    text-transform: uppercase;
+  }
 }
 
-.nav-links {
+// 右上角专属瑞士 [BLOG] 线框按钮（超高特异性，确保生效）
+.nav-actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  list-style: none;
+}
 
-  a {
-    font-family: $font-code;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: $color-text;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid transparent;
-    transition: all 0.15s ease;
+.nav-blog-btn {
+  display: inline-block !important;
+  font-family: $font-code !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #09090b !important;
+  background: #ffffff !important;
+  border: 1.5px solid #09090b !important;
+  border-radius: 0px !important;
+  padding: 0.35rem 0.9rem !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
 
-    &:hover,
-    &.active {
-      color: $color-primary;
-      border-color: $color-primary;
-      background: $color-primary-light;
-    }
+  &:hover,
+  &.active {
+    color: #ffffff !important;
+    background: #09090b !important;
+    border-color: #09090b !important;
   }
 }

@@ -1,3 +1,9 @@
-<footer style="text-align: center; padding: 2rem 1.5rem; color: #94a3b8; font-size: 0.85rem; border-top: 1px solid #e2e8f0; margin-top: 3rem;">
-  <p>&copy; {{ 'now' | date: "%Y" }} {{ site.title }} &middot; Built with Jekyll &amp; GitHub Pages</p>
+<footer
+  style="text-align: center; padding: 2rem 1.5rem; color: #94a3b8; font-size: 0.85rem; border-top: 1px solid #e2e8f0; margin-top: 3rem;">
+  <p>
+    &copy; {{ 'now' | date: "%Y" }} {{ site.title }} &middot;
+    <a href="{{ '/feed.xml' | relative_url }}" target="_blank" rel="noopener"
+      style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">RSS</a> &middot;
+    Built with Jekyll &amp; GitHub Pages
+  </p>
 </footer>

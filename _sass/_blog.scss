@@ -1,13 +1,11 @@
 @import "variables";
 
-// 博客容器
 .blog-container {
   max-width: $max-content-width;
   margin: 0 auto;
   padding: 0.5rem 0 3rem;
 }
 
-// 博客头部
 .blog-header {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
@@ -29,7 +27,7 @@
   }
 }
 
-// 标签过滤栏（修复原生按钮外观）
+// 标签过滤栏 (Tokyo Night 风格)
 .blog-tags {
   display: flex;
   gap: 0.5rem;
@@ -48,25 +46,27 @@
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: $color-text;
+  color: $color-text-muted;
   cursor: pointer;
   transition: all 0.15s ease;
-  background: #ffffff;
+  background: $color-card-bg;
   user-select: none;
   outline: none;
 
   &:hover {
     background: $color-bg-light;
+    color: $color-text;
+    border-color: $color-primary;
   }
 
   &.active {
-    background: $color-text;
-    color: #ffffff;
-    border-color: $color-text;
+    background: $color-primary;
+    color: #1f2335;
+    border-color: $color-primary;
+    font-weight: 800;
   }
 }
 
-// 博客文章列表
 .blog-posts-list {
   display: flex;
   flex-direction: column;
@@ -116,9 +116,9 @@
 
 .post-tag-badge {
   display: inline-block;
-  background: transparent;
-  color: $color-text;
-  border: 1px solid $color-border;
+  background: $color-card-bg;
+  color: $color-primary;
+  border: 1px solid $color-border-dark;
   border-radius: $radius-none;
   font-family: $font-code;
   font-size: 0.72rem;
@@ -134,7 +134,7 @@
   line-height: 1.65;
 }
 
-// Post 详情页排版
+// 文章详情页
 .post-container {
   max-width: $max-content-width;
   margin: 0 auto;
@@ -201,7 +201,7 @@
   blockquote {
     border-left: 3px solid $color-primary;
     padding: 0.85rem 1.25rem;
-    background: $color-bg-light;
+    background: $color-card-bg;
     color: $color-text;
     border-radius: $radius-none;
     margin: 1.5rem 0;
@@ -232,7 +232,8 @@
     }
 
     th {
-      background: $color-bg-light;
+      background: $color-card-bg;
+      color: $color-text;
       font-weight: 700;
       font-family: $font-code;
       text-transform: uppercase;
@@ -253,7 +254,7 @@
     font-family: $font-code;
     font-weight: 700;
     font-size: 0.85rem;
-    color: $color-text;
+    color: $color-text-muted;
     text-transform: uppercase;
     letter-spacing: 0.04em;
 

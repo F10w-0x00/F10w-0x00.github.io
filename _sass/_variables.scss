@@ -1,29 +1,30 @@
 // ==========================================
-// 瑞士平面设计与现代学术排版体系
+// Tokyo Night Storm 调色板与排版规范
 // ==========================================
 
-// 配色方案 (Palette)
-$color-bg: #fcfcfc; // 纯净冷灰白画布
-$color-card-bg: #ffffff; // 纯白结构块
-$color-bg-light: #f4f4f5; // 浅色网格填充
-$color-text: #1a1a2e; // 舒适深墨黑（告别死黑高频眩光，提升长时间阅读舒适度）
-$color-text-muted: #6b7280; // 中性中灰元数据
-$color-border: #e4e4e7; // 细线结构边框
-$color-border-dark: #09090b; // 强结构线
+// 配色方案 (Tokyo Night Storm Palette)
+$color-bg: #24283b; // 画布主底色 (Storm 深蓝灰)
+$color-card-bg: #1f2335; // 卡片/区块底色 (Storm Darker)
+$color-bg-light: #292e42; // 次级浅色块/徽章底色
+$color-text: #c0caf5; // 主文本冷白蓝 (极度护眼，柔和不刺眼)
+$color-text-muted: #7982a9; // 次级/元数据灰蓝 (Muted)
+$color-border: #292e42; // 细线结构边框
+$color-border-dark: #414868; // 强结构线
 
-// 瑞士重点色 (Swiss Accent: 国际克莱因蓝)
-$color-primary: #0038ff;
-$color-primary-light: #eff4ff;
-$color-primary-hover: #0022cc;
-$color-accent: #09090b;
+// Tokyo Night 重点色 (Accents)
+$color-primary: #7aa2f7; // 经典天蓝 (Accent Blue)
+$color-primary-light: rgba(122, 162, 247, 0.15);
+$color-primary-hover: #89b4fa;
+$color-accent: #bb9af7; // 霓虹紫 (Accent Purple)
 
 // 几何规范 (Geometry)
-$radius-none: 0px; // 理性几何无圆角
+$radius-none: 0px;
+$radius-code: 8px; // Antigravity 风格代码块精致圆角
 
 // 字体排版体系 (Typography)
 $font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
 $font-heading: "Source Serif 4", Georgia, "Times New Roman", "Source Han Serif SC", serif;
-$font-code: "JetBrains Mono", Consolas, Menlo, monospace;
+$font-code: "JetBrains Mono", Consolas, Menlo, Monaco, monospace;
 
 // 页面尺度 (Grid & Layout)
 $max-content-width: 980px;

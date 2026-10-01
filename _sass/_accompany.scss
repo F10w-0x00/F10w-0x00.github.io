@@ -63,10 +63,10 @@ a.accompany-link {
   width: 100%;
 }
 
-// 伴随笔记右侧分栏（★ 告别刺眼白底，适配 Tokyo Night 深色卡片）
+// 伴随笔记右侧分栏（暗夜深色卡片）
 .accompany-panel {
   display: none;
-  background: #1f2335; // 暗夜深色卡片底色
+  background: #1f2335;
   border: 1px solid $color-border;
   border-radius: 10px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
@@ -105,7 +105,7 @@ a.accompany-link {
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1.25rem;
-  background: rgba(0, 0, 0, 0.22); // 半透明暗色顶栏
+  background: rgba(0, 0, 0, 0.22);
   border-bottom: 1px solid $color-border;
 }
 
@@ -145,7 +145,7 @@ a.accompany-link {
   }
 }
 
-// 伴随笔记正文内容区域（文字、公式全面继承柔和 Tokyo Night 色系）
+// 伴随笔记正文内容区域
 .accompany-panel-body {
   padding: 1.5rem 1.8rem;
   overflow-y: auto;
@@ -165,4 +165,104 @@ a.accompany-link {
     background: rgba(122, 162, 247, 0.12);
     border: 1px solid rgba(122, 162, 247, 0.3);
     border-radius: 4px;
-    padding: 0.15em 0.5
+    padding: 0.15em 0.55em;
+    margin-bottom: 0.75rem;
+  }
+
+  .accompany-title {
+    font-family: $font-heading;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    color: $color-text;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: $font-heading;
+    color: $color-text;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  p {
+    color: $color-text;
+    margin-bottom: 1.2rem;
+  }
+
+  ul,
+  ol {
+    margin-bottom: 1.2rem;
+    padding-left: 1.5rem;
+    color: $color-text;
+  }
+
+  li {
+    margin-bottom: 0.35rem;
+  }
+
+  blockquote {
+    border-left: 3px solid $color-primary;
+    padding: 0.8rem 1.1rem;
+    background: #24283b;
+    color: $color-text;
+    border-radius: 4px;
+    margin: 1.2rem 0;
+  }
+
+  table {
+    font-size: 0.88rem;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.2rem 0;
+
+    th,
+    td {
+      border: 1px solid $color-border;
+      padding: 0.5rem 0.75rem;
+    }
+
+    th {
+      background: #24283b;
+      color: $color-text;
+      font-family: $font-code;
+    }
+  }
+}
+
+// 移动端背景遮罩
+.accompany-backdrop {
+  display: none !important;
+
+  @media (max-width: 1023px) {
+    &.active {
+      display: block !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 17, 26, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+    }
+  }
+}
+
+@keyframes accompanyFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

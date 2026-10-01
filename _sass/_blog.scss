@@ -1,88 +1,86 @@
 @import "variables";
 
+// Blog 列表与筛选器
 .blog-container {
   max-width: $max-content-width;
   margin: 0 auto;
   padding: 0.5rem 0 3rem;
 }
 
-.blog-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid $color-border;
-
-  .blog-title {
-    font-size: 2.4rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    color: $color-text;
-    margin-bottom: 0.35rem;
-  }
-
-  .blog-desc {
-    font-family: $font-code;
-    color: $color-text-muted;
-    font-size: 0.95rem;
-  }
-}
-
-// 瑞士风格直角标签栏 (Swiss Sharp Tags)
-.blog-tags {
+.blog-filter-bar {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid $color-border;
+  overflow-x: auto;
 }
 
-.tag-pill {
-  display: inline-block;
-  padding: 0.35em 0.85em;
-  border: 1px solid $color-border-dark;
-  border-radius: $radius-none;
+.filter-pill {
   font-family: $font-code;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: $color-text;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid $color-border;
+  border-radius: $radius-none;
+  background: transparent;
+  color: $color-text-muted;
   cursor: pointer;
   transition: all 0.15s ease;
-  background: #ffffff;
-  user-select: none;
+  white-space: nowrap;
 
   &:hover {
-    background: $color-bg-light;
+    border-color: $color-text;
+    color: $color-text;
   }
 
   &.active {
-    background: $color-text;
+    background: $color-primary;
+    border-color: $color-primary;
     color: #ffffff;
-    border-color: $color-text;
   }
 }
 
-.blog-post-card {
-  padding: 1.8rem 0;
+// 博客无分页流式列表
+.blog-stream {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-item {
+  padding: 1.75rem 0;
   border-bottom: 1px solid $color-border;
+  transition: background-color 0.15s ease;
 
-  &:first-of-type {
-    padding-top: 0.5rem;
+  &:first-child {
+    padding-top: 0;
   }
 
-  &:last-child {
-    border-bottom: none;
+  &.hidden {
+    display: none;
   }
 }
 
-.blog-post-card-title {
+.blog-item-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-item-title {
+  font-family: $font-heading;
   font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.45rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
 
   a {
     color: $color-text;
+    text-decoration: none;
     transition: color 0.15s ease;
 
     &:hover {
@@ -91,32 +89,30 @@
   }
 }
 
-.blog-post-card-meta {
-  font-family: $font-code;
-  font-size: 0.82rem;
-  color: $color-text-muted;
-  margin-bottom: 0.6rem;
+.blog-item-meta {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
+  font-family: $font-code;
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  flex-shrink: 0;
 }
 
-.post-tag-badge {
-  display: inline-block;
-  background: transparent;
-  color: $color-text;
+.blog-item-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
   border: 1px solid $color-border;
   border-radius: $radius-none;
-  font-family: $font-code;
-  font-size: 0.72rem;
-  font-weight: 700;
+  color: $color-text;
   text-transform: uppercase;
-  padding: 0.15em 0.55em;
+  letter-spacing: 0.03em;
 }
 
-.blog-post-card-excerpt {
-  font-size: 0.96rem;
+.blog-item-excerpt {
   color: $color-text-muted;
+  font-size: 0.95rem;
   line-height: 1.65;
 }
 
@@ -134,9 +130,10 @@
 }
 
 .post-title {
+  font-family: $font-heading;
   font-size: 2.4rem;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: $color-text;
   margin-bottom: 0.75rem;
   line-height: 1.25;
@@ -156,19 +153,24 @@
   line-height: 1.8;
   color: $color-text;
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: $font-heading;
     margin-top: 2.2rem;
     margin-bottom: 0.85rem;
     color: $color-text;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   p {
     margin-bottom: 1.35rem;
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin-bottom: 1.35rem;
     padding-left: 1.5rem;
   }
@@ -177,62 +179,74 @@
     margin-bottom: 0.4rem;
   }
 
+  blockquote {
+    margin: 1.75rem 0;
+    padding: 1rem 1.4rem;
+    border-left: 3px solid $color-primary;
+    background: $color-bg-light;
+    color: $color-text;
+    font-style: italic;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   img {
     max-width: 100%;
+    height: auto;
     border-radius: $radius-none;
     border: 1px solid $color-border;
     margin: 1.5rem 0;
   }
 
-  blockquote {
-    border-left: 3px solid $color-text;
-    padding: 0.85rem 1.25rem;
-    background: $color-bg-light;
-    color: $color-text;
-    border-radius: $radius-none;
-    margin: 1.5rem 0;
-    font-size: 0.98rem;
-  }
-
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
-    font-size: 0.92rem;
+    margin: 1.75rem 0;
+    font-size: 0.95rem;
 
-    th, td {
+    th,
+    td {
       border: 1px solid $color-border;
-      padding: 0.65rem 0.85rem;
+      padding: 0.6rem 0.85rem;
+      text-align: left;
     }
 
     th {
       background: $color-bg-light;
       font-weight: 700;
       font-family: $font-code;
+      font-size: 0.85rem;
       text-transform: uppercase;
-      font-size: 0.82rem;
+      letter-spacing: 0.03em;
     }
   }
 }
 
-.post-footer {
-  margin-top: 3.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid $color-border;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.post-tag-badge {
+  font-family: $font-code;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid $color-border;
+  border-radius: $radius-none;
+  color: $color-text;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
-  .back-link {
-    font-family: $font-code;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: $color-text;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+// 伴读触发器链接 (Accompany Trigger)
+.accompany-trigger {
+  color: $color-primary;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.15s ease;
 
-    &:hover {
-      color: $color-primary;
-    }
+  &:hover {
+    color: $color-primary-hover;
+    background: $color-primary-light;
   }
 }

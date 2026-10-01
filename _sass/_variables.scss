@@ -1,16 +1,15 @@
 // ==========================================
-// 瑞士平面设计体系 (Swiss / International Style)
-// 核心美学：严谨网格、冷峻纯粹、零多余圆角、高对比度黑白与国际克莱因蓝
+// 瑞士平面设计与现代学术排版体系
 // ==========================================
 
 // 配色方案 (Palette)
-$color-bg: #fcfcfc;               // 纯净冷灰白画布
-$color-card-bg: #ffffff;          // 纯白结构块
-$color-bg-light: #f4f4f5;         // 浅色网格填充
-$color-text: #09090b;             // 墨黑 (近绝对黑，极致排版对比度)
-$color-text-muted: #71717a;       // 中性冷灰元数据
-$color-border: #e4e4e7;           // 细线结构边框
-$color-border-dark: #09090b;      // 强结构线
+$color-bg: #fcfcfc; // 纯净冷灰白画布
+$color-card-bg: #ffffff; // 纯白结构块
+$color-bg-light: #f4f4f5; // 浅色网格填充
+$color-text: #1a1a2e; // 舒适深墨黑（告别死黑高频眩光，提升长时间阅读舒适度）
+$color-text-muted: #6b7280; // 中性中灰元数据
+$color-border: #e4e4e7; // 细线结构边框
+$color-border-dark: #09090b; // 强结构线
 
 // 瑞士重点色 (Swiss Accent: 国际克莱因蓝)
 $color-primary: #0038ff;
@@ -19,15 +18,16 @@ $color-primary-hover: #0022cc;
 $color-accent: #09090b;
 
 // 几何规范 (Geometry)
-$radius-none: 0px;                // 彻底抛弃圆角，回归纯粹理性几何
+$radius-none: 0px; // 理性几何无圆角
 
 // 字体排版体系 (Typography)
-$font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-$font-code: "JetBrains Mono", "SF Mono", Menlo, Consolas, Monaco, monospace;
+$font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+$font-heading: "Source Serif 4", Georgia, "Times New Roman", "Source Han Serif SC", serif;
+$font-code: "JetBrains Mono", Consolas, Menlo, monospace;
 
-// 页面尺度 (Grid & Layout - 大幅拓宽阅读宽度与分屏尺度)
-$max-content-width: 980px;        // 默认单栏阅读宽度由 880px 扩展至 980px
-$max-page-width: 1560px;          // 全局最大容器宽度扩展至 1560px（彻底解绑分屏宽度上限）
+// 页面尺度 (Grid & Layout)
+$max-content-width: 980px;
+$max-page-width: 1560px;
 $nav-height: 60px;
 
 // 断点 (Breakpoints)

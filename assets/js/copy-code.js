@@ -3,13 +3,13 @@ function setupCodeBlocks(root) {
   var codeBlocks = container.querySelectorAll('div.highlighter-rouge');
 
   codeBlocks.forEach(function (block) {
-    if (block.querySelector('.code-header')) return; // 避免重复注入
+    if (block.querySelector('.code-header')) return;
 
-    // 1. 提取语言标识（例如 language-scss -> SCSS）
-    var lang = 'CODE';
+    // 1. 提取语言标识并转为小写 (如 bash, scss)
+    var lang = 'code';
     block.classList.forEach(function (cls) {
       if (cls.startsWith('language-')) {
-        lang = cls.replace('language-', '').toUpperCase();
+        lang = cls.replace('language-', '').toLowerCase();
       }
     });
 
@@ -17,13 +17,11 @@ function setupCodeBlocks(root) {
     var header = document.createElement('div');
     header.className = 'code-header';
 
-    // 语言标签 (左侧)
     var langBadge = document.createElement('span');
     langBadge.className = 'code-lang';
     langBadge.innerText = lang;
     header.appendChild(langBadge);
 
-    // 复制按钮 (右侧纯复制图标，无 @ 按钮)
     var copyBtn = document.createElement('button');
     copyBtn.className = 'copy-code-button';
     copyBtn.type = 'button';
@@ -59,8 +57,6 @@ function setupCodeBlocks(root) {
     });
 
     header.appendChild(copyBtn);
-
-    // 将顶栏插入到代码块的最前面
     block.insertBefore(header, block.firstChild);
   });
 }

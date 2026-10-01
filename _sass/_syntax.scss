@@ -1,86 +1,87 @@
 @import "variables";
 
 // ==========================================
-// Antigravity 悬浮独立卡片代码块
+// Antigravity 像素级复刻代码块 (Elevated Card)
 // ==========================================
 div.highlighter-rouge {
   position: relative;
-  margin: 1.75rem 0;
-  background: #2e334d; // 整体卡片提亮
-  border: 1px solid #3b4261; // 清晰的轮廓线
-  border-radius: $radius-code;
+  margin: 2rem 0;
+  // ★ 核心：精准提取 Antigravity 浅色卡片底色，与页面底色 #24283b 形成鲜明悬浮层次
+  background: #2b3046;
+  border: 1px solid rgba(255, 255, 255, 0.08); // 细腻微光边框
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(15, 17, 26, 0.25); // 悬浮层次阴影
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22); // 柔和深色卡片投影
 
-  // 1. 顶部状态栏 (Language Badge + Copy Button)
+  // 1. 顶部状态栏（半透明融合，告别生硬死黑）
   .code-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.6rem 1.1rem;
-    background: #1f2335; // 状态栏微暗，形成层次
-    border-bottom: 1px solid #3b4261;
+    padding: 0.6rem 1.25rem;
+    background: rgba(0, 0, 0, 0.18); // 柔和暗色半透层
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
     .code-lang {
       font-family: $font-code;
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: #7982a9;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #848aa6; // 低饱和度高级暗灰
+      text-transform: lowercase; // 同款克制小写 (bash / scss / html)
+      letter-spacing: 0.04em;
     }
 
     .copy-code-button {
       background: transparent;
       border: none;
-      color: #7982a9;
+      color: #848aa6;
       cursor: pointer;
-      padding: 4px;
+      padding: 4px 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 4px;
+      border-radius: 5px;
       transition: all 0.15s ease;
 
       &:hover {
-        color: #c0caf5;
-        background: rgba(255, 255, 255, 0.06);
+        color: #c5ceef;
+        background: rgba(255, 255, 255, 0.08);
       }
 
       &.copied {
-        color: #9ece6a; // 复制成功绿
+        color: #9ece6a;
       }
     }
   }
 
-  // 2. 代码正文区域（关键提亮：从 #24283b 提亮至 #2e334d）
+  // 2. 代码正文区域
   .highlight {
     margin: 0;
-    padding: 1.25rem 1.4rem;
-    background: #2e334d; // ★ 浅色提亮底色，完美独立于页面背景
+    padding: 1.25rem 1.45rem;
+    background: transparent; // 继承整体 #2b3046 浅色背景
     border: none;
     border-radius: 0;
     overflow-x: auto;
-    font-family: $font-code;
-    font-size: 0.88rem;
-    line-height: 1.68;
 
     pre {
       margin: 0;
-      color: #c0caf5;
+      font-family: $font-code;
+      font-size: 0.88rem;
+      line-height: 1.75; // 舒展高可读性行高
+      color: #c5ceef;
     }
   }
 }
 
-// 行内代码样式 (Inline Code 同步提亮)
+// 行内代码微光高亮 (Inline Code)
 code.highlighter-rouge {
-  background: #2e334d;
+  background: #2b3046;
   color: #7dcfff;
-  padding: 0.2em 0.45em;
-  border-radius: 4px;
+  padding: 0.2em 0.48em;
+  border-radius: 5px;
   font-size: 0.88em;
   font-family: $font-code;
-  border: 1px solid #3b4261;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 // ==========================================
@@ -93,11 +94,11 @@ code.highlighter-rouge {
   .cm,
   .cs,
   .cp {
-    color: #636da6;
+    color: #6c7393;
     font-style: italic;
   }
 
-  // 注释微提亮，兼顾可读性
+  // 注释柔和灰紫
   .k,
   .kd,
   .kn,
@@ -108,12 +109,12 @@ code.highlighter-rouge {
     font-weight: 600;
   }
 
-  // 关键字 (Purple)
+  // 关键字
   .kc {
     color: #ff9e64;
   }
 
-  // 常量/布尔值 (Orange)
+  // 常量
   .s,
   .s1,
   .s2,
@@ -129,7 +130,7 @@ code.highlighter-rouge {
     color: #9ece6a;
   }
 
-  // 字符串 (Green)
+  // 字符串
   .m,
   .mf,
   .mh,
@@ -139,33 +140,33 @@ code.highlighter-rouge {
     color: #ff9e64;
   }
 
-  // 数字 (Orange)
+  // 数字
   .na {
     color: #bb9af7;
   }
 
-  // 属性名 (Purple)
+  // 属性名
   .nb {
     color: #7dcfff;
   }
 
-  // 内置对象 (Cyan)
+  // 内置函数
   .nc {
     color: #e0af68;
   }
 
-  // 类名 (Yellow)
+  // 类名
   .nf,
   .fm {
     color: #7aa2f7;
   }
 
-  // 函数调用 (Blue)
+  // 函数调用
   .nt {
     color: #f7768e;
   }
 
-  // 标签 (Red)
+  // HTML/XML 标签
   .nv,
   .vc,
   .vg,
@@ -173,23 +174,16 @@ code.highlighter-rouge {
     color: #c0caf5;
   }
 
-  // 变量名 (Light Blue)
+  // 变量名
   .o,
   .ow {
     color: #89ddff;
   }
 
-  // 操作符 (Cyan Light)
+  // 操作符
   .p {
     color: #9abdfa;
   }
 
-  // 标点符号 (Soft Blue)
-  .ge {
-    font-style: italic;
-  }
-
-  .gs {
-    font-weight: bold;
-  }
+  // 标点
 }

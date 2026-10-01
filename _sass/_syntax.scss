@@ -1,22 +1,25 @@
 @import "variables";
 
-// Antigravity 风格代码块容器
+// ==========================================
+// Antigravity 悬浮独立卡片代码块
+// ==========================================
 div.highlighter-rouge {
   position: relative;
   margin: 1.75rem 0;
-  border: 1px solid $color-border;
+  background: #2e334d; // 整体卡片提亮
+  border: 1px solid #3b4261; // 清晰的轮廓线
   border-radius: $radius-code;
   overflow: hidden;
-  background: $color-card-bg;
+  box-shadow: 0 4px 20px rgba(15, 17, 26, 0.25); // 悬浮层次阴影
 
-  // 顶栏 (Language Badge + Copy Button)
+  // 1. 顶部状态栏 (Language Badge + Copy Button)
   .code-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.55rem 1rem;
-    background: #1f2335;
-    border-bottom: 1px solid #292e42;
+    padding: 0.6rem 1.1rem;
+    background: #1f2335; // 状态栏微暗，形成层次
+    border-bottom: 1px solid #3b4261;
 
     .code-lang {
       font-family: $font-code;
@@ -40,48 +43,48 @@ div.highlighter-rouge {
       transition: all 0.15s ease;
 
       &:hover {
-        color: $color-text;
-        background: #292e42;
+        color: #c0caf5;
+        background: rgba(255, 255, 255, 0.06);
       }
 
       &.copied {
-        color: #9ece6a; // Tokyo Night 绿
+        color: #9ece6a; // 复制成功绿
       }
     }
   }
 
-  // 代码正文区域
+  // 2. 代码正文区域（关键提亮：从 #24283b 提亮至 #2e334d）
   .highlight {
     margin: 0;
-    padding: 1.1rem 1.3rem;
-    background: #24283b; // Storm 代码底色
+    padding: 1.25rem 1.4rem;
+    background: #2e334d; // ★ 浅色提亮底色，完美独立于页面背景
     border: none;
     border-radius: 0;
     overflow-x: auto;
     font-family: $font-code;
     font-size: 0.88rem;
-    line-height: 1.65;
+    line-height: 1.68;
 
     pre {
       margin: 0;
-      color: $color-text;
+      color: #c0caf5;
     }
   }
 }
 
-// 行内代码样式 (Inline Code)
+// 行内代码样式 (Inline Code 同步提亮)
 code.highlighter-rouge {
-  background: #1f2335;
-  color: #7dcfff; // Tokyo Night 青色高亮
+  background: #2e334d;
+  color: #7dcfff;
   padding: 0.2em 0.45em;
   border-radius: 4px;
   font-size: 0.88em;
   font-family: $font-code;
-  border: 1px solid #292e42;
+  border: 1px solid #3b4261;
 }
 
 // ==========================================
-// Tokyo Night Storm 完整语法高亮词法着色
+// Tokyo Night Storm 语法高亮词法着色
 // ==========================================
 .highlight {
 
@@ -90,11 +93,11 @@ code.highlighter-rouge {
   .cm,
   .cs,
   .cp {
-    color: #565f89;
+    color: #636da6;
     font-style: italic;
   }
 
-  // 注释 (Muted Grey)
+  // 注释微提亮，兼顾可读性
   .k,
   .kd,
   .kn,
@@ -146,7 +149,7 @@ code.highlighter-rouge {
     color: #7dcfff;
   }
 
-  // 内置函数/对象 (Cyan)
+  // 内置对象 (Cyan)
   .nc {
     color: #e0af68;
   }
@@ -162,7 +165,7 @@ code.highlighter-rouge {
     color: #f7768e;
   }
 
-  // HTML/XML 标签 (Red)
+  // 标签 (Red)
   .nv,
   .vc,
   .vg,

@@ -1,3 +1,13 @@
+---
+layout: post
+title: "Xaga Fasting Note"
+date: 2026-10-03
+tags: [Note]
+math: true
+excerpt: "Xaga: Redmi Note 11T Pro"
+---
+
+
 ### Preface
 
 `Xaga` 是 `Redmi Note 11T Pro` 的代号 

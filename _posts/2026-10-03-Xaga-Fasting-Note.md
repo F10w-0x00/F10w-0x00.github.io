@@ -8,7 +8,7 @@ excerpt: "Xaga: Redmi Note 11T Pro"
 ---
 
 
-### Preface
+## Preface
 
 `Xaga` 是 `Redmi Note 11T Pro` 的代号 
 
@@ -16,7 +16,7 @@ excerpt: "Xaga: Redmi Note 11T Pro"
 
 为了手机上 Claude 和 ChatGPT 订阅不出问题，我决定重装一遍
 
-### After fasting the new ROM
+## After fasting the new ROM
 
 `更多设置` → `开发者选项` → `设备解锁状态` 可以看到“设备已锁定”，这是 ROM 自带的假回锁
 
@@ -26,9 +26,9 @@ excerpt: "Xaga: Redmi Note 11T Pro"
 
 [图片]
 
-### Ksu & Fake invironment
+## Ksu & Fake invironment
 
-### Software
+## Software
 
 
 | Usage        | App             | Version          |
@@ -57,7 +57,7 @@ excerpt: "Xaga: Redmi Note 11T Pro"
 
 PS：重新用回
 
-#### Moon Reader
+### Moon Reader
 
 （我原本越狱了一个 Kindle 来看书，但是折腾好的 Moon Reader 效果太好，Kindle 都好久没用了。现在打算刷个 RAnki，就当 Anki 用）
 
@@ -69,7 +69,7 @@ PS：重新用回
 
 夜间模式：
 
-### Little adjust
+## Little adjust
 
 桌面图标：`主题壁纸` → `澎湃原生` 
 
@@ -78,7 +78,7 @@ PS：重新用回
 壁纸：
 
 
-### Fin.
+## Fin.
 
 [图片]
 

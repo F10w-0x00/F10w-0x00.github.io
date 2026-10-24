@@ -1,0 +1,15 @@
+# Build and dependencies
+node_modules/
+dist/
+.astro/
+
+# Environment and local files
+.env
+.env.production
+.DS_Store
+Thumbs.db
+*.log
+
+# Scratch and editor configs
+.vscode/
+.idea/

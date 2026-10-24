@@ -1,0 +1,47 @@
+---
+import SiteHeader from '../components/common/SiteHeader.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageName?: string;
+  activeNav?: 'home' | 'blog' | 'products';
+}
+
+const {
+  title = "文档 | Ken’s Shelter",
+  description = "Ken’s Shelter（阿健的避难所）的文档列表，收录阿健对学习、旅行、日常的观察和记录。",
+  pageName = "blog-index",
+  activeNav = "blog"
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-page={pageName} data-storage-namespace="KenShelter" data-visitor-enabled="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Ken’s Shelter RSS" />
+    <script is:inline>
+      // 预先读取主题设置，防止页面初次加载闪白
+      try {
+        const settings = JSON.parse(localStorage.getItem('KenShelter_settings') || '{}');
+        if (settings.theme && settings.theme !== 'auto') {
+          document.documentElement.setAttribute('data-theme', settings.theme);
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <SiteHeader active={activeNav} />
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,58 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import posts from '../data/posts.json';
-
-const recentPosts = posts.slice(0, 5);
 ---
 
-<BaseLayout title="Ken’s Shelter" pageName="home" activeNav="home">
-  <div class="home-container" style="max-width: var(--content-width); margin: 0 auto; padding: 48px var(--content-gutter);">
-    <section class="hero" style="margin-bottom: 64px;">
-      <h1 style="font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 760; line-height: 1.1; margin-bottom: 24px;">
-        Welcome to<br />Ken’s Shelter.
-      </h1>
-      <p style="color: var(--muted); font-size: 1.15rem; max-width: 600px; line-height: 1.6;">
-        收录阿健对学习、旅行、日常的观察与记录。
-      </p>
-    </section>
-
-    <section class="recent-posts" style="margin-bottom: 64px;">
-      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
-        <h2 style="font-size: 1.6rem; font-weight: 700; margin: 0;">Recent Posts</h2>
-        <a href="/blog/" style="color: var(--link-internal); font-size: 0.95rem; text-decoration: none;">全部文档 &rarr;</a>
-      </div>
-
-      <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
-        {recentPosts.map((post) => (
-          <article class="post-card" style="border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 20px 24px; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s;">
-            <a href={post.url} style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
-              <div>
-                <h3 style="font-size: 1.25rem; font-weight: 640; margin: 0 0 8px; color: var(--text);">
-                  {post.title}
-                </h3>
-                <div style="color: var(--muted); font-size: 0.9rem; display: flex; gap: 8px;">
-                  <time datetime={post.datetime}>{post.displayDate}</time>
-                  <span>/</span>
-                  <span>{post.category || '未分类'}</span>
-                  <span>/</span>
-                  <span>{post.words}</span>
-                </div>
-              </div>
-              {post.cover && (
-                <img src={post.cover} alt="" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" loading="lazy" />
-              )}
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <footer style="margin-top: 96px; padding-top: 32px; border-top: 1px solid var(--border-soft); color: var(--muted); font-size: 0.88rem; display: flex; justify-content: space-between;">
-      <span>&copy; {new Date().getFullYear()} Ken’s Shelter</span>
-      <div style="display: flex; gap: 16px;">
-        <a href="/rss.xml" style="color: var(--muted); text-decoration: none;">RSS</a>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color: var(--link-external); text-decoration: underline;">GitHub</a>
-      </div>
-    </footer>
-  </div>
+<BaseLayout
+  title="Ken’s Shelter"
+  description="Ken’s Shelter（阿健的避难所），收录阿健对学习、旅行、日常的观察和记录。"
+  pageName="home"
+  activeNav="home"
+>
+    <section class="home-hero" aria-labelledby="home-title"> <svg class="home-door-light" data-home-door-light data-active="false" data-logo-width="3489" data-logo-height="438" data-door-left="2008.31" data-door-right="2142.75" data-door-top="225.26" data-door-bottom="430" data-source-distance-scale="1" data-ground-scale-y="0.5" data-ground-spread-x="1.5" aria-hidden="true" focusable="false"> <defs> <radialGradient id="home-door-light-falloff" data-home-door-light-gradient gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1"> <stop offset="0" stop-color="#00a160" stop-opacity="0.36"></stop> <stop offset="0.16" stop-color="#00a160" stop-opacity="0.28"></stop> <stop offset="0.3" stop-color="#00a160" stop-opacity="0.14"></stop> <stop offset="0.46" stop-color="#00a160" stop-opacity="0.055"></stop> <stop offset="0.62" stop-color="#00a160" stop-opacity="0.012"></stop> <stop offset="0.74" stop-color="#00a160" stop-opacity="0"></stop> <stop offset="1" stop-color="#00a160" stop-opacity="0"></stop> </radialGradient> <filter id="home-door-light-feather" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB"> <feGaussianBlur stdDeviation="9"></feGaussianBlur> </filter> <filter id="home-door-light-core" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"> <feGaussianBlur stdDeviation="1.35"></feGaussianBlur> </filter> <filter id="home-door-threshold-glow" x="-50%" y="-500%" width="200%" height="1100%" color-interpolation-filters="sRGB"> <feGaussianBlur stdDeviation="4"></feGaussianBlur> </filter> </defs> <g data-home-door-light-ground> <path class="home-door-light-cone home-door-light-cone-feather" data-home-door-light-cone-feather fill="url(#home-door-light-falloff)" filter="url(#home-door-light-feather)"></path> <path class="home-door-light-cone home-door-light-cone-core" data-home-door-light-cone fill="url(#home-door-light-falloff)" filter="url(#home-door-light-core)"></path> </g> <line class="home-door-threshold-glow" data-home-door-threshold-glow stroke="#00a160" stroke-linecap="round" filter="url(#home-door-threshold-glow)"></line> <line class="home-door-threshold-edge" data-home-door-threshold-edge stroke="#00a160" stroke-linecap="round"></line> </svg> <script type="module" src="/_astro/HomeDoorLight.astro_astro_type_script_index_0_lang.DvA07G04.js"></script> <p class="home-kicker">Welcome to</p> <h1 id="home-title" class="home-logo-title"> <span class="home-logo-title-text">Ken’s Shelter｜阿健的避难所</span> <img class="home-logo-image home-logo-image-light" src="/ken-shelter-logo.svg" alt="" width="3489" height="438" decoding="async" fetchpriority="high" draggable="false" aria-hidden="true"> <img class="home-logo-image home-logo-image-dark" src="/ken-shelter-logo-dark.svg" alt="" width="3489" height="438" decoding="async" draggable="false" aria-hidden="true"> </h1> <p class="home-subtitle">阿健的避难所</p> </section> <section class="home-section home-recent-posts" aria-labelledby="recent-posts-title"> <div class="home-section-header"> <h2 id="recent-posts-title">Recent Posts</h2> <a class="text-button" href="/blog/">Read All →</a> </div> <div class="home-post-grid"> <article class="home-post-card"> <a href="/blog/2026-10-01-how-i-use-obsidian/" class="home-post-card-link"> <div class="home-post-cover"> <img src="data:image/avif;base64,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" alt="" width="640" height="320" loading="lazy" decoding="async"> </div> <div class="home-post-body"> <h3>我是怎么使用 Obsidian 的</h3> <p>Obsidian 的哲学和缺陷</p> <p class="post-meta home-post-meta"> <time datetime="2026-10-01T00:00:00.000Z">10月1日</time>   <span aria-hidden="true">/</span> <span>2994 字</span>  </p> </div> </a> </article><article class="home-post-card"> <a href="/blog/2026-07-25-recommended-up-creators-im-following-part-3/" class="home-post-card-link"> <div class="home-post-cover"> <img src="/_astro/wp8667993-bilibili-wallpapers%201-thumb.RWTKrlzg.avif" alt="" width="640" height="320" loading="lazy" decoding="async"> </div> <div class="home-post-body"> <h3>推荐几位我在看的 UP（三）</h3> <p>无关茉莉星、董晨宇、徐师傅、技术爬爬虾</p> <p class="post-meta home-post-meta"> <time datetime="2026-07-25T00:00:00.000Z">7月25日</time>   <span aria-hidden="true">/</span> <span>869 字</span>  </p> </div> </a> </article><article class="home-post-card"> <a href="/blog/2026-07-20-my-wisdom-tooth-extraction-experience/" class="home-post-card-link"> <div class="home-post-cover"> <img src="/_astro/ChatGPT%20Image%20Jul%2020_%202026_%2005_29_43%20PM-thumb.DmWba74d.avif" alt="" width="640" height="320" loading="lazy" decoding="async"> </div> <div class="home-post-body"> <h3>拔智齿的经历</h3> <p>拔智齿的全过程记录：拍片、付费、麻醉、手术，以及术后一周的疼痛、血凝块与拆线</p> <p class="post-meta home-post-meta"> <time datetime="2026-07-20T00:00:00.000Z">7月20日</time>   <span aria-hidden="true">/</span> <span>6035 字</span>  </p> </div> </a> </article><article class="home-post-card home-post-card-mobile-only"> <a href="/blog/2026-06-27-encyclopedia-of-everything/" class="home-post-card-link"> <div class="home-post-cover"> <img src="/_astro/_DSC1492-thumb.DTdTpXXK.avif" alt="" width="640" height="320" loading="lazy" decoding="async"> </div> <div class="home-post-body"> <h3>万物图鉴</h3> <p>我在中国大陆所见过的最精致的店铺</p> <p class="post-meta home-post-meta"> <time datetime="2026-06-27T00:00:00.000Z">6月27日</time>   <span aria-hidden="true">/</span> <span>372 字</span>  </p> </div> </a> </article> </div> </section>    
 </BaseLayout>

@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="我是怎么使用 Obsidian 的 | f10w-0x00"
+  description="Obsidian 的哲学和缺陷，双链笔记与本地知识库构建"
+  pageName="blog-post"
+  activeNav="blog"
+>
+  <div class="article-reading-shell">
+    <article
+      class="article-page"
+      data-post-reading
+      data-reading-post-id="post-ae8ffbc6-9bdd-4f19-a6d2-de2b367032ac"
+      data-reading-post-slug="2026-10-01-how-i-use-obsidian"
+      data-reading-api-base="/api/comments"
+      data-visitor-enabled="true"
+    >
+      <header class="article-header has-article-category">
+        <a class="article-category" href="/blog/?category=%E5%AD%A6%E4%B9%A0" aria-label="查看 学习 类型的文档">学习</a>
+        <p class="post-meta article-meta">
+          <time datetime="2026-10-01T00:00:00.000Z">10月1日</time>
+          <span aria-hidden="true">/</span>
+          <span>2994 字</span>
+        </p>
+        <h1 id="post-title">我是怎么使用 Obsidian 的</h1>
+        <p>Obsidian 的哲学和缺陷，双链笔记与本地知识库构建</p>
+      </header>
+
+      <figure class="article-cover">
+        <img
+          src="/_astro/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
+          alt="我是怎么使用 Obsidian 的"
+          width="1600"
+          height="800"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+
+      <div class="prose">
+        <p data-comment-block-id="cb-obs-01">在换过十几个笔记软件之后，我最终把主力写作和知识沉淀的阵地停留在了 <a href="https://obsidian.md" target="_blank" rel="noopener noreferrer" class="external-link-with-favicon" data-link-reading-kind="external"><img src="/favicons/external-links/obsidian-md.ico" alt="" class="external-link-favicon" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">Obsidian</a>。</p>
+        <p data-comment-block-id="cb-obs-02">这篇博客记录我使用 Obsidian 的思考模型与工作流，以及在长期使用中发现的那些被许多博主刻意忽略的缺陷。</p>
+
+        <h2 id="哲学基石本地优先">哲学基石：本地优先</h2>
+        <p data-comment-block-id="cb-obs-03">市面上绝大部分笔记工具（如 Notion、Craft）本质上是“云优先”的数据库服务。数据被储存在远程服务器上，受制于网络环境、供应商的商业策略以及随时可能发生的服务端断联。</p>
+        <p data-comment-block-id="cb-obs-04">Obsidian 的哲学彻底反转了这种依附关系：它把笔记还原为纯粹的纯文本 Markdown 文件。文件夹就是你的知识库，文件就是你的知识载体。即使二十年后 Obsidian 这家公司不复存在，你的笔记依然可以用任何文本编辑器直接打开。</p>
+
+        <blockquote class="callout callout-note">
+          <p class="callout-title" data-comment-block-id="cb-obs-note">数据主权原则</p>
+          <p data-comment-block-id="cb-obs-note-body">不要把你的思考托付给一个无法一键导出纯文本的黑盒系统。工具会老去，格式会过时，但纯文本是数字世界的花岗岩。</p>
+        </blockquote>
+
+        <h2 id="双链笔记的迷思与真相">双链笔记的迷思与真相</h2>
+        <h3 id="不要过早建立网状连接">不要过早建立网状连接</h3>
+        <p data-comment-block-id="cb-obs-05">初学者最容易陷入的陷阱，是在刚建库的前几周狂热地为每一个名词打上 <code>[[双向链接]]</code>，陶醉在星系一般绚丽的知识图谱里。但这种图谱除了发在社交媒体上满足虚荣心之外，对真正的理解往往毫无用处。</p>
+        <p data-comment-block-id="cb-obs-06">网状结构应该像自然界中的地脉一样，是由多条思路多次交叉后自然沉淀出来的，而不是人为强行编织的假象。如果你不能用一句话概括两个笔记之间的具体逻辑关联，那么这个双链就不应该存在。</p>
+
+        <h3 id="卡片盒笔记法的改良">卡片盒笔记法的改良</h3>
+        <p data-comment-block-id="cb-obs-07">卢曼的卡片盒笔记法被很多生产力网红神化了。在实际日常中，过度细碎的“原子化”笔记会导致上下文割裂。我的改良做法是：以主题为单位撰写长篇文档，仅将具有复用价值的核心观点提炼为概念卡片。</p>
+
+        <h2 id="我的核心工作流">我的核心工作流</h2>
+        <p data-comment-block-id="cb-obs-08">一个高效的系统必须抵御“折腾插件”的诱惑。我的 Obsidian 库只保留四个核心插件：</p>
+        <ul>
+          <li data-comment-block-id="cb-obs-plugin1"><strong>Dataview</strong>：用于对具有 YAML frontmatter 的笔记进行聚合查询。</li>
+          <li data-comment-block-id="cb-obs-plugin2"><strong>Omnisearch</strong>：基于 BM25 算法的高性能本地语义检索，支持搜索 PDF 与图片文字。</li>
+          <li data-comment-block-id="cb-obs-plugin3"><strong>Canvas</strong>：官方内置的白板，用于结构化梳理文章大纲与架构图。</li>
+          <li data-comment-block-id="cb-obs-plugin4"><strong>Git 自动同步</strong>：通过 GitHub 私有仓库实现全平台多端版本控制与防灾备份。</li>
+        </ul>
+
+        <h3 id="查询聚合代码示例">查询聚合代码示例</h3>
+        <p data-comment-block-id="cb-obs-09">下面是我在每日汇总页使用的 Dataview 查询语法示例：</p>
+
+        <pre class="astro-code" style="background-color: var(--code-bg); color: var(--code-text); padding: 18px; border-radius: var(--radius-sm); overflow-x: auto;"><code>```dataview
+TABLE file.mtime AS "最后修改", tags AS "标签"
+FROM "02_Knowledge"
+WHERE contains(status, "active")
+SORT file.mtime DESC
+LIMIT 5
+```</code></pre>
+
+        <h2 id="Obsidian的缺陷">Obsidian 的缺陷</h2>
+        <p data-comment-block-id="cb-obs-10">没有完美的工具。在使用 Obsidian 两年后，我对它的缺点同样心知肚明：</p>
+        <table>
+          <thead>
+            <tr>
+              <th data-comment-block-id="cb-obs-th1">维度</th>
+              <th data-comment-block-id="cb-obs-th2">缺陷现象</th>
+              <th data-comment-block-id="cb-obs-th3">应对策略</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-comment-block-id="cb-obs-td1">移动端体验</td>
+              <td data-comment-block-id="cb-obs-td2">启动缓慢，插件过多时内存占用高，输入法光标偶发跳跃</td>
+              <td data-comment-block-id="cb-obs-td3">移动端仅用于速记收集，定期在桌面端归档整理</td>
+            </tr>
+            <tr>
+              <td data-comment-block-id="cb-obs-td4">协作难度</td>
+              <td data-comment-block-id="cb-obs-td5">纯文本模式缺乏成熟的实时多人协同光标体验</td>
+              <td data-comment-block-id="cb-obs-td6">对外协同优先使用 Google Docs，定稿后归档回本地</td>
+            </tr>
+            <tr>
+              <td data-comment-block-id="cb-obs-td7">排版上限</td>
+              <td data-comment-block-id="cb-obs-td8">原生 Markdown 缺乏多栏混排和复杂表格语义支持</td>
+              <td data-comment-block-id="cb-obs-td9">通过自定义 CSS 片段或导出到专业排版平台渲染</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="总结">总结</h2>
+        <p data-comment-block-id="cb-obs-11">知识管理工具的最终目的不是为了展示自己“收集了多少知识”，而是为了在需要调用的时候能够快速检索，并在思考碰撞中产出自己的表达。</p>
+        <p data-comment-block-id="cb-obs-12">关于博客站本身的设计与实现思路，我也在另一篇专门文章中做了详细阐述，可参考 <a href="/blog/2026-06-10-visual-and-interaction-design-of-this-blog-site/" data-link-reading-kind="internal">本博客站的视觉和交互设计</a>。</p>
+      </div>
+
+      <section class="post-category-directory" data-post-category-directory data-current-post-id="2026-10-01-how-i-use-obsidian" data-expanded="false" aria-labelledby="post-category-list-title">
+        <div class="post-category-directory-header">
+          <h2 id="post-category-list-title">
+            本文所属分类：<a href="/blog/?category=%E5%AD%A6%E4%B9%A0">学习</a><span class="post-category-directory-count">（1）</span>
+          </h2>
+        </div>
+        <ol id="post-category-list-obsidian" class="post-category-directory-list">
+          <li class="post-category-directory-item is-current" data-post-id="2026-10-01-how-i-use-obsidian">
+            <div class="post-category-directory-item-reveal">
+              <a class="post-category-directory-item-content" href="/blog/2026-10-01-how-i-use-obsidian/" aria-current="page">
+                <span class="post-category-directory-title">
+                  <span class="post-category-status-icon post-category-current-icon" data-post-current-icon aria-hidden="true">
+                    <svg viewBox="0 0 640 640" focusable="false"><path d="M541.9 139.5C546.4 127.7 543.6 114.3 534.7 105.4C525.8 96.5 512.4 93.6 500.6 98.2L84.6 258.2C71.9 263 63.7 275.2 64 288.7C64.3 302.2 73.1 314.1 85.9 318.3L262.7 377.2L321.6 554C325.9 566.8 337.7 575.6 351.2 575.9C364.7 576.2 376.9 568 381.8 555.4L541.8 139.4z"></path></svg>
+                  </span>
+                  <span class="post-category-directory-title-text">我是怎么使用 Obsidian 的</span>
+                </span>
+                <span class="post-category-directory-meta">
+                  <time datetime="2026-10-01T00:00:00.000Z">10月1日</time>
+                  <span aria-hidden="true">/</span>
+                  <span>2994 字</span>
+                </span>
+              </a>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <nav class="post-adjacent-nav" aria-label="相邻文章">
+        <a class="post-adjacent-card post-adjacent-card-prev" href="/blog/2026-07-25-recommended-up-creators-im-following-part-3/" rel="prev">
+          <span class="post-adjacent-label"><span aria-hidden="true">&larr;</span><span>下一篇</span></span>
+          <span class="post-adjacent-title">推荐几位我在看的 UP（三）</span>
+        </a>
+      </nav>
+    </article>
+  </div>
+
+  <script id="blog-published-media-map" type="application/json">{}</script>
+  <script type="module" src="/_astro/PostLayout.astro_astro_type_script_index_0_lang.CnuivQWP.js"></script>
+</BaseLayout>

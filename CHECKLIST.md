@@ -30,3 +30,7 @@
 | **F19** | 底部交互 | 上下篇导航与同页跳转顶栏锚点返回按钮 | **已验证** | Agent-Article | 还原所属分类列表、相邻博文卡片与顶栏滑出锚点返回按钮 | `214e379` |
 | **F20** | 回归校验 | 注入《设计长文》全量内容进行 1:1 比对 | **已验证** | Agent-Docs-CI | Computed Styles 与 DOM 校验，0 missing classes，18 headings，12 images 对齐 | `b19d102` |
 | **F21** | 终局审查 | 伴随式文档 100% 完整性核验与最终推送 | **已验证** | Agent-Docs-CI | 根目录及 `docs/` 下全套 6 份文档 100% 闭环同步 | `b19d102` |
+| **F22** | 专属标识 | GitHub 官方 Identicon 规则算法逆向与 Logo 替换 | **已验证** | Agent-Core | 逆向 5x5 水平对称矩阵与 `#d1947c` 配色，替换顶栏品牌为 `f10w-0x00` 与专属徽标 | 待提交 |
+| **F23** | 首页重构 | 移除门光与英雄区，仅保留 Recent Posts | **已验证** | Agent-Core | 首页删除 home-hero，仅呈现 Recent Posts 真实文章网格与平滑留白 | 待提交 |
+| **F24** | 真实博文 | 清除 112 篇占位博文，重构 4 篇 1:1 像素级实装模板 | **已验证** | Agent-Article | 清空 404 占位卡片；实装 Obsidian、UP主推荐、拔智齿经历等高保真完整文章 | 待提交 |
+| **F25** | Pages 修复 | 根治 Jekyll 构建报错与 Pages 流水线冲突 | **已验证** | Agent-Docs-CI | 根目录与 public 注入 `.nojekyll`，规避 Jekyll 对 `_astro` 的解析冲突并校验 Pages Actions | 待提交 |

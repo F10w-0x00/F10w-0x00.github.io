@@ -9,8 +9,8 @@
 
 | 编号 | 模块 | Feature 描述 | 当前状态 (`已验证` / `不可用（有证据）` / `我决定跳过` / `进行中`) | 负责 Agent | 验证结果或证据文档路径 | 最近 Commit Hash |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **F01** | 基准逆向 | 原站 DOM/CSS 与设计长文解析 | **已验证** | Agent-Core | `docs/DESIGN_TOKENS.md` 解析原站 DOM、样式表与设计理念完成 |待定 |
-| **F02** | 资源提取 | 字体栈与核心静态/SVG 资源提取 | 待处理 | Agent-Core | `public/` 资源目录 | - |
+| **F01** | 基准逆向 | 原站 DOM/CSS 与设计长文解析 | **已验证** | Agent-Core | `docs/DESIGN_TOKENS.md` 解析原站 DOM、样式表与设计理念完成 | `3a6c197` |
+| **F02** | 资源提取 | 字体栈与核心静态/SVG 资源提取 | **已验证** | Agent-Core | `public/` 资源目录下载提取完成，包含原站全量图标与封面 | 待定 |
 | **F03** | 静态脚手架 | Astro 静态博客工程与仓库初始化 | 待处理 | Agent-Core | 本地构建测试通过 | - |
 | **F04** | 部署流水线 | GitHub Actions 自动化发布 Pages | 待处理 | Agent-Docs-CI | `.github/workflows/deploy.yml` | - |
 | **F05** | 全局视觉 | 全局色彩系统与亮/暗色主题无缝切换 | 待处理 | Agent-Core | `src/styles/global.css` | - |

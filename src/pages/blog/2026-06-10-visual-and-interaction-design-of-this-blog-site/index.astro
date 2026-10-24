@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="本博客站的视觉和交互设计 | Ken’s Shelter"
+  description="对博客站的设计思路的记录，也是对参与博客站建设的人的致谢"
+  pageName="blog-post"
+  activeNav="blog"
+>
+    <div class="article-reading-shell"> <article class="article-page" data-post-reading data-reading-post-id="post-32298018-ffe2-468f-99af-804a8ac98c0e" data-reading-post-slug="2026-06-10-visual-and-interaction-design-of-this-blog-site" data-reading-api-base="/api/comments" data-visitor-enabled="true"> <header class="article-header has-article-category"> <a class="article-category" href="/blog/?category=%E5%8D%9A%E5%AE%A2%E7%AB%99" aria-label="查看 博客站 类型的文档"> 博客站 </a> <p class="post-meta article-meta"> <time datetime="2026-06-10T00:00:00.000Z">6月10日</time>   <span aria-hidden="true">/</span> <span>3659 字</span>  </p> <h1 id="post-title">本博客站的视觉和交互设计</h1> <p>对博客站的设计思路的记录，也是对参与博客站建设的人的致谢</p>  </header> <figure class="article-cover"> <img src="/_astro/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-cover.B3qC8p6g.avif" alt width="1600" height="800" fetchpriority="high" decoding="async"> </figure> <div class="prose">    <p data-comment-block-id="cb-869e5fdf6eaa6eb0">Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品位。</p>
+<p data-comment-block-id="cb-4bcaa8978a285a98">这篇博文记录一下对博客站的设计思路，以免将来忘记。同时也是对参与博客站建设的人的致谢。</p>
+<h2 id="风格基调">风格基调</h2>
+<h3 id="首页">首页</h3>
+<p data-comment-block-id="cb-40f2f63590f3638d">当我幻想要做一个博客站以后，Lia 向我提供了 Astro 教程以及几个主题模版。</p>
+<p data-comment-block-id="cb-a098474f8f6b83ab">这些主题模版其实都不算好看，但其中有一个相对好看的 <a href="https://yashjawale.github.io/saral-theme-astro" target="_blank" rel="noopener noreferrer" class="external-link-with-favicon" data-link-reading-kind="external"><img src="/favicons/external-links/yashjawale-github-io.png" alt="" class="external-link-favicon" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">Saral Theme</a>，所以我就把它作为博客站的设计基调了。</p>
+<p><img alt="Saral Theme 的 demo" data-full-src="../media/Screenshot%202026-06-09%20at%2014.05.08@2x-medium.avif" decoding="async" data-caption="Saral Theme 的 demo" loading="lazy" width="656" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.05.08@2x-thumb.n6G8qpch_2a1Atg.avif" srcset="">
+<img alt="我的博客站首页" data-full-src="../media/Screenshot%202026-06-09%20at%2014.06.20@2x-medium.avif" decoding="async" data-caption="我的博客站首页" loading="lazy" width="1061" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif" srcset=""></p>
+<p data-comment-block-id="cb-09d0c4ecf5dd8668">可以明显看出，我剽窃了它的白底黑字，还有「Welcome to」和「Recent Posts」布局。不过对于它，我也有几个不满意的地方：</p>
+<ul>
+<li data-comment-block-id="cb-61d5575847fb1d24">右上角有一个「关于」页的入口，但我觉得这种东西无关紧要，放在如此显眼的入口是对注意力的浪费，所以我选择了抛弃它。</li>
+<li data-comment-block-id="cb-699e63e37d93f5d2">网页下方有大量的空间用来自我介绍，我还在很多个人的博客站里看过类似的设计，但我觉得这种操作把自己看得太重要了点，实际上会想进一步交流的应该只有很少的人，而且我也没太多兴趣和人一对一聊天，所以我把我的联系方式塞到了首页底下不起眼的角落里。如果遇到了问题，或有设计上的改进建议，欢迎向我反馈。</li>
+</ul>
+<h3 id="文档页面">文档页面</h3>
+<p data-comment-block-id="cb-e07c46e3aab7677a">我对文档页面应该叫什么有过纠结，「博文」？「文章」？「归档」？</p>
+<p data-comment-block-id="cb-65de8fd3117e225c">目前决定是叫「文档」，它的范围要比「博文」和「文章」更大，不知道未来会不会再修改。</p>
+<p data-comment-block-id="cb-045d188617bf47c8">文档页面的设计参考了 <a href="https://www.apple.com.cn/newsroom/archive/" target="_blank" rel="noopener noreferrer" class="external-link-with-favicon" data-link-reading-kind="external"><img src="/favicons/external-links/www-apple-com-cn.ico" alt="" class="external-link-favicon" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">Apple 的 Newsroom 页面</a>，可以看到我剽窃了它的筛选功能设计，也就是「话题」和「年份」的筛选框。至于「月份」，考虑到我的博文并不密集，所以我觉得还是不给这个筛选更好。此外，我还做了排序功能，这样的话就可以从旧的文档开始看起。</p>
+<p><img alt="Apple 的 Newsroom" data-full-src="../media/Screenshot%202026-06-09%20at%2014.19.30@2x-medium.avif" decoding="async" data-caption="Apple 的 Newsroom" loading="lazy" width="1044" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif" srcset="">
+<img alt="我的博客站文档页" data-full-src="../media/Screenshot%202026-06-09%20at%2014.23.19@2x-medium.avif" decoding="async" data-caption="我的博客站文档页" loading="lazy" width="1124" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.23.19@2x-thumb.BerPSr9p_132Bwq.avif" srcset=""></p>
+<p data-comment-block-id="cb-8569f923b7f2aded">在文档的筛选和排序区域，我增加了两个小小的动画。</p>
+<p data-comment-block-id="cb-390ef9a7732985e7">在思考给排序的动画时，我的脑子里闪过一个灵光，所以现在放在按照时间排序按钮附近的，是一个等边三角形。等边三角形可以实现一个奇妙的设计——点击按钮后，只需要旋转 60 度，就等效于旋转 180 度（上下翻转）。我不知道世界上有没有其他的人进行了和我一样的设计，我做它主要是觉得很好玩。我并不明确地知道按照时间排序时应该使用什么朝向的箭头， 所以我选择了保留模糊性。</p>
+<p data-comment-block-id="cb-de591ca06fbbb779">筛选处还有一个箭头动画，这是 Lia 的主意。点击筛选框以后，箭头会有平滑的过渡动画，就像是鸟在飞一样。</p>
+<h3 id="颜色">颜色</h3>
+<p data-comment-block-id="cb-9a1fcb0d2b74babd">我的网站的色彩设计是对苹果性冷淡风格和莫兰迪色的糅合。</p>
+<p data-comment-block-id="cb-7515a5e2d62c6896">苹果给我提供了黑白灰上的审美愉悦感，它足够中性，不会出错。所以在不需要彩色的场合，我会使用黑白灰。</p>
+<p data-comment-block-id="cb-b1ba230a30f88b5c">在需要色彩的场合，我让 coding agent 使用莫兰迪色作为配色方案。我是此前从 Lia 那里知道这个名词的，它是一种低饱和度的配色方案，让我觉得满意，不喧宾夺主，有一种淡淡的高级感。</p>
+<p id="19aed4" data-comment-block-id="cb-13cf7b10e055d31e">在使用彩色时，我对不同的色彩有专门的使用规定，我希望用颜色来表达固定的语义。例如，蓝色在我的博客里永远表示前往博客站内部的链接，所以首页的 hover 效果、博文顶部的分类、博文里所有的内部链接、博文里小标题的 hover 效果……全部是蓝色。</p>
+<p data-comment-block-id="cb-bf12e4e654ec5ac9">对于前往站外的链接，我则统一采取棕色的颜色。这其实不太符合超链接的蓝色传统，不过能让用户更清楚链接的结果，所以我就这么做了。由于棕色违反了超链接的蓝色传统，所以它的下划线需要保留下来，否则用户会困惑。</p>
+<p data-comment-block-id="cb-b2def959b244a577">除了链接，还有一些别的颜色使用规则：<code>内联代码块</code> 和代码块都是绿色（绿色带有一点对终端的想象）；引用块都是紫色（没特别的原因，硬要说的话，紫色有一点异质感）……</p>
+<h2 id="博文页面">博文页面</h2>
+<h3 id="保持专注">保持专注</h3>
+<p data-comment-block-id="cb-14a76dcd027df6d7">在电脑上阅读文字时，往往屏幕的左右两侧是空出来的——如果文字部分的宽度很大，那么人在换行的时候就容易前往错误的行，所以需要减少文章的宽度。</p>
+<p data-comment-block-id="cb-609941e4151a79aa">这时候就有很多「擅长」利用空间的人，把网页空出来的左右两边塞上各种各样的东西。在阅读一些网站的文章时，我时常被这样的设计者折磨，他们难道一点都感受不到专注的快乐吗？</p>
+<p data-comment-block-id="cb-f1a2994c9a34fe9b">所以我对博文的期待是左右两边不要有任何东西，空着就好。我希望用户在打开博文页面的时候，就像是打开了 Safari 的阅读模式，干净、专注。</p>
+<p data-comment-block-id="cb-c826a50a879d1f12">像维基百科这样的网站把外观设置放在了侧边，需要我手动点击才能离去，让我觉得非常麻烦。类似地，很多用国产手机系统的人总是喜欢说手机上的广告「可以关」，这种说辞让我觉得无语，就算可以关，大部分人也是不会想去研究怎么关的。所以我对自己的博文页面的要求是，就算不进行任何探索，就已经是干净的最佳状态。</p>
+<p><img alt="维基百科对网页侧面的占用" data-full-src="../media/Screenshot%202026-06-10%20at%2016.07.52@2x-medium.avif" decoding="async" data-caption="维基百科对网页侧面的占用" loading="lazy" width="1364" height="576" src="/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif" srcset=""></p>
+<h3 id="沉浸式大纲">沉浸式大纲</h3>
+<p data-comment-block-id="cb-fff931ffcb511b80">由于我不喜欢在博文的左右两边塞东西，还喜欢追求页面的左右对称美，所以我为设计博文页面的大纲而纠结了很久。在最开始，我做了一个存在感很低的侧边大纲，但是我对它并不满意。</p>
+<p data-comment-block-id="cb-9a003fd8531d6e37">终于，后面我思考出了把博文内小标题和大纲融为一体的设计——点击博文内的任意小标题后，正文文字会隐去，剩下的所有小标题会聚拢到一起，这样一来，整个页面就从博文状态平滑地过渡到了大纲视图。退出动画也是同理。</p>
+<p><video data-media-kind="video" data-preview-file="Screenshot 2026-06-14 at 17.27.45-thumb.webm" data-full-file="Screenshot 2026-06-14 at 17.27.45-medium.webm" muted playsinline preload="metadata" width="908" height="576" data-caption="通过点击小标题来进入大纲" aria-label="通过点击小标题来进入大纲"></video></p>
+<p data-comment-block-id="cb-4b6a9c3d3322f8cb">在最初的版本，过渡动画时页面不能被滚动，Lia 认为这不舒服，所以我让 coding agent 再加了班，现在过渡动画时页面也可以被滚动。Lia 还提议过渡动画可以被打断，这点提议被我否决了。</p>
+<p data-comment-block-id="cb-736e8c67b300c75e">现在的沉浸式大纲实现了我对美的要求，让我觉得愉悦。相对地，它也有缺点——不易被新的用户发现。我思考过要不要在顶栏放一个进入大纲的按钮，但目前还是没有放。由于我的博客往往不是技术向的，所以我认为即便用户发现不了大纲也无关紧要，我更担心的是传统大纲对美的破坏。</p>
+<h3 id="图片堆叠">图片堆叠</h3>
+<p data-comment-block-id="cb-884e29264c6dbd02">目前，当我在博文里插入多张图片时，它们会堆叠在一起。点击翻页按钮时，它们会有炫酷的翻页动画，我花了一些时间来把动画调好。在 Safari 上，出现了一些特别的错误动画，需要付出额外的时间修复。这次构建博客的过程让我感觉到了 Safari 的不便——更容易出现奇怪的错误，也更难以被调试。</p>
+<p data-comment-block-id="cb-0115afeffbd16d33">点击图片后，会进入放大版的图片堆叠，在图片放大的动画里，网站使用原有的模糊图片先糊弄。等完全进入放大状态以后，图片加载为最大尺寸为 3000px 的图片。通过设计两种图片尺寸的方式，我节省了网站的流量，并提高了加载速度。</p>
+<p data-comment-block-id="cb-d8b941ee887afa40">关于图片的展示，有的博客采取了放在正文侧边的形式，这样的空间利用不错。我不能说我的设计是更好的，不过为了追求对称美，目前就是这种占掉一大行的设计了。</p>
+<h3 id="注意事项">注意事项</h3>
+<p data-comment-block-id="cb-af3d12ab0684bd0c">我的博文都是 Markdown 格式，网页是从 Markdown 原文按照规则自动转化而来的。一开始，我没有做注意事项的语法支持，原因在于这并不是 Markdown 标准语法。</p>
+<p data-comment-block-id="cb-ca292841f7e66f46">但后面还是决定做，有了注意事项以后，我就可以把一些对上文的补充内容以注意事项的形式书写，当我对博文更新以后，也可以用注意事项在博文的最开始说明更新了什么。</p>
+<blockquote class="callout callout-note">
+<p class="callout-title" data-comment-block-id="cb-bc72f99b07f0220e">附言</p>
+<p data-comment-block-id="cb-a4fb103f1979ca4c">此前，Lia 就提议过注意事项的格式支持，但被我往后排了。现在觉得 Lia 当前的提议是正确的。</p>
+</blockquote>
+<h3 id="外链的自动-favicon-显示">外链的自动 favicon 显示</h3>
+<p data-comment-block-id="cb-788f065315d59878">Favicon 是 favorites icon 的缩写，也就是出现在浏览器标签栏和收藏栏的网站图标。</p>
+<p data-comment-block-id="cb-db6468eac969ee2c"><a href="https://ggame.gledos.science/mkdocs/%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E7%AC%A6%E5%8F%B7.html" target="_blank" rel="noopener noreferrer" class="external-link-with-favicon" data-link-reading-kind="external"><img src="/favicons/external-links/ggame-gledos-science.png" alt="" class="external-link-favicon" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">Lia 的网站</a><span class="link-boundary-space external-link-trailing-space" aria-hidden="true"></span>里带有对外链 favicon 的部分显示，我觉得精致，所以就剽窃了这一设计。</p>
+<p data-comment-block-id="cb-55bf8056e917d87b">不过我采用的是自动抓取 favicon 的形式，这样一来就不需要人工介入了。从我的审美来说，现在的外链 favicon 看上去很精致。</p>
+<p data-comment-block-id="cb-ce4e8a224094108b">缺点在于，由于 favicon 是自动抓取的，所以 favicon 的质量参差不齐，不同网站对 favicon 的设计质量与风格不同。例如 GitHub 的 favicon 在深色模式下很糟，但我不打算为 GitHub 擦屁股，所以保留了它的这一难读性。</p>
+<p><img alt="深色下的 GitHub favicon" data-full-src="../media/Screenshot%202026-06-10%20at%2015.51.30@2x%201-medium.avif" decoding="async" data-caption="深色下的 GitHub favicon" loading="lazy" width="1536" height="469" src="/_astro/Screenshot%202026-06-10%20at%2015.51.30@2x-thumb.CqyJwicQ_Z1yeVgW.avif" srcset="">
+<img alt="浅色下的 GitHub favicon" data-full-src="../media/Screenshot%202026-06-10%20at%2015.52.12@2x-medium.avif" decoding="async" data-caption="浅色下的 GitHub favicon" loading="lazy" width="1536" height="467" src="/_astro/Screenshot%202026-06-10%20at%2015.52.12@2x-thumb.BF-3qpID_O7PMC.avif" srcset=""></p>
+<p data-comment-block-id="cb-aa50f2fe23b1720e">还有一些人认为，favicon 让博文在阅读的过程里存在干扰。也许的确如此。</p>
+<h3 id="同页面的跳转">同页面的跳转</h3>
+<p data-comment-block-id="cb-fc86223395013e2d"><a href="#19aed4" class="same-page-anchor-with-indicator" data-link-reading-kind="same-page"><span class="same-page-anchor-indicator is-up" aria-hidden="true"><svg class="same-page-anchor-icon" viewBox="0 0 260 260" focusable="false" aria-hidden="true"><g transform="translate(130 130) scale(1 -1) translate(-130 -130)"><g transform="translate(130 130) scale(1.23) translate(-130 -130) rotate(-90 130 130) translate(0 29)"><path class="same-page-anchor-turn-arrow" d="M132.6 31.2 C135.9 31.2 138.6 33.9 138.6 37.2 L138.6 66.8 C181.0 67.0 207.7 94.8 213.6 151.2 C214.4 158.7 204.5 162.2 200.2 156.0 C184.6 133.3 166.4 125.3 138.6 125.2 L138.6 153.8 C138.6 159.2 132.3 162.1 128.1 158.5 L62.9 103.0 C59.0 99.7 59.0 93.7 62.9 90.4 L128.5 32.8 C129.6 31.8 131.1 31.2 132.6 31.2 Z"></path></g></g></svg></span>上面</a><span class="link-boundary-space same-page-anchor-trailing-space" aria-hidden="true"></span>提到，我对网页有统一的对蓝色样式的语义，所以博文内的「跳转到当前博文某处」和「跳转到另外的博文」的链接是蓝色的。</p>
+<p data-comment-block-id="cb-32f3c293d50d6adc">为了增加语义上的区分，我为「在当前博文内跳转」的超链接的前方增加了从右出发的朝上或者朝下的箭头，这样一来，就可以知道这个链接将会带用户去哪里了，增加了用户点击链接时的心理安全感。</p>
+<p data-comment-block-id="cb-4f51f37e8e65a0bc">feixqe 觉得需要给页面内增加一个返回按钮，我向 ta 告知，其实可以点浏览器的返回键，这样就会返回原位了。</p>
+<p data-comment-block-id="cb-b793c9d261ad94f7">如果增加按钮，会破坏页面的简洁；如果不增加按钮，会有人蒙在鼓里。这是一个需要权衡的点。出于设计的宽容原则，为了让想不到返回键的人也能舒适使用我的博客站，我还是增加了一个不显眼的锚点返回按钮，它会在点击相同博文跳转的链接后出现在顶栏的右侧，并在目标内容离开屏幕后自动消失。</p>
+<p data-comment-block-id="cb-3bfe1e584bd96889">目前，我还没有想好怎么处理「跳转到另外的博文」的链接的设计。所以这类链接目前没有特殊外观。</p>
+<h3 id="表格">表格</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th data-comment-block-id="cb-620c78f07e34577c">标题</th><th data-comment-block-id="cb-b67f82b81f7c8ca6">正文</th></tr></thead><tbody><tr><td data-comment-block-id="cb-1d0e84815d662bf1">设计难点1</td><td data-comment-block-id="cb-dee68ec277307836">表格的设计要比想象中的复杂，需要知道表格文本的语义，才能排好版。也就是说，重要的内容，要比次要的内容有更多的空间冗余。靠代码无法实现这种排版智能，原因在于无法知道表格里不同内容的重要性。</td></tr><tr><td data-comment-block-id="cb-53d717479b1213fb">设计难点2</td><td data-comment-block-id="cb-e186aeabea3db603">还有一个问题是换行的策略，如果采用自动换行的方式，那么当换行过于频繁时，就会变成难以阅读的情况。不同的屏幕尺寸也会让合理的换行策略变得复杂。</td></tr><tr><td data-comment-block-id="cb-b972e360efa5c229">当前设计</td><td data-comment-block-id="cb-9eb410ea5ec54616">目前，我使用了一种简单的表格排版策略——设置列的最小宽度以避免过度换行。同时，由于一般来说表格的左列更重要，那么这种最小宽度会带来左列的冗余，起到强调左列的作用。目前的策略还有明显缺点，我可能在后续进一步调整。</td></tr></tbody></table>
+<h3 id="折叠的引用块和代码块">折叠的引用块和代码块</h3>
+<p data-comment-block-id="cb-70fbff67f27cf2a9">我为代码块和引用块设计了专门的样式。当代码块或引用块里包含较多内容时，会被自动折叠。可以通过点击按钮或者渐隐状态的文字来展开。</p>
+<p><img alt="触发折叠的引用块示例" data-full-src="../media/Screenshot%202026-06-10%20at%2016.12.54@2x-medium.avif" decoding="async" data-caption="触发折叠的引用块示例" loading="lazy" width="1536" height="425" src="/_astro/Screenshot%202026-06-10%20at%2016.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif" srcset=""></p>
+<p data-comment-block-id="cb-4396a489fa1c4372">群友 cheems 提醒我部分折叠块的样式怪异，触发了折叠样式，但是点击展开以后只展开一点，导致了体验的糟糕。</p>
+<p data-comment-block-id="cb-17b50f0a369ab944">这时，我才意识到「触发折叠的高度阈值」和「折叠后的高度」应该是两个不同的数值，通过让「折叠后的高度」低于「触发折叠的高度阈值」，就可以避免 cheems 遇到的那种刚好触发了折叠的糟糕情况。</p>
+<h2 id="其他">其他</h2>
+<h3 id="打开链接的方式">打开链接的方式</h3>
+<p data-comment-block-id="cb-8ec2dd6c2e804a24">之前被 Lia 教导过，如果站内链接一般是同标签页，如果站外链接一般是新标签页。海外网站往往遵守这个原则，而国内网站未必遵守这个原则，总是开启新的标签页。</p>
+<p data-comment-block-id="cb-72ac7b013ee560a8">我的博客站也是按照 Lia 提及的设计理念做的，只有站外链接会以新标签页的形式打开。</p>
+<p data-comment-block-id="cb-5a9fc25e241df5ba">不过我不确信这样的设计是更好，手动选择从新标签页打开以后，新标签页是以后台的形式打开，还需要我进行一次标签页的切换。（Lia 教我的小妙招：通过按住 <code>command-shift</code> 或 <code>control-shift</code>，可以在以新标签页打开的同时将新标签页前台显示）</p>
+<p data-comment-block-id="cb-14f6512541863bbb">并且，尽管对于熟悉电脑的人来说，在按住 <code>command</code> 或 <code>control</code> 的同时来打开新标签页是常识。但对于电脑小白来说，他们未必知道这个常识，所以需要对他们宽容。</p>
+<p data-comment-block-id="cb-22780438c630334a">另外，其实我自己觉得像哔哩哔哩这样的网站在点击视频后直接打开新标签页挺方便，我不介意开一堆标签页，这在我看来是方便的好事。</p>
+<p data-comment-block-id="cb-662f642e83473771">由于我还没有想明白这个问题，所以暂且按照海外的常规方式来处理。</p>    </div> <section class="post-category-directory" data-post-category-directory data-current-post-id="2026-06-10-visual-and-interaction-design-of-this-blog-site" data-expanded="false" aria-labelledby="post-category-list-2026-06-10-visual-and-interaction-design-of-this-blog-site-title"> <div class="post-category-directory-header"> <h2 id="post-category-list-2026-06-10-visual-and-interaction-design-of-this-blog-site-title">
+本文所属分类：<a href="/blog/?category=%E5%8D%9A%E5%AE%A2%E7%AB%99">博客站</a><span class="post-category-directory-count">（2）</span> </h2>  </div> <ol id="post-category-list-2026-06-10-visual-and-interaction-design-of-this-blog-site" class="post-category-directory-list"> <li class="post-category-directory-item" data-post-id="2026-06-05-building-my-personal-blog-site" data-reading-post-id="post-c39249da-43fd-496b-b9d6-2015e03843b2" data-reading-post-slug="2026-06-05-building-my-personal-blog-site" data-preview="true" data-preview-first="true" data-date="1780617600000"> <div class="post-category-directory-item-reveal"> <a class="post-category-directory-item-content" href="/blog/2026-06-05-building-my-personal-blog-site/"> <span class="post-category-directory-title"> <span class="post-category-status-icon post-category-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true"> <svg viewBox="0 0 24 24" focusable="false"> <path d="m3.5 11.5 5.5 5.5L20 6"></path> </svg> </span> <span class="post-category-directory-title-text">个人博客站的搭建</span> </span> <span class="post-category-directory-meta"> <time datetime="2026-06-05T00:00:00.000Z">6月5日</time> <span aria-hidden="true">/</span> <span>787 字</span> </span> </a> </div> </li><li class="post-category-directory-item is-current" data-post-id="2026-06-10-visual-and-interaction-design-of-this-blog-site" data-reading-post-id="post-32298018-ffe2-468f-99af-804a8ac98c0e" data-reading-post-slug="2026-06-10-visual-and-interaction-design-of-this-blog-site" data-preview="true" data-preview-first="false" data-date="1781049600000"> <div class="post-category-directory-item-reveal"> <a class="post-category-directory-item-content" href="/blog/2026-06-10-visual-and-interaction-design-of-this-blog-site/" aria-current="page"> <span class="post-category-directory-title"> <span class="post-category-status-icon post-category-current-icon" data-post-current-icon aria-hidden="true"> <svg viewBox="0 0 640 640" focusable="false"> <path d="M541.9 139.5C546.4 127.7 543.6 114.3 534.7 105.4C525.8 96.5 512.4 93.6 500.6 98.2L84.6 258.2C71.9 263 63.7 275.2 64 288.7C64.3 302.2 73.1 314.1 85.9 318.3L262.7 377.2L321.6 554C325.9 566.8 337.7 575.6 351.2 575.9C364.7 576.2 376.9 568 381.8 555.4L541.8 139.4z"></path> </svg> </span> <span class="post-category-directory-title-text">本博客站的视觉和交互设计</span> </span> <span class="post-category-directory-meta"> <time datetime="2026-06-10T00:00:00.000Z">6月10日</time> <span aria-hidden="true">/</span> <span>3659 字</span> </span> </a> </div> </li> </ol> </section> <nav class="post-adjacent-nav" aria-label="相邻文章"><a class="post-adjacent-card post-adjacent-card-prev" href="/blog/2026-06-05-building-my-personal-blog-site/" rel="prev"><span class="post-adjacent-label"><span aria-hidden="true">&larr;</span><span>上一篇</span></span><span class="post-adjacent-title">个人博客站的搭建</span></a><a class="post-adjacent-card post-adjacent-card-next" href="/blog/2026-06-27-encyclopedia-of-everything/" rel="next"><span class="post-adjacent-label"><span>下一篇</span><span aria-hidden="true">&rarr;</span></span><span class="post-adjacent-title">万物图鉴</span></a></nav> </article> <div class="comment-system" data-comment-system data-post-id="post-32298018-ffe2-468f-99af-804a8ac98c0e" data-comment-mode="open" data-api-base="/api/comments"> <div class="comment-marker-layer" data-comment-marker-layer aria-label="正文留言"></div> <div class="comment-highlight-layer" data-comment-highlight-layer aria-hidden="true"></div> <aside id="comment-bubble" class="comment-bubble" data-comment-bubble role="status" hidden> <div class="comment-bubble-meta"> <strong> <span data-comment-bubble-author></span> <span class="comment-verification-badge" data-comment-verification-badge aria-label="署名已经管理员认证" title="署名已经管理员认证" hidden>✓</span> </strong> <time data-comment-bubble-time></time> </div> <p data-comment-bubble-body></p> <div class="comment-bubble-actions" data-comment-bubble-actions hidden> <button type="button" data-comment-verify-author hidden>认证署名</button> <button type="button" data-comment-edit>编辑</button> <button type="button" data-comment-delete>删除</button> </div> </aside> <div class="comment-composer-backdrop" data-comment-composer-backdrop hidden> <section class="comment-composer" data-comment-composer role="dialog" aria-labelledby="comment-composer-title"> <div class="comment-composer-header"> <h2 id="comment-composer-title" data-comment-composer-title>发表留言</h2> <button type="button" class="comment-composer-close" data-comment-composer-close aria-label="关闭留言框">×</button> </div> <blockquote class="comment-composer-quote comment-context-quote" data-comment-composer-quote></blockquote> <form data-comment-form novalidate> <div class="comment-field"> <label class="comment-field-label" for="comment-author">
+署名（可选）
+<output id="comment-author-remaining" data-comment-author-remaining aria-live="polite" hidden>20</output> </label> <input id="comment-author" type="text" name="author" autocomplete="nickname" placeholder="匿名" aria-describedby="comment-author-remaining" data-comment-author> <div class="comment-verified-author-picker" data-comment-verified-author-picker hidden> <button type="button" class="comment-author-picker-toggle" data-comment-verified-author-toggle aria-expanded="false" aria-controls="comment-verified-author-options">
+选择已认证署名
+</button> <div id="comment-verified-author-options" class="comment-verified-author-options" data-comment-verified-author-options role="group" aria-label="已认证署名" hidden></div> </div> </div> <label class="comment-field"> <span class="comment-field-label">
+留言
+<output id="comment-body-remaining" data-comment-body-remaining aria-live="polite" hidden>300</output> </span> <textarea name="body" rows="5" aria-describedby="comment-body-remaining" required data-comment-body></textarea> </label> <p class="comment-form-message" data-comment-form-message role="alert" hidden></p> <div class="comment-form-actions"> <button type="button" class="comment-secondary-button" data-comment-cancel>取消</button> <button type="submit" class="comment-primary-button" data-comment-submit disabled> 发表留言 </button> </div> </form> </section> </div> <p class="comment-toast" data-comment-toast role="status" aria-live="polite" hidden></p> </div> </div> <script id="blog-published-media-map" type="application/json">{"Screenshot 2026-06-09 at 14.05.08@2x-medium.avif":"/_astro/Screenshot%202026-06-09%20at%2014.05.08@2x-medium.BBX9yRVk.avif","Screenshot 2026-06-09 at 14.06.20@2x-medium.avif":"/_astro/Screenshot%202026-06-09%20at%2014.06.20@2x-medium.TvPDS7Vo.avif","Screenshot 2026-06-09 at 14.19.30@2x-medium.avif":"/_astro/Screenshot%202026-06-09%20at%2014.19.30@2x-medium.Du6z1_Dl.avif","Screenshot 2026-06-09 at 14.23.19@2x-medium.avif":"/_astro/Screenshot%202026-06-09%20at%2014.23.19@2x-medium.mIodpToi.avif","Screenshot 2026-06-10 at 15.51.30@2x 1-medium.avif":"/_astro/Screenshot%202026-06-10%20at%2015.51.30@2x-medium.DYT_1-U5.avif","Screenshot 2026-06-10 at 15.52.12@2x-medium.avif":"/_astro/Screenshot%202026-06-10%20at%2015.52.12@2x-medium.CvRk9sEd.avif","Screenshot 2026-06-10 at 16.07.52@2x-medium.avif":"/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-medium.B4ofoszK.avif","Screenshot 2026-06-10 at 16.12.54@2x-medium.avif":"/_astro/Screenshot%202026-06-10%20at%2016.12.54@2x-medium.Ckhw5dM3.avif","Screenshot 2026-06-14 at 17.27.45-medium.webm":"/_astro/Screenshot%202026-06-14%20at%2017.27.45-medium.BgdNtfmO.webm","Screenshot 2026-06-14 at 17.27.45-thumb.webm":"/_astro/Screenshot%202026-06-14%20at%2017.27.45-thumb.DK5C-Skf.webm"}</script> <script type="module" src="/_astro/PostLayout.astro_astro_type_script_index_0_lang.CnuivQWP.js"></script>    
+</BaseLayout>

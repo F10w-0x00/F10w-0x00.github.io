@@ -11,6 +11,7 @@
   "dependencies": {
     "astro": "^5.4.2"
   },
+  "packageManager": "pnpm@10.5.2",
   "devDependencies": {
     "@types/node": "^22.13.9",
     "typescript": "^5.7.3"

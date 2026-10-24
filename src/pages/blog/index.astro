@@ -1,0 +1,231 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import posts from '../../data/posts.json';
+
+// 计算各分类统计
+const categoriesMap = new Map<string, number>();
+posts.forEach(p => {
+  const cat = p.category || '未分类';
+  categoriesMap.set(cat, (categoriesMap.get(cat) || 0) + 1);
+});
+const categories = Array.from(categoriesMap.entries()).sort((a, b) => b[1] - a[1]);
+
+// 计算各年份统计
+const yearsSet = new Set<string>();
+posts.forEach(p => {
+  if (p.year) yearsSet.add(p.year);
+});
+const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
+---
+
+<BaseLayout title="文档 | Ken’s Shelter" pageName="blog-index" activeNav="blog">
+  <section class="page-heading">
+    <h1>文档</h1>
+  </section>
+
+  <div data-blog-archive>
+    <!-- 筛选与排序控制栏 (Apple Newsroom 极简风格) -->
+    <section class="archive-filter" aria-label="文档列表">
+      <div class="archive-filter-inner">
+        <!-- 分类筛选下拉框 -->
+        <div class="archive-filter-control archive-filter-control-category">
+          <button type="button" class="archive-filter-button" data-blog-filter="category" data-filter-value="" aria-label="按类型筛选" aria-haspopup="listbox" aria-expanded="false">
+            <span data-filter-label>所有类型</span>
+            <span class="archive-filter-arrow" aria-hidden="true">
+              <span class="archive-filter-arrow-line"></span>
+              <span class="archive-filter-arrow-line"></span>
+            </span>
+          </button>
+          <div class="archive-filter-menu" role="listbox" hidden>
+            <button type="button" class="archive-filter-option" data-filter-option="" data-option-label="所有类型" role="option" aria-selected="true">
+              <span>所有类型</span>
+              <span class="archive-filter-option-count" aria-label={`${posts.length} 篇文章`}>
+                {posts.length}
+              </span>
+            </button>
+            {categories.map(([cat, count]) => (
+              <button type="button" class="archive-filter-option" data-filter-option={cat} data-option-label={cat} role="option">
+                <span>{cat}</span>
+                <span class="archive-filter-option-count" aria-label={`${count} 篇文章`}>
+                  {count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- 年份筛选下拉框 -->
+        <div class="archive-filter-control archive-filter-control-year">
+          <button type="button" class="archive-filter-button" data-blog-filter="year" data-filter-value="" aria-label="按年份筛选" aria-haspopup="listbox" aria-expanded="false">
+            <span data-filter-label>全部年份</span>
+            <span class="archive-filter-arrow" aria-hidden="true">
+              <span class="archive-filter-arrow-line"></span>
+              <span class="archive-filter-arrow-line"></span>
+            </span>
+          </button>
+          <div class="archive-filter-menu" role="listbox" hidden>
+            <button type="button" class="archive-filter-option" data-filter-option="" data-option-label="全部年份" role="option" aria-selected="true">
+              全部年份
+            </button>
+            {years.map((yr) => (
+              <button type="button" class="archive-filter-option" data-filter-option={yr} data-option-label={`${yr} 年`} role="option">
+                {yr} 年
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- 时间排序按钮 (配 60° 旋转等边三角形动效) -->
+        <button type="button" class="archive-sort-button" data-blog-sort="desc" data-sort-label-asc="从旧到新" data-sort-label-desc="从新到旧" aria-label="切换文档排序">
+          <span class="archive-sort-triangle" aria-hidden="true"></span>
+          <span data-sort-label>从新到旧</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 文章卡片列表区域 -->
+    <section class="post-cards-list" data-post-cards-list>
+      {posts.map((post) => (
+        <div data-blog-post data-category={post.category || '未分类'} data-year={post.year} data-date={post.dateTimestamp}>
+          <article class="post-card" data-reading-post-id={post.url}>
+            <a href={post.url} class="post-card-link">
+              <div class="post-card-body">
+                <h2>
+                  <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="m3.5 11.5 5.5 5.5L20 6"></path>
+                    </svg>
+                  </span>
+                  <span class="post-card-title-text">{post.title}</span>
+                </h2>
+                <div class="post-card-footer">
+                  <p class="post-meta post-card-meta">
+                    <time datetime={post.datetime}>{post.displayDate}</time>
+                    <span aria-hidden="true">/</span>
+                    <span>{post.words}</span>
+                  </p>
+                </div>
+              </div>
+              {post.cover && (
+                <div class="post-card-cover" aria-hidden="true">
+                  <img src={post.cover} alt="" width="640" height="320" loading="lazy" decoding="async" />
+                </div>
+              )}
+            </a>
+          </article>
+        </div>
+      ))}
+      <p class="filter-empty" data-filter-empty hidden>
+        没有符合筛选条件的文章。
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const listContainer = document.querySelector('[data-post-cards-list]');
+    const postElements = Array.from(document.querySelectorAll('[data-blog-post]'));
+    const emptyNotice = document.querySelector('[data-filter-empty]');
+    const sortBtn = document.querySelector('[data-blog-sort]');
+    const sortLabel = sortBtn?.querySelector('[data-sort-label]');
+
+    let currentCategory = '';
+    let currentYear = '';
+    let currentSort = 'desc';
+
+    // 检查并标注已读文章标记
+    try {
+      const readSet = new Set(JSON.parse(localStorage.getItem('KenShelter_read_posts') || '[]'));
+      postElements.forEach(el => {
+        const id = el.querySelector('.post-card')?.getAttribute('data-reading-post-id');
+        if (id && readSet.has(id)) {
+          el.querySelector('[data-post-visited-icon]')?.classList.add('is-visited');
+        }
+      });
+    } catch (e) {}
+
+    // 下拉框弹窗交互
+    document.querySelectorAll('.archive-filter-control').forEach(ctrl => {
+      const btn = ctrl.querySelector('.archive-filter-button');
+      const menu = ctrl.querySelector('.archive-filter-menu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !menu.hidden;
+        document.querySelectorAll('.archive-filter-menu').forEach(m => m.hidden = true);
+        document.querySelectorAll('.archive-filter-button').forEach(b => b.setAttribute('aria-expanded', 'false'));
+        menu.hidden = isOpen;
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      menu.querySelectorAll('.archive-filter-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const val = opt.getAttribute('data-filter-option') || '';
+          const label = opt.getAttribute('data-option-label') || '';
+          const type = btn.getAttribute('data-blog-filter');
+
+          menu.querySelectorAll('.archive-filter-option').forEach(o => o.removeAttribute('aria-selected'));
+          opt.setAttribute('aria-selected', 'true');
+          btn.querySelector('[data-filter-label]').textContent = label;
+          btn.setAttribute('data-filter-value', val);
+          menu.hidden = true;
+          btn.setAttribute('aria-expanded', 'false');
+
+          if (type === 'category') currentCategory = val;
+          if (type === 'year') currentYear = val;
+          applyFiltersAndSort();
+        });
+      });
+    });
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.archive-filter-menu').forEach(m => m.hidden = true);
+      document.querySelectorAll('.archive-filter-button').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    });
+
+    // 排序切换 (旋转 60° 等效翻转等边三角形)
+    if (sortBtn) {
+      sortBtn.addEventListener('click', () => {
+        currentSort = currentSort === 'desc' ? 'asc' : 'desc';
+        sortBtn.setAttribute('data-blog-sort', currentSort);
+        if (sortLabel) {
+          sortLabel.textContent = currentSort === 'desc' ? '从新到旧' : '从旧到新';
+        }
+        applyFiltersAndSort();
+      });
+    }
+
+    function applyFiltersAndSort() {
+      let visibleCount = 0;
+      postElements.forEach(el => {
+        const cat = el.getAttribute('data-category') || '';
+        const yr = el.getAttribute('data-year') || '';
+
+        const matchCat = !currentCategory || cat === currentCategory;
+        const matchYr = !currentYear || yr === currentYear;
+
+        if (matchCat && matchYr) {
+          el.hidden = false;
+          visibleCount++;
+        } else {
+          el.hidden = true;
+        }
+      });
+
+      if (emptyNotice) {
+        emptyNotice.hidden = visibleCount > 0;
+      }
+
+      // 执行时间重排
+      const sorted = postElements.slice().sort((a, b) => {
+        const timeA = Number(a.getAttribute('data-date')) || 0;
+        const timeB = Number(b.getAttribute('data-date')) || 0;
+        return currentSort === 'desc' ? timeB - timeA : timeA - timeB;
+      });
+
+      sorted.forEach(el => listContainer.appendChild(el));
+    }
+  })();
+</script>

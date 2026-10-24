@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import posts from '../data/posts.json';
+
+const recentPosts = posts.slice(0, 5);
+---
+
+<BaseLayout title="Ken’s Shelter" pageName="home" activeNav="home">
+  <div class="home-container" style="max-width: var(--content-width); margin: 0 auto; padding: 48px var(--content-gutter);">
+    <section class="hero" style="margin-bottom: 64px;">
+      <h1 style="font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 760; line-height: 1.1; margin-bottom: 24px;">
+        Welcome to<br />Ken’s Shelter.
+      </h1>
+      <p style="color: var(--muted); font-size: 1.15rem; max-width: 600px; line-height: 1.6;">
+        收录阿健对学习、旅行、日常的观察与记录。
+      </p>
+    </section>
+
+    <section class="recent-posts" style="margin-bottom: 64px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin: 0;">Recent Posts</h2>
+        <a href="/blog/" style="color: var(--link-internal); font-size: 0.95rem; text-decoration: none;">全部文档 &rarr;</a>
+      </div>
+
+      <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
+        {recentPosts.map((post) => (
+          <article class="post-card" style="border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 20px 24px; background: var(--surface); transition: transform 0.2s, box-shadow 0.2s;">
+            <a href={post.url} style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 640; margin: 0 0 8px; color: var(--text);">
+                  {post.title}
+                </h3>
+                <div style="color: var(--muted); font-size: 0.9rem; display: flex; gap: 8px;">
+                  <time datetime={post.datetime}>{post.displayDate}</time>
+                  <span>/</span>
+                  <span>{post.category || '未分类'}</span>
+                  <span>/</span>
+                  <span>{post.words}</span>
+                </div>
+              </div>
+              {post.cover && (
+                <img src={post.cover} alt="" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" loading="lazy" />
+              )}
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <footer style="margin-top: 96px; padding-top: 32px; border-top: 1px solid var(--border-soft); color: var(--muted); font-size: 0.88rem; display: flex; justify-content: space-between;">
+      <span>&copy; {new Date().getFullYear()} Ken’s Shelter</span>
+      <div style="display: flex; gap: 16px;">
+        <a href="/rss.xml" style="color: var(--muted); text-decoration: none;">RSS</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color: var(--link-external); text-decoration: underline;">GitHub</a>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>

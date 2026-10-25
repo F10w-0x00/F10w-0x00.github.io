@@ -34,3 +34,8 @@
 | **F23** | 首页重构 | 移除门光与英雄区，仅保留 Recent Posts | **已验证** | Agent-Core | 首页删除 home-hero，仅呈现 Recent Posts 真实文章网格与平滑留白 | `10737d6` |
 | **F24** | 真实博文 | 清除 112 篇占位博文，重构 4 篇 1:1 像素级实装模板 | **已验证** | Agent-Article | 清空 404 占位卡片；实装 Obsidian、UP主推荐、拔智齿经历等高保真完整文章 | `10737d6` |
 | **F25** | Pages 修复 | 根治 Jekyll 构建报错与 Pages 流水线冲突 | **已验证** | Agent-Docs-CI | 切换 GitHub Actions 模式后触发正式构建，线上 HTTP 200 验证通过 | `10737d6` |
+| **F26** | 个人头像与 Favicon | 真实头像导入与多分辨率 Favicon/Tab 图标全量替换 | **已验证** | Agent-Core | 导入用户头像 `/home/flynn/Downloads/avatar.jpg`，生成全套 avatar/favicon (32/64/192/512) 并绑定 Tab 图标 | 本次提交 |
+| **F27** | 首页去小勾 | 首页 Recent Posts 卡片彻底移除已读打勾与裁剪框 | **已验证** | Agent-Index | 移除首页卡片 `data-reading-post-slug` 与打勾元素，保留 `/blog/` 归档页独立打勾功能 | 本次提交 |
+| **F28** | 代码块精细还原 | Shiki 语法高亮、浮动语言徽标、长代码折叠与内联复制 | **已验证** | Agent-Article | 补齐 Shiki Light/Dark 配色，浮动语言徽标，复制过渡与超 10 行平滑渐隐折叠 | 本次提交 |
+| **F29** | 4 篇博文排版深度精修 | 注入真实正文、figure/figcaption图片下小字、表格与Callout | **已验证** | Agent-Article | 拔智齿与UP主推荐全量内容对齐原站，规范图片下灰色小字与 Callout 提示框 | 本次提交 |
+| **F30** | 完整排版范例规范 | 全特性排版指南与全平台字体建议 | **已验证** | Agent-Docs-CI | 输出 `docs/TYPOGRAPHY_AND_STYLE_GUIDE.md`，覆盖 Frontmatter、小字、代码块及 Win/Mac 字体选型与自定义字体指南 | 本次提交 |

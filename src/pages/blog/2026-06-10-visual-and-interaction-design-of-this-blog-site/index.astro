@@ -43,7 +43,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 <p data-comment-block-id="cb-609941e4151a79aa">这时候就有很多「擅长」利用空间的人，把网页空出来的左右两边塞上各种各样的东西。在阅读一些网站的文章时，我时常被这样的设计者折磨，他们难道一点都感受不到专注的快乐吗？</p>
 <p data-comment-block-id="cb-f1a2994c9a34fe9b">所以我对博文的期待是左右两边不要有任何东西，空着就好。我希望用户在打开博文页面的时候，就像是打开了 Safari 的阅读模式，干净、专注。</p>
 <p data-comment-block-id="cb-c826a50a879d1f12">像维基百科这样的网站把外观设置放在了侧边，需要我手动点击才能离去，让我觉得非常麻烦。类似地，很多用国产手机系统的人总是喜欢说手机上的广告「可以关」，这种说辞让我觉得无语，就算可以关，大部分人也是不会想去研究怎么关的。所以我对自己的博文页面的要求是，就算不进行任何探索，就已经是干净的最佳状态。</p>
-<p><img alt="维基百科对网页侧面的占用" data-full-src="../media/Screenshot%202026-06-10%20at%2016.07.52@2x-medium.avif" decoding="async" data-caption="维基百科对网页侧面的占用" loading="lazy" width="1364" height="576" src="/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif" srcset=""></p>
+<figure class="post-image-figure">
+  <img alt="维基百科对网页侧面的占用" data-full-src="../media/Screenshot%202026-06-10%20at%2016.07.52@2x-medium.avif" decoding="async" data-caption="维基百科对网页侧面的占用" loading="lazy" width="1364" height="576" src="/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif">
+  <figcaption class="post-image-caption">维基百科对网页侧面的占用</figcaption>
+</figure>
 <h3 id="图片堆叠">图片堆叠</h3>
 <p data-comment-block-id="cb-884e29264c6dbd02">目前，当我在博文里插入多张图片时，它们会堆叠在一起。点击翻页按钮时，它们会有炫酷的翻页动画，我花了一些时间来把动画调好。在 Safari 上，出现了一些特别的错误动画，需要付出额外的时间修复。这次构建博客的过程让我感觉到了 Safari 的不便——更容易出现奇怪的错误，也更难以被调试。</p>
 <p data-comment-block-id="cb-0115afeffbd16d33">点击图片后，会进入放大版的图片堆叠，在图片放大的动画里，网站使用原有的模糊图片先糊弄。等完全进入放大状态以后，图片加载为最大尺寸为 3000px 的图片。通过设计两种图片尺寸的方式，我节省了网站的流量，并提高了加载速度。</p>
@@ -94,7 +97,30 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 <table><thead><tr><th data-comment-block-id="cb-620c78f07e34577c">标题</th><th data-comment-block-id="cb-b67f82b81f7c8ca6">正文</th></tr></thead><tbody><tr><td data-comment-block-id="cb-1d0e84815d662bf1">设计难点1</td><td data-comment-block-id="cb-dee68ec277307836">表格的设计要比想象中的复杂，需要知道表格文本的语义，才能排好版。也就是说，重要的内容，要比次要的内容有更多的空间冗余。靠代码无法实现这种排版智能，原因在于无法知道表格里不同内容的重要性。</td></tr><tr><td data-comment-block-id="cb-53d717479b1213fb">设计难点2</td><td data-comment-block-id="cb-e186aeabea3db603">还有一个问题是换行的策略，如果采用自动换行的方式，那么当换行过于频繁时，就会变成难以阅读的情况。不同的屏幕尺寸也会让合理的换行策略变得复杂。</td></tr><tr><td data-comment-block-id="cb-b972e360efa5c229">当前设计</td><td data-comment-block-id="cb-9eb410ea5ec54616">目前，我使用了一种简单的表格排版策略——设置列的最小宽度以避免过度换行。同时，由于一般来说表格的左列更重要，那么这种最小宽度会带来左列的冗余，起到强调左列的作用。目前的策略还有明显缺点，我可能在后续进一步调整。</td></tr></tbody></table>
 <h3 id="折叠的引用块和代码块">折叠的引用块和代码块</h3>
 <p data-comment-block-id="cb-70fbff67f27cf2a9">我为代码块和引用块设计了专门的样式。当代码块或引用块里包含较多内容时，会被自动折叠。可以通过点击按钮或者渐隐状态的文字来展开。</p>
-<p><img alt="触发折叠的引用块示例" data-full-src="../media/Screenshot%202026-06-10%20at%2016.12.54@2x-medium.avif" decoding="async" data-caption="触发折叠的引用块示例" loading="lazy" width="1536" height="425" src="/_astro/Screenshot%202026-06-10%20at%2016.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif" srcset=""></p>
+<figure class="post-image-figure">
+  <img alt="触发折叠的引用块示例" data-full-src="../media/Screenshot%202026-06-10%20at%2016.12.54@2x-medium.avif" decoding="async" data-caption="触发折叠的引用块示例" loading="lazy" width="1536" height="425" src="/_astro/Screenshot%202026-06-10%20at%2016.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif">
+  <figcaption class="post-image-caption">触发折叠的引用块示例：超过行数阈值后呈现渐隐折叠与展开交互</figcaption>
+</figure>
+
+<p data-comment-block-id="cb-code-example-desc">下面是博客站折叠代码块的实现核心样式规则，当代码超出 10 行时自动触发折叠并生成语言徽标与展开按钮：</p>
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;" tabindex="0" data-language="css"><code><span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">.code-block</span> <span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">{</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">position</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> relative<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">margin</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">2em</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">0</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line"><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">}</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">.code-block[data-code-language]::before</span> <span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">{</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">position</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> absolute<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">top</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">0</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">left</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">30px</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">content</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#8250df;--shiki-dark:#d2a8ff;">attr</span>(data-code-language)<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">border-radius</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">999px</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">background</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">var</span>(--code-bg)<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">color</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">var</span>(--code-accent)<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">transform</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#8250df;--shiki-dark:#d2a8ff;">translateY</span>(-50%)<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line"><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">}</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">.collapsible-block.is-collapsed .collapsible-block-content</span> <span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">{</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">max-height</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">:</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">var</span>(--collapsible-collapsed-height)<span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span></span>
+<span class="line"><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">}</span></span></code></pre>
 <p data-comment-block-id="cb-4396a489fa1c4372">群友 cheems 提醒我部分折叠块的样式怪异，触发了折叠样式，但是点击展开以后只展开一点，导致了体验的糟糕。</p>
 <p data-comment-block-id="cb-17b50f0a369ab944">这时，我才意识到「触发折叠的高度阈值」和「折叠后的高度」应该是两个不同的数值，通过让「折叠后的高度」低于「触发折叠的高度阈值」，就可以避免 cheems 遇到的那种刚好触发了折叠的糟糕情况。</p>
 <h2 id="其他">其他</h2>

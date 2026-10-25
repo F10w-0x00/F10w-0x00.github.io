@@ -114,7 +114,9 @@ const {
     <meta name="description" content={description} />
     <meta name="generator" content="Astro v6.4.8" />
     <title>{title}</title>
-    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/favicons/avatar-192.png" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="f10w-0x00 RSS" />
     <link rel="stylesheet" href="/_astro/BaseLayout.BXLOwkA9.css" />
   </head>
@@ -123,7 +125,7 @@ const {
       <header class="site-header">
         <div class="site-header-inner">
           <a class="brand" href="/" aria-label="f10w-0x00 首页">
-            <img class="brand-avatar" src="/avatar.svg" alt="" width="22" height="22" style="border-radius: 4px; vertical-align: -3px; margin-right: 7px; display: inline-block;" />
+            <img class="brand-avatar" src="/avatar.png" alt="" width="22" height="22" style="border-radius: 4px; vertical-align: -3px; margin-right: 7px; display: inline-block; object-fit: cover;" />
             f10w-0x00
           </a>
           <nav class="site-nav" aria-label="主导航">

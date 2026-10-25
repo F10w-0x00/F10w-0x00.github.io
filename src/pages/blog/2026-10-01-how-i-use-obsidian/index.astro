@@ -57,6 +57,19 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
         <p data-comment-block-id="cb-obs-05">初学者最容易陷入的陷阱，是在刚建库的前几周狂热地为每一个名词打上 <code>[[双向链接]]</code>，陶醉在星系一般绚丽的知识图谱里。但这种图谱除了发在社交媒体上满足虚荣心之外，对真正的理解往往毫无用处。</p>
         <p data-comment-block-id="cb-obs-06">网状结构应该像自然界中的地脉一样，是由多条思路多次交叉后自然沉淀出来的，而不是人为强行编织的假象。如果你不能用一句话概括两个笔记之间的具体逻辑关联，那么这个双链就不应该存在。</p>
 
+        <figure class="post-image-figure">
+          <img
+            src="/_astro/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif"
+            alt="Obsidian 网状关系图谱"
+            data-caption="Obsidian 网状关系图谱：节点密集的图谱若缺乏内在逻辑，极易沦为视觉满足的自嗨"
+            loading="lazy"
+            decoding="async"
+            width="1024"
+            height="576"
+          />
+          <figcaption class="post-image-caption">Obsidian 网状关系图谱：节点密集的图谱若缺乏内在逻辑，极易沦为视觉满足的自嗨</figcaption>
+        </figure>
+
         <h3 id="卡片盒笔记法的改良">卡片盒笔记法的改良</h3>
         <p data-comment-block-id="cb-obs-07">卢曼的卡片盒笔记法被很多生产力网红神化了。在实际日常中，过度细碎的“原子化”笔记会导致上下文割裂。我的改良做法是：以主题为单位撰写长篇文档，仅将具有复用价值的核心观点提炼为概念卡片。</p>
 
@@ -72,13 +85,30 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
         <h3 id="查询聚合代码示例">查询聚合代码示例</h3>
         <p data-comment-block-id="cb-obs-09">下面是我在每日汇总页使用的 Dataview 查询语法示例：</p>
 
-        <pre class="astro-code" style="background-color: var(--code-bg); color: var(--code-text); padding: 18px; border-radius: var(--radius-sm); overflow-x: auto;"><code>```dataview
-TABLE file.mtime AS "最后修改", tags AS "标签"
-FROM "02_Knowledge"
-WHERE contains(status, "active")
-SORT file.mtime DESC
-LIMIT 5
-```</code></pre>
+        <pre class="astro-code astro-code-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;" tabindex="0" data-language="dataview"><code><span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">TABLE</span> <span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">file.mtime</span> <span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">AS</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"最后修改"</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">,</span> <span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">tags</span> <span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">AS</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"标签"</span></span>
+<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">FROM</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"02_Knowledge"</span></span>
+<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">WHERE</span> <span style="--shiki-light:#8250df;--shiki-dark:#d2a8ff;">contains</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">(</span><span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">status</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">,</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"active"</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">)</span></span>
+<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">SORT</span> <span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">file.mtime</span> <span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">DESC</span></span>
+<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">LIMIT</span> <span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">5</span></span></code></pre>
+
+        <h3 id="定时同步备份脚本">定时同步备份脚本</h3>
+        <p data-comment-block-id="cb-obs-sync-desc">为了避免多端协同冲突并保有完整的历史版本记录，我使用如下 Shell 脚本进行定时增量防冲突同步：</p>
+
+        <pre class="astro-code astro-code-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6a737d;--shiki-dark:#8b949e;">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="--shiki-light:#6a737d;--shiki-dark:#8b949e;"># Obsidian 知识库定时增量防冲突同步脚本</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">VAULT_DIR</span><span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">=</span><span style="--shiki-light:#032f62;--shiki-dark:#a5d6ff;">"$HOME/Documents/Vault"</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">cd</span> <span style="--shiki-light:#032f62;--shiki-dark:#a5d6ff;">"$VAULT_DIR"</span> <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">||</span> <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">exit</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">1</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6a737d;--shiki-dark:#8b949e;"># 抓取远端修改并尝试自动变基</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">git</span> fetch origin main <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">&gt;/dev/null 2&gt;&amp;1</span></span>
+<span class="line"><span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">git</span> rebase origin/main <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">&gt;/dev/null 2&gt;&amp;1</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6a737d;--shiki-dark:#8b949e;"># 如存在本地改动则提交并推送</span></span>
+<span class="line"><span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">if</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">[</span> <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">-n</span> <span style="--shiki-light:#032f62;--shiki-dark:#a5d6ff;">"$(git status --porcelain)"</span> <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">]</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">;</span> <span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">then</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">git</span> add -A</span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">git</span> commit -m <span style="--shiki-light:#032f62;--shiki-dark:#a5d6ff;">"auto: vault snapshot $(date '+%Y-%m-%d %H:%M:%S')"</span></span>
+<span class="line">  <span style="--shiki-light:#005cc5;--shiki-dark:#79c0ff;">git</span> push origin main</span>
+<span class="line"><span style="--shiki-light:#d73a49;--shiki-dark:#ff7b72;">fi</span></span></code></pre>
 
         <h2 id="Obsidian的缺陷">Obsidian 的缺陷</h2>
         <p data-comment-block-id="cb-obs-10">没有完美的工具。在使用 Obsidian 两年后，我对它的缺点同样心知肚明：</p>

@@ -49,8 +49,8 @@ Obsidian 的哲学彻底反转了这种依附关系：它把笔记还原为纯�
 
 ```dataview
 TABLE file.mtime AS "最后修改", tags AS "标签"
-FROM "Daily Notes"
-WHERE file.mday >= date(today) - dur(7 days)
+FROM "02_Knowledge"
+WHERE contains(status, "active")
 SORT file.mtime DESC
 LIMIT 5
 ```

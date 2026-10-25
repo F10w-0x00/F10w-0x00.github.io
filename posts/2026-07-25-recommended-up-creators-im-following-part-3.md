@@ -3,7 +3,7 @@ title: "推荐几位我在看的 UP（三）"
 description: "无关茉莉星、董晨宇、徐师傅、技术爬爬虾"
 date: 2026-07-25
 cover: "/images/wp8667993-bilibili-wallpapers%201-thumb.RWTKrlzg.avif"
-category: "日常生活"
+category: "UP主推荐"
 words: 1860
 ---
 

@@ -53,12 +53,18 @@ export default function rehypeBlogContent() {
           const firstP = node.children && node.children.find(c => c.tagName === "p");
           if (firstP && firstP.children && firstP.children[0] && firstP.children[0].type === "text") {
             const firstText = firstP.children[0].value;
-            const match = firstText.match(/^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\](?:[ \t]+([^\n]+))?/i);
+            const match = firstText.match(/^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)(?:[ \t]+([^\]]+))?\](?:[ \t]+([^\n]+))?/i);
             if (match) {
               const alertType = match[1].toLowerCase();
-              const customTitle = match[2] ? match[2].trim() : "";
+              const tagModifier = match[2] ? match[2].trim() : "";
+              const outsideTitle = match[3] ? match[3].trim() : "";
+              const isIconOnly = tagModifier === "CALLOUT-ICON-ONLY" || outsideTitle === "CALLOUT-ICON-ONLY";
+              const customTitle = isIconOnly ? "" : (outsideTitle || tagModifier);
+
               node.properties = node.properties || {};
-              node.properties.className = ["callout", `callout-${alertType}`];
+              node.properties.className = isIconOnly
+                ? ["callout", `callout-${alertType}`, "callout-icon-only"]
+                : ["callout", `callout-${alertType}`];
 
               // 剥离 [!TYPE] 标记
               const remainingText = firstText.substring(match[0].length).replace(/^\n+/, "");
@@ -68,14 +74,16 @@ export default function rehypeBlogContent() {
                 firstP.children.shift();
               }
 
-              // 在前面插入 callout-title
-              const titleText = customTitle || alertType.toUpperCase();
-              node.children.unshift({
-                type: "element",
-                tagName: "p",
-                properties: { className: ["callout-title"] },
-                children: [{ type: "text", value: titleText }]
-              });
+              // 在前面插入 callout-title（仅在非 icon-only 时）
+              if (!isIconOnly) {
+                const titleText = customTitle || alertType.toUpperCase();
+                node.children.unshift({
+                  type: "element",
+                  tagName: "p",
+                  properties: { className: ["callout-title"] },
+                  children: [{ type: "text", value: titleText }]
+                });
+              }
 
               // 如果首个 p 为空则移除
               if (firstP.children.length === 0) {

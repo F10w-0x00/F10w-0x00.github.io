@@ -2,7 +2,7 @@
 title: "本博客站的视觉和交互设计"
 description: "对博客站的设计思路的记录，也是对参与博客站建设的人的致谢"
 date: 2026-06-10
-cover: "/images/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-cover.B3qC8p6g.avif"
+cover: "/images/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-thumb.CigA-ns2.avif"
 category: "博客站"
 words: 3659
 ---
@@ -17,17 +17,16 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 当我幻想要做一个博客站以后，Lia 向我提供了 Astro 教程以及几个主题模版。
 
-这些主题模版其实都不算好看，但其中有一个相对好看的 [![](/favicons/external-links/yashjawale-github-io.png)Saral Theme](https://yashjawale.github.io/saral-theme-astro)，所以我就把它作为博客站的设计基调了。
+这些主题模版其实都不算好看，但其中有一个相对好看的 [Saral Theme](https://yashjawale.github.io/saral-theme-astro)，所以我就把它作为博客站的设计基调了。
 
-<img alt="Saral Theme 的 demo" data-full-src="../media/Screenshot%202026-06-09%20at%2014.05.08@2x-medium.avif" decoding="async" data-caption="Saral Theme 的 demo" loading="lazy" width="656" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.05.08@2x-thumb.n6G8qpch_2a1Atg.avif" srcset="">
-<img alt="我的博客站首页" data-full-src="../media/Screenshot%202026-06-09%20at%2014.06.20@2x-medium.avif" decoding="async" data-caption="我的博客站首页" loading="lazy" width="1061" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif" srcset="">
+![Saral Theme 的 demo](/images/Screenshot%202026-06-09%20at%2014.05.08@2x-thumb.n6G8qpch_2a1Atg.avif "Saral Theme 的 demo")
+
+![我的博客站首页](/images/Screenshot%202026-06-09%20at%2014.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif "我的博客站首页")
 
 可以明显看出，我剽窃了它的白底黑字，还有「Welcome to」和「Recent Posts」布局。不过对于它，我也有几个不满意的地方：
 
-<ul>
-<li data-comment-block-id="cb-61d5575847fb1d24">右上角有一个「关于」页的入口，但我觉得这种东西无关紧要，放在如此显眼的入口是对注意力的浪费，所以我选择了抛弃它。</li>
-<li data-comment-block-id="cb-699e63e37d93f5d2">网页下方有大量的空间用来自我介绍，我还在很多个人的博客站里看过类似的设计，但我觉得这种操作把自己看得太重要了点，实际上会想进一步交流的应该只有很少的人，而且我也没太多兴趣和人一对一聊天，所以我把我的联系方式塞到了首页底下不起眼的角落里。如果遇到了问题，或有设计上的改进建议，欢迎向我反馈。</li>
-</ul>
+- 右上角有一个「关于」页的入口，但我觉得这种东西无关紧要，放在如此显眼的入口是对注意力的浪费，所以我选择了抛弃它。
+- 网页下方有大量的空间用来自我介绍，我还在很多个人的博客站里看过类似的设计，但我觉得这种操作把自己看得太重要了点，实际上会想进一步交流的应该只有很少的人，而且我也没太多兴趣和人一对一聊天，所以我把我的联系方式塞到了首页底下不起眼的角落里。如果遇到了问题，或有设计上的改进建议，欢迎向我反馈。
 
 ### 文档页面
 
@@ -35,10 +34,11 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 目前决定是叫「文档」，它的范围要比「博文」和「文章」更大，不知道未来会不会再修改。
 
-文档页面的设计参考了 [![](/favicons/external-links/www-apple-com-cn.ico)Apple 的 Newsroom 页面](https://www.apple.com.cn/newsroom/archive/)，可以看到我剽窃了它的筛选功能设计，也就是「话题」和「年份」的筛选框。至于「月份」，考虑到我的博文并不密集，所以我觉得还是不给这个筛选更好。此外，我还做了排序功能，这样的话就可以从旧的文档开始看起。
+文档页面的设计参考了 [Apple 的 Newsroom 页面](https://www.apple.com.cn/newsroom/archive/)，可以看到我剽窃了它的筛选功能设计，也就是「话题」和「年份」的筛选框。至于「月份」，考虑到我的博文并不密集，所以我觉得还是不给这个筛选更好。此外，我还做了排序功能，这样的话就可以从旧的文档开始看起。
 
-<img alt="Apple 的 Newsroom" data-full-src="../media/Screenshot%202026-06-09%20at%2014.19.30@2x-medium.avif" decoding="async" data-caption="Apple 的 Newsroom" loading="lazy" width="1044" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif" srcset="">
-<img alt="我的博客站文档页" data-full-src="../media/Screenshot%202026-06-09%20at%2014.23.19@2x-medium.avif" decoding="async" data-caption="我的博客站文档页" loading="lazy" width="1124" height="576" src="/_astro/Screenshot%202026-06-09%20at%2014.23.19@2x-thumb.BerPSr9p_132Bwq.avif" srcset="">
+![Apple 的 Newsroom](/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Apple 的 Newsroom")
+
+![我的博客站文档页](/images/Screenshot%202026-06-09%20at%2014.23.19@2x-thumb.BerPSr9p_132Bwq.avif "我的博客站文档页")
 
 在文档的筛选和排序区域，我增加了两个小小的动画。
 
@@ -58,7 +58,7 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 对于前往站外的链接，我则统一采取棕色的颜色。这其实不太符合超链接的蓝色传统，不过能让用户更清楚链接的结果，所以我就这么做了。由于棕色违反了超链接的蓝色传统，所以它的下划线需要保留下来，否则用户会困惑。
 
-除了链接，还有一些别的颜色使用规则：<code>内联代码块</code> 和代码块都是绿色（绿色带有一点对终端的想象）；引用块都是紫色（没特别的原因，硬要说的话，紫色有一点异质感）……
+除了链接，还有一些别的颜色使用规则：`内联代码块` 和代码块都是绿色（绿色带有一点对终端的想象）；引用块都是紫色（没特别的原因，硬要说的话，紫色有一点异质感）……
 
 ## 博文页面
 
@@ -71,6 +71,8 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 所以我对博文的期待是左右两边不要有任何东西，空着就好。我希望用户在打开博文页面的时候，就像是打开了 Safari 的阅读模式，干净、专注。
 
 像维基百科这样的网站把外观设置放在了侧边，需要我手动点击才能离去，让我觉得非常麻烦。类似地，很多用国产手机系统的人总是喜欢说手机上的广告「可以关」，这种说辞让我觉得无语，就算可以关，大部分人也是不会想去研究怎么关的。所以我对自己的博文页面的要求是，就算不进行任何探索，就已经是干净的最佳状态。
+
+![维基百科对网页侧面的占用](/images/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif "维基百科对网页侧面的占用")
 
 ### 图片堆叠
 
@@ -86,32 +88,24 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 但后面还是决定做，有了注意事项以后，我就可以把一些对上文的补充内容以注意事项的形式书写，当我对博文更新以后，也可以用注意事项在博文的最开始说明更新了什么。
 
-<blockquote class="callout callout-note">
-
-附言
-
-此前，Lia 就提议过注意事项的格式支持，但被我往后排了。现在觉得 Lia 当前的提议是正确的。
-
-</blockquote>
+> [!NOTE] 附言
+> 此前，Lia 就提议过注意事项的格式支持，但被我往后排了。现在觉得 Lia 当前的提议是正确的。
 
 ### 外链的自动 favicon 显示
 
 Favicon 是 favorites icon 的缩写，也就是出现在浏览器标签栏和收藏栏的网站图标。
 
-[![](/favicons/external-links/ggame-gledos-science.png)Lia 的网站](https://ggame.gledos.science/mkdocs/%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E7%AC%A6%E5%8F%B7.html)<span class="link-boundary-space external-link-trailing-space" aria-hidden="true"></span>里带有对外链 favicon 的部分显示，我觉得精致，所以就剽窃了这一设计。
+[Lia 的网站](https://ggame.gledos.science/mkdocs/%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E7%AC%A6%E5%8F%B7.html)里带有对外链 favicon 的部分显示，我觉得精致，所以就剽窃了这一设计。
 
 不过我采用的是自动抓取 favicon 的形式，这样一来就不需要人工介入了。从我的审美来说，现在的外链 favicon 看上去很精致。
 
 缺点在于，由于 favicon 是自动抓取的，所以 favicon 的质量参差不齐，不同网站对 favicon 的设计质量与风格不同。例如 GitHub 的 favicon 在深色模式下很糟，但我不打算为 GitHub 擦屁股，所以保留了它的这一难读性。
 
-<img alt="深色下的 GitHub favicon" data-full-src="../media/Screenshot%202026-06-10%20at%2015.51.30@2x%201-medium.avif" decoding="async" data-caption="深色下的 GitHub favicon" loading="lazy" width="1536" height="469" src="/_astro/Screenshot%202026-06-10%20at%2015.51.30@2x-thumb.CqyJwicQ_Z1yeVgW.avif" srcset="">
-<img alt="浅色下的 GitHub favicon" data-full-src="../media/Screenshot%202026-06-10%20at%2015.52.12@2x-medium.avif" decoding="async" data-caption="浅色下的 GitHub favicon" loading="lazy" width="1536" height="467" src="/_astro/Screenshot%202026-06-10%20at%2015.52.12@2x-thumb.BF-3qpID_O7PMC.avif" srcset="">
-
 还有一些人认为，favicon 让博文在阅读的过程里存在干扰。也许的确如此。
 
 ### 同页面的跳转
 
-[<span class="same-page-anchor-indicator is-up" aria-hidden="true"><svg class="same-page-anchor-icon" viewBox="0 0 260 260" focusable="false" aria-hidden="true"><g transform="translate(130 130) scale(1 -1) translate(-130 -130)"><g transform="translate(130 130) scale(1.23) translate(-130 -130) rotate(-90 130 130) translate(0 29)"><path class="same-page-anchor-turn-arrow" d="M132.6 31.2 C135.9 31.2 138.6 33.9 138.6 37.2 L138.6 66.8 C181.0 67.0 207.7 94.8 213.6 151.2 C214.4 158.7 204.5 162.2 200.2 156.0 C184.6 133.3 166.4 125.3 138.6 125.2 L138.6 153.8 C138.6 159.2 132.3 162.1 128.1 158.5 L62.9 103.0 C59.0 99.7 59.0 93.7 62.9 90.4 L128.5 32.8 C129.6 31.8 131.1 31.2 132.6 31.2 Z"></path></g></g></svg></span>上面](#19aed4)<span class="link-boundary-space same-page-anchor-trailing-space" aria-hidden="true"></span>提到，我对网页有统一的对蓝色样式的语义，所以博文内的「跳转到当前博文某处」和「跳转到另外的博文」的链接是蓝色的。
+[上面](#19aed4)提到，我对网页有统一的对蓝色样式的语义，所以博文内的「跳转到当前博文某处」和「跳转到另外的博文」的链接是蓝色的。
 
 为了增加语义上的区分，我为「在当前博文内跳转」的超链接的前方增加了从右出发的朝上或者朝下的箭头，这样一来，就可以知道这个链接将会带用户去哪里了，增加了用户点击链接时的心理安全感。
 
@@ -133,25 +127,27 @@ feixqe 觉得需要给页面内增加一个返回按钮，我向 ta 告知，其
 
 我为代码块和引用块设计了专门的样式。当代码块或引用块里包含较多内容时，会被自动折叠。可以通过点击按钮或者渐隐状态的文字来展开。
 
+![触发折叠的引用块示例](/images/Screenshot%202026-06-10%20at%2016.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif "触发折叠的引用块示例：超过行数阈值后呈现渐隐折叠与展开交互")
+
 下面是博客站折叠代码块的实现核心样式规则，当代码超出 10 行时自动触发折叠并生成语言徽标与展开按钮：
 
 ```css
-.code-block
-  position
-  margin
+.code-block {
+  position: relative;
+  margin: 2em 0;
 }
-.code-block[data-code-language]::before
-  position
-  top
-  left
-  content
-  border-radius
-  background
-  color
-  transform
+.code-block[data-code-language]::before {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  content: attr(data-code-language);
+  border-radius: 999px;
+  background: var(--code-bg);
+  color: var(--code-accent);
+  transform: translateY(-50%);
 }
-.collapsible-block.is-collapsed .collapsible-block-content
-  max-height
+.collapsible-block.is-collapsed .collapsible-block-content {
+  max-height: var(--collapsible-collapsed-height);
 }
 ```
 
@@ -167,9 +163,9 @@ feixqe 觉得需要给页面内增加一个返回按钮，我向 ta 告知，其
 
 我的博客站也是按照 Lia 提及的设计理念做的，只有站外链接会以新标签页的形式打开。
 
-不过我不确信这样的设计是更好，手动选择从新标签页打开以后，新标签页是以后台的形式打开，还需要我进行一次标签页的切换。（Lia 教我的小妙招：通过按住 <code>command-shift</code> 或 <code>control-shift</code>，可以在以新标签页打开的同时将新标签页前台显示）
+不过我不确信这样的设计是更好，手动选择从新标签页打开以后，新标签页是以后台的形式打开，还需要我进行一次标签页的切换。（Lia 教我的小妙招：通过按住 `command-shift` 或 `control-shift`，可以在以新标签页打开的同时将新标签页前台显示）
 
-并且，尽管对于熟悉电脑的人来说，在按住 <code>command</code> 或 <code>control</code> 的同时来打开新标签页是常识。但对于电脑小白来说，他们未必知道这个常识，所以需要对他们宽容。
+并且，尽管对于熟悉电脑的人来说，在按住 `command` 或 `control` 的同时来打开新标签页是常识。但对于电脑小白来说，他们未必知道这个常识，所以需要对他们宽容。
 
 另外，其实我自己觉得像哔哩哔哩这样的网站在点击视频后直接打开新标签页挺方便，我不介意开一堆标签页，这在我看来是方便的好事。
 

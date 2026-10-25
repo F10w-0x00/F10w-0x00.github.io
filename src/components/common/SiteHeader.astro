@@ -15,7 +15,6 @@ const { active = 'blog' } = Astro.props;
     <nav class="site-nav" aria-label="主导航">
       <a href="/" aria-current={active === 'home' ? 'page' : undefined}> 首页 </a>
       <a href="/blog/" aria-current={active === 'blog' ? 'page' : undefined}> 文档 </a>
-      <a href="/products/" aria-current={active === 'products' ? 'page' : undefined}> 产品 </a>
     </nav>
     <div class="site-header-actions">
       <!-- 回到跳转前位置 (同页锚点跳转后出现) -->
@@ -24,14 +23,6 @@ const { active = 'blog' } = Astro.props;
           <path d="M9.25 5.75 4.75 10.25l4.5 4.5"></path>
           <path d="M5.25 10.25h8.8a5.2 5.2 0 0 1 5.2 5.2v2.8"></path>
         </svg>
-      </button>
-
-      <!-- 为所选文字留言 -->
-      <button class="comment-selection-button" type="button" data-comment-selection-button hidden aria-label="为所选文字留言" title="为所选文字留言">
-        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-          <path d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"></path>
-        </svg>
-        <span class="comment-selection-label">留言</span>
       </button>
 
       <!-- 网站设置按钮 -->
@@ -43,7 +34,7 @@ const { active = 'blog' } = Astro.props;
       </button>
     </div>
 
-    <!-- 网站设置浮层抽屉面板 -->
+    <!-- 网站设置浮层抽屉面板 (仅保留外观、字号、宽度) -->
     <div class="site-settings-panel" id="site-settings-panel" data-settings-panel role="dialog" aria-label="网站设置" tabindex="-1" hidden>
       <div class="site-settings-header">
         <p class="site-settings-title">设置</p>
@@ -79,151 +70,8 @@ const { active = 'blog' } = Astro.props;
               <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="l" aria-label="宽宽度">L</button>
             </div>
           </div>
-
-          <!-- 外链图标开关 -->
-          <div class="site-setting-row">
-            <span class="site-setting-label">外链图标</span>
-            <div class="segmented-control" data-option-count="2" role="group" aria-label="外链图标">
-              <button type="button" data-setting-option data-setting-name="externalLinkIcons" data-setting-value="on">ON</button>
-              <button type="button" data-setting-option data-setting-name="externalLinkIcons" data-setting-value="off">OFF</button>
-            </div>
-          </div>
         </div>
-
-        <hr class="site-settings-divider" />
-
-        <div class="site-settings-section">
-          <!-- 留言显示开关 -->
-          <div class="site-setting-row">
-            <span class="site-setting-label">留言</span>
-            <div class="segmented-control" data-option-count="2" role="group" aria-label="留言">
-              <button type="button" data-setting-option data-setting-name="commentsDisplay" data-setting-value="on">ON</button>
-              <button type="button" data-setting-option data-setting-name="commentsDisplay" data-setting-value="off">OFF</button>
-            </div>
-          </div>
-        </div>
-
-        <hr class="site-settings-divider" />
-        
-        <!-- 访客身份管理入口 -->
-        <a class="site-settings-identity-link" href="/visitor/" data-visitor-account-link aria-label="访客身份管理">
-          <strong>访客身份管理</strong>
-          <span class="site-settings-identity-status" data-visitor-login-status data-state="logged-out" role="status" aria-live="polite">
-            <span class="site-settings-identity-status-dot" aria-hidden="true"></span>
-            <span data-visitor-login-status-label>未登录</span>
-          </span>
-        </a>
       </div>
     </div>
   </div>
 </header>
-
-<script is:inline>
-  (function () {
-    const STORAGE_KEY = 'KenShelter_settings';
-    function getStoredSettings() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch (e) {
-        return {};
-      }
-    }
-    function saveSettings(s) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-      } catch (e) {}
-    }
-
-    const toggleBtn = document.querySelector('[data-settings-toggle]');
-    const panel = document.getElementById('site-settings-panel');
-
-    function updateSettingUI(name, val) {
-      const btns = document.querySelectorAll(`[data-setting-name="${name}"]`);
-      btns.forEach((b) => {
-        if (b.getAttribute('data-setting-value') === val) {
-          b.setAttribute('data-active', 'true');
-        } else {
-          b.removeAttribute('data-active');
-        }
-      });
-    }
-
-    function applyTheme(theme) {
-      const html = document.documentElement;
-      if (theme === 'auto' || !theme) {
-        html.removeAttribute('data-theme');
-      } else {
-        html.setAttribute('data-theme', theme);
-      }
-    }
-
-    function applyFontSize(size) {
-      const html = document.documentElement;
-      if (size === 's') html.style.setProperty('--site-font-size', '16px');
-      else if (size === 'l') html.style.setProperty('--site-font-size', '19px');
-      else html.style.removeProperty('--site-font-size');
-    }
-
-    const current = getStoredSettings();
-    const activeTheme = current.theme || 'auto';
-    const activeFont = current.fontSize || 'm';
-    const activeWidth = current.contentWidth || 'm';
-    const activeFavicon = current.externalLinkIcons || 'on';
-    const activeComments = current.commentsDisplay || 'on';
-
-    updateSettingUI('theme', activeTheme);
-    updateSettingUI('fontSize', activeFont);
-    updateSettingUI('contentWidth', activeWidth);
-    updateSettingUI('externalLinkIcons', activeFavicon);
-    updateSettingUI('commentsDisplay', activeComments);
-
-    applyTheme(activeTheme);
-    applyFontSize(activeFont);
-
-    if (toggleBtn && panel) {
-      toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = !panel.hidden;
-        panel.hidden = isOpen;
-        toggleBtn.setAttribute('aria-expanded', String(!isOpen));
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!panel.hidden && !panel.contains(e.target) && !toggleBtn.contains(e.target)) {
-          panel.hidden = true;
-          toggleBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
-    }
-
-    document.querySelectorAll('[data-setting-option]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const name = btn.getAttribute('data-setting-name');
-        const val = btn.getAttribute('data-setting-value');
-        if (!name || !val) return;
-
-        const s = getStoredSettings();
-        s[name] = val;
-        saveSettings(s);
-        updateSettingUI(name, val);
-
-        if (name === 'theme') applyTheme(val);
-        if (name === 'fontSize') applyFontSize(val);
-      });
-    });
-
-    // 锚点返回按钮逻辑
-    const anchorBtn = document.querySelector('[data-anchor-return]');
-    let previousScrollPos = 0;
-    if (anchorBtn) {
-      window.addEventListener('hashchange', () => {
-        previousScrollPos = window.scrollY;
-        anchorBtn.hidden = false;
-      });
-      anchorBtn.addEventListener('click', () => {
-        window.scrollTo({ top: previousScrollPos, behavior: 'smooth' });
-        anchorBtn.hidden = true;
-      });
-    }
-  })();
-</script>

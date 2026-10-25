@@ -44,12 +44,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 <p data-comment-block-id="cb-f1a2994c9a34fe9b">所以我对博文的期待是左右两边不要有任何东西，空着就好。我希望用户在打开博文页面的时候，就像是打开了 Safari 的阅读模式，干净、专注。</p>
 <p data-comment-block-id="cb-c826a50a879d1f12">像维基百科这样的网站把外观设置放在了侧边，需要我手动点击才能离去，让我觉得非常麻烦。类似地，很多用国产手机系统的人总是喜欢说手机上的广告「可以关」，这种说辞让我觉得无语，就算可以关，大部分人也是不会想去研究怎么关的。所以我对自己的博文页面的要求是，就算不进行任何探索，就已经是干净的最佳状态。</p>
 <p><img alt="维基百科对网页侧面的占用" data-full-src="../media/Screenshot%202026-06-10%20at%2016.07.52@2x-medium.avif" decoding="async" data-caption="维基百科对网页侧面的占用" loading="lazy" width="1364" height="576" src="/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif" srcset=""></p>
-<h3 id="沉浸式大纲">沉浸式大纲</h3>
-<p data-comment-block-id="cb-fff931ffcb511b80">由于我不喜欢在博文的左右两边塞东西，还喜欢追求页面的左右对称美，所以我为设计博文页面的大纲而纠结了很久。在最开始，我做了一个存在感很低的侧边大纲，但是我对它并不满意。</p>
-<p data-comment-block-id="cb-9a003fd8531d6e37">终于，后面我思考出了把博文内小标题和大纲融为一体的设计——点击博文内的任意小标题后，正文文字会隐去，剩下的所有小标题会聚拢到一起，这样一来，整个页面就从博文状态平滑地过渡到了大纲视图。退出动画也是同理。</p>
-<p><video data-media-kind="video" data-preview-file="Screenshot 2026-06-14 at 17.27.45-thumb.webm" data-full-file="Screenshot 2026-06-14 at 17.27.45-medium.webm" muted playsinline preload="metadata" width="908" height="576" data-caption="通过点击小标题来进入大纲" aria-label="通过点击小标题来进入大纲"></video></p>
-<p data-comment-block-id="cb-4b6a9c3d3322f8cb">在最初的版本，过渡动画时页面不能被滚动，Lia 认为这不舒服，所以我让 coding agent 再加了班，现在过渡动画时页面也可以被滚动。Lia 还提议过渡动画可以被打断，这点提议被我否决了。</p>
-<p data-comment-block-id="cb-736e8c67b300c75e">现在的沉浸式大纲实现了我对美的要求，让我觉得愉悦。相对地，它也有缺点——不易被新的用户发现。我思考过要不要在顶栏放一个进入大纲的按钮，但目前还是没有放。由于我的博客往往不是技术向的，所以我认为即便用户发现不了大纲也无关紧要，我更担心的是传统大纲对美的破坏。</p>
 <h3 id="图片堆叠">图片堆叠</h3>
 <p data-comment-block-id="cb-884e29264c6dbd02">目前，当我在博文里插入多张图片时，它们会堆叠在一起。点击翻页按钮时，它们会有炫酷的翻页动画，我花了一些时间来把动画调好。在 Safari 上，出现了一些特别的错误动画，需要付出额外的时间修复。这次构建博客的过程让我感觉到了 Safari 的不便——更容易出现奇怪的错误，也更难以被调试。</p>
 <p data-comment-block-id="cb-0115afeffbd16d33">点击图片后，会进入放大版的图片堆叠，在图片放大的动画里，网站使用原有的模糊图片先糊弄。等完全进入放大状态以后，图片加载为最大尺寸为 3000px 的图片。通过设计两种图片尺寸的方式，我节省了网站的流量，并提高了加载速度。</p>

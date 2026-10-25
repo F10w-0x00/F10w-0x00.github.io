@@ -5,7 +5,7 @@
 - **核心框架**：[Astro](https://astro.build/) (v5/v6 最新静态站点生成模式)
   - **Zero-JS 默认理念**：文章正文及常规静态内容零客户端 JavaScript 开销，渲染性能极致。
   - **原生 CSS 与 CSS 变量**：直接采用现代 CSS 特性与原站精准 Design Tokens，避免 Tailwind 造成的预设样式污染，确保 1:1 像素级复刻。
-  - **Vanilla 微交互**：沉浸式大纲（Immersive Outline）、等边三角形排序翻转、折叠代码块、外链自动 Favicon 等均采用纯原生轻量 JS 驱动，内聚在各 Astro 孤岛组件中。
+  - **Vanilla 微交互**：等边三角形排序翻转、折叠代码块、外链自动 Favicon、已读打勾标记等均采用纯原生轻量 JS 驱动，内聚在各 Astro 孤岛组件中。
 - **运行与构建环境**：
   - 基于 NixOS 声明式环境，统一由 `nix-shell -p nodejs pnpm git` 提供底层支撑。
 

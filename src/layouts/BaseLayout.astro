@@ -17,118 +17,97 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-page={pageName} data-storage-namespace="KenShelter" data-storage-legacy-namespaces="[&quot;ken-blog&quot;]" data-visitor-enabled="true">
+<html lang="zh-CN" data-page={pageName} data-storage-namespace="KenShelter" data-storage-legacy-namespaces="[&quot;ken-blog&quot;]" data-visitor-enabled="false">
   <head>
     <script is:inline>
-
       (() => {
         let theme = null;
         let fontSize = null;
         let contentWidth = null;
-        let externalLinkIcons = null;
-        let commentsDisplay = null;
-        let commentSidePreview = null;
-        let visitorIdentityPanels = null;
 
         try {
-          const storageNamespace =
-            document.documentElement.dataset.storageNamespace || "ExampleSite";
-          const visitorEnabled =
-            document.documentElement.dataset.visitorEnabled === "true";
-          const legacyStorageNamespaces = (() => {
-            try {
-              const parsed = JSON.parse(
-                document.documentElement.dataset.storageLegacyNamespaces || "[]"
-              );
-
-              if (Array.isArray(parsed) && parsed.every((value) => typeof value === "string" && value)) {
-                return [...new Set(parsed)].filter((value) => value !== storageNamespace);
-              }
-            } catch {
-              // 配置属性异常时忽略旧键，避免共享主题猜测实例的历史命名空间。
-            }
-
-            return [];
-          })();
-
-          // 读取当前命名空间，并把所有旧命名空间中的首个已有值原样搬迁。
-          const readMigratedPreference = (preferenceName) => {
-            const currentKey = `${storageNamespace}-${preferenceName}`;
-            const legacyKeys = legacyStorageNamespaces.map(
-              (namespace) => `${namespace}-${preferenceName}`
-            );
-            const currentValue = window.localStorage?.getItem(currentKey);
-            const legacyValue =
-              currentValue === null
-                ? legacyKeys
-                    .map((legacyKey) => window.localStorage?.getItem(legacyKey))
-                    .find((value) => value !== null) ?? null
-                : null;
-
-            try {
-              if (legacyValue !== null) {
-                window.localStorage?.setItem(currentKey, legacyValue);
-              }
-              legacyKeys.forEach((legacyKey) => window.localStorage?.removeItem(legacyKey));
-            } catch {
-              // 写入受限时仍使用刚读到的旧值渲染首帧，后续页面可继续尝试搬迁。
-            }
-
-            return currentValue ?? legacyValue;
-          };
-
-          theme = readMigratedPreference("theme");
-          fontSize = readMigratedPreference("font-size");
-          contentWidth = readMigratedPreference("content-width");
-          externalLinkIcons = readMigratedPreference("external-link-icons");
-          if (visitorEnabled) {
-            commentsDisplay = readMigratedPreference("comments-display");
-            commentSidePreview = readMigratedPreference("comment-side-preview");
-            visitorIdentityPanels = readMigratedPreference("visitor-identity-panels");
-          }
-        } catch {
-          theme = null;
-          fontSize = null;
-          contentWidth = null;
-          externalLinkIcons = null;
-          commentsDisplay = null;
-          commentSidePreview = null;
-          visitorIdentityPanels = null;
-        }
+          const storageNamespace = document.documentElement.dataset.storageNamespace || "KenShelter";
+          theme = window.localStorage?.getItem(`${storageNamespace}-theme`);
+          fontSize = window.localStorage?.getItem(`${storageNamespace}-font-size`);
+          contentWidth = window.localStorage?.getItem(`${storageNamespace}-content-width`);
+        } catch {}
 
         const themeMode = theme === "light" || theme === "dark" ? theme : "auto";
         const readingFontSize = fontSize === "s" || fontSize === "l" ? fontSize : "m";
         const readingWidth = contentWidth === "s" || contentWidth === "l" ? contentWidth : "m";
-        const externalLinkIconMode = externalLinkIcons === "off" ? "off" : "on";
-        const visitorEnabled =
-          document.documentElement.dataset.visitorEnabled === "true";
 
-        // 提前同步用户偏好，避免页面切换时设置控件和正文尺寸先显示默认值。
         document.documentElement.dataset.themeMode = themeMode;
         document.documentElement.dataset.fontSize = readingFontSize;
         document.documentElement.dataset.contentWidth = readingWidth;
-        document.documentElement.dataset.externalLinkIcons = externalLinkIconMode;
-        if (visitorEnabled) {
-          document.documentElement.dataset.commentsDisplay =
-            commentsDisplay === "off" ? "off" : "on";
-          document.documentElement.dataset.commentSidePreview =
-            commentSidePreview === "on" ? "on" : "off";
-        }
-
-        // 访客身份页在首帧绘制前恢复面板状态，避免客户端脚本加载前短暂显示展开内容。
-        if (
-          visitorEnabled &&
-          document.documentElement.dataset.page === "visitor-identity"
-        ) {
-          document.documentElement.dataset.visitorIdentityPanels =
-            visitorIdentityPanels === "collapsed" ? "collapsed" : "expanded";
-        }
+        document.documentElement.dataset.externalLinkIcons = "on";
 
         if (themeMode === "light" || themeMode === "dark") {
           document.documentElement.dataset.theme = themeMode;
         }
       })();
-    
+
+      // 已读博文（Visited Checkmark）核心交互逻辑
+      (() => {
+        const visitedPostsKey = 'KenShelter-visited-posts';
+        function getVisitedSet() {
+          try {
+            return new Set(JSON.parse(localStorage.getItem(visitedPostsKey) || '[]'));
+          } catch {
+            return new Set();
+          }
+        }
+        function saveVisited(slug) {
+          if (!slug) return;
+          try {
+            const visited = getVisitedSet();
+            visited.add(slug);
+            localStorage.setItem(visitedPostsKey, JSON.stringify([...visited]));
+          } catch {}
+        }
+        function updateVisitedMarks() {
+          const visited = getVisitedSet();
+          document.querySelectorAll('[data-reading-post-slug]').forEach((card) => {
+            const slug = card.getAttribute('data-reading-post-slug');
+            const icon = card.querySelector('[data-post-visited-icon]');
+            if (slug && icon) {
+              icon.classList.toggle('is-visited', visited.has(slug));
+            }
+          });
+        }
+
+        // 页面就绪后标记打勾
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', updateVisitedMarks, { once: true });
+        } else {
+          updateVisitedMarks();
+        }
+        document.addEventListener('astro:page-load', updateVisitedMarks);
+
+        // 如果在文章页面，将当前文章自动记为已读
+        document.addEventListener('DOMContentLoaded', () => {
+          const readingElem = document.querySelector('[data-post-reading]');
+          if (readingElem) {
+            const currentSlug = readingElem.getAttribute('data-reading-post-slug');
+            if (currentSlug) {
+              saveVisited(currentSlug);
+            }
+          }
+        });
+
+        // 监听卡片点击立即打勾
+        document.addEventListener('click', (e) => {
+          const link = e.target.closest('a[href*="/blog/20"]');
+          const card = link ? link.closest('[data-reading-post-slug]') : null;
+          if (card) {
+            const slug = card.getAttribute('data-reading-post-slug');
+            if (slug) {
+              saveVisited(slug);
+              const icon = card.querySelector('[data-post-visited-icon]');
+              if (icon) icon.classList.add('is-visited');
+            }
+          }
+        }, { passive: true });
+      })();
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -136,36 +115,80 @@ const {
     <meta name="generator" content="Astro v6.4.8" />
     <title>{title}</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Ken’s Shelter RSS" />
+    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="f10w-0x00 RSS" />
     <link rel="stylesheet" href="/_astro/BaseLayout.BXLOwkA9.css" />
   </head>
   <body>
     <div class="site-shell">
-      <header class="site-header"> <div class="site-header-inner"> <a class="brand" href="/" aria-label="f10w-0x00 首页"><img class="brand-avatar" src="/avatar.svg" alt="" width="22" height="22" style="border-radius: 4px; vertical-align: -3px; margin-right: 7px; display: inline-block;" />f10w-0x00</a> <nav class="site-nav" aria-label="主导航"> <a href="/"> 首页 </a><a href="/blog/" aria-current="page"> 文档 </a><a href="/products/"> 产品 </a> </nav> <div class="site-header-actions"> <button class="anchor-return-button" type="button" data-anchor-return hidden aria-label="回到跳转前的位置" title="回到跳转前的位置"> <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"> <path d="M9.25 5.75 4.75 10.25l4.5 4.5"></path> <path d="M5.25 10.25h8.8a5.2 5.2 0 0 1 5.2 5.2v2.8"></path> </svg> </button> <button class="comment-selection-button" type="button" data-comment-selection-button hidden aria-label="为所选文字留言" title="为所选文字留言"> <!-- 留言入口使用带省略号的消息气泡：浮动模式并列文字，顶栏模式由 CSS 隐藏文字。 --> <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"> <!-- Heroicons chat-bubble-left-ellipsis，MIT License：https://heroicons.com/ --> <path d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"></path> </svg> <span class="comment-selection-label">留言</span> </button> <button class="settings-button" type="button" data-settings-toggle aria-label="打开网站设置" aria-controls="site-settings-panel" aria-expanded="false" title="网站设置"> <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"> <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.52a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.52a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path> <circle cx="12" cy="12" r="3"></circle> </svg> </button> </div> <div class="site-settings-panel" id="site-settings-panel" data-settings-panel role="dialog" aria-label="网站设置" tabindex="-1" hidden> <div class="site-settings-header"> <p class="site-settings-title">设置</p> </div> <div class="site-settings-list"> <div class="site-settings-section"> <div class="site-setting-row"> <span class="site-setting-label">外观</span> <div class="segmented-control" role="group" aria-label="外观"> <button type="button" data-setting-option data-setting-name="theme" data-setting-value="auto">自动</button> <button type="button" data-setting-option data-setting-name="theme" data-setting-value="light">浅色</button> <button type="button" data-setting-option data-setting-name="theme" data-setting-value="dark">深色</button> </div> </div> <div class="site-setting-row"> <span class="site-setting-label">字号</span> <div class="segmented-control" role="group" aria-label="字号"> <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="s" aria-label="小字号">
-S
-</button> <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="m" aria-label="中字号">
-M
-</button> <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="l" aria-label="大字号">
-L
-</button> </div> </div> <div class="site-setting-row"> <span class="site-setting-label">宽度</span> <div class="segmented-control" role="group" aria-label="宽度"> <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="s" aria-label="窄宽度">
-S
-</button> <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="m" aria-label="中宽度">
-M
-</button> <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="l" aria-label="宽宽度">
-L
-</button> </div> </div> <div class="site-setting-row"> <span class="site-setting-label">外链图标</span> <div class="segmented-control" data-option-count="2" role="group" aria-label="外链图标"> <button type="button" data-setting-option data-setting-name="externalLinkIcons" data-setting-value="on">
-ON
-</button> <button type="button" data-setting-option data-setting-name="externalLinkIcons" data-setting-value="off">
-OFF
-</button> </div> </div> </div>  <hr class="site-settings-divider"> <div class="site-settings-section"> <div class="site-setting-row"> <span class="site-setting-label">留言</span> <div class="segmented-control" data-option-count="2" role="group" aria-label="留言"> <button type="button" data-setting-option data-setting-name="commentsDisplay" data-setting-value="on">
-ON
-</button> <button type="button" data-setting-option data-setting-name="commentsDisplay" data-setting-value="off">
-OFF
-</button> </div> </div> <div class="site-setting-row" data-comment-side-preview-setting hidden> <span class="site-setting-label">侧缘预览</span> <div class="segmented-control" data-option-count="2" role="group" aria-label="侧缘预览"> <button type="button" data-setting-option data-setting-name="commentSidePreview" data-setting-value="on">
-ON
-</button> <button type="button" data-setting-option data-setting-name="commentSidePreview" data-setting-value="off">
-OFF
-</button> </div> </div> </div> <hr class="site-settings-divider"> <!-- 访客页会处理账户密钥，必须完整导航以清除普通页面已加载的第三方统计运行时。 --> <a class="site-settings-identity-link" href="/visitor/" data-astro-reload data-visitor-account-link data-visitor-identity-link data-api-base="/api/comments" aria-label="访客身份管理"> <strong>访客身份管理</strong> <span class="site-settings-identity-status" data-visitor-login-status data-state="logged-out" role="status" aria-live="polite" hidden> <span class="site-settings-identity-status-dot" aria-hidden="true"></span> <span data-visitor-login-status-label>未登录</span> </span> </a> <script type="module" src="/_astro/VisitorAccountLink.astro_astro_type_script_index_0_lang.8AUZsTwC.js"></script>  </div> </div> </div> </header>
+      <header class="site-header">
+        <div class="site-header-inner">
+          <a class="brand" href="/" aria-label="f10w-0x00 首页">
+            <img class="brand-avatar" src="/avatar.svg" alt="" width="22" height="22" style="border-radius: 4px; vertical-align: -3px; margin-right: 7px; display: inline-block;" />
+            f10w-0x00
+          </a>
+          <nav class="site-nav" aria-label="主导航">
+            <a href="/" aria-current={activeNav === 'home' ? 'page' : undefined}> 首页 </a>
+            <a href="/blog/" aria-current={activeNav === 'blog' ? 'page' : undefined}> 文档 </a>
+          </nav>
+          <div class="site-header-actions">
+            <!-- 回到跳转前位置 (同页锚点跳转后出现) -->
+            <button class="anchor-return-button" type="button" data-anchor-return hidden aria-label="回到跳转前的位置" title="回到跳转前的位置">
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="M9.25 5.75 4.75 10.25l4.5 4.5"></path>
+                <path d="M5.25 10.25h8.8a5.2 5.2 0 0 1 5.2 5.2v2.8"></path>
+              </svg>
+            </button>
+
+            <!-- 网站设置按钮 -->
+            <button class="settings-button" type="button" data-settings-toggle aria-label="打开网站设置" aria-controls="site-settings-panel" aria-expanded="false" title="网站设置">
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.52a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.52a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 网站设置浮层抽屉面板 (仅保留有效外观、字号与宽度) -->
+          <div class="site-settings-panel" id="site-settings-panel" data-settings-panel role="dialog" aria-label="网站设置" tabindex="-1" hidden>
+            <div class="site-settings-header">
+              <p class="site-settings-title">设置</p>
+            </div>
+            <div class="site-settings-list">
+              <div class="site-settings-section">
+                <!-- 外观设置 -->
+                <div class="site-setting-row">
+                  <span class="site-setting-label">外观</span>
+                  <div class="segmented-control" role="group" aria-label="外观">
+                    <button type="button" data-setting-option data-setting-name="theme" data-setting-value="auto">自动</button>
+                    <button type="button" data-setting-option data-setting-name="theme" data-setting-value="light">浅色</button>
+                    <button type="button" data-setting-option data-setting-name="theme" data-setting-value="dark">深色</button>
+                  </div>
+                </div>
+
+                <!-- 字号设置 -->
+                <div class="site-setting-row">
+                  <span class="site-setting-label">字号</span>
+                  <div class="segmented-control" role="group" aria-label="字号">
+                    <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="s" aria-label="小字号">S</button>
+                    <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="m" aria-label="中字号">M</button>
+                    <button type="button" data-setting-option data-setting-name="fontSize" data-setting-value="l" aria-label="大字号">L</button>
+                  </div>
+                </div>
+
+                <!-- 宽度设置 -->
+                <div class="site-setting-row">
+                  <span class="site-setting-label">宽度</span>
+                  <div class="segmented-control" role="group" aria-label="宽度">
+                    <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="s" aria-label="窄宽度">S</button>
+                    <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="m" aria-label="中宽度">M</button>
+                    <button type="button" data-setting-option data-setting-name="contentWidth" data-setting-value="l" aria-label="宽宽度">L</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
       <script type="module" src="/_astro/SiteHeader.astro_astro_type_script_index_0_lang.Dh2xBbJQ.js"></script>
       <main>
         <slot />

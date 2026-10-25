@@ -1,5 +1,25 @@
 ---
+// src/pages/blog/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { processPosts } from '../../utils/posts.js';
+
+const postFiles = import.meta.glob('../../../posts/*.md', { eager: true });
+const allPosts = processPosts(postFiles);
+
+// 提取分类与计数
+const categoryCounts = {};
+allPosts.forEach(p => {
+  categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+});
+const categories = Object.keys(categoryCounts);
+
+// 提取年份与计数
+const yearCounts = {};
+allPosts.forEach(p => {
+  const y = new Date(p.date).getUTCFullYear();
+  yearCounts[y] = (yearCounts[y] || 0) + 1;
+});
+const years = Object.keys(yearCounts).sort((a, b) => b - a);
 ---
 
 <BaseLayout
@@ -27,24 +47,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <div class="archive-filter-menu" role="listbox" hidden>
             <button type="button" class="archive-filter-option" data-filter-option="" data-option-label="所有类型" role="option" aria-selected="true">
               <span>所有类型</span>
-              <span class="archive-filter-option-count" aria-label="4 篇文章">4</span>
+              <span class="archive-filter-option-count" aria-label={`${allPosts.length} 篇文章`}>{allPosts.length}</span>
             </button>
-            <button type="button" class="archive-filter-option" data-filter-option="学习" data-option-label="学习" role="option">
-              <span>学习</span>
-              <span class="archive-filter-option-count" aria-label="1 篇文章">1</span>
-            </button>
-            <button type="button" class="archive-filter-option" data-filter-option="UP主推荐" data-option-label="UP主推荐" role="option">
-              <span>UP主推荐</span>
-              <span class="archive-filter-option-count" aria-label="1 篇文章">1</span>
-            </button>
-            <button type="button" class="archive-filter-option" data-filter-option="日常" data-option-label="日常" role="option">
-              <span>日常</span>
-              <span class="archive-filter-option-count" aria-label="1 篇文章">1</span>
-            </button>
-            <button type="button" class="archive-filter-option" data-filter-option="博客站" data-option-label="博客站" role="option">
-              <span>博客站</span>
-              <span class="archive-filter-option-count" aria-label="1 篇文章">1</span>
-            </button>
+            {categories.map(cat => (
+              <button type="button" class="archive-filter-option" data-filter-option={cat} data-option-label={cat} role="option">
+                <span>{cat}</span>
+                <span class="archive-filter-option-count" aria-label={`${categoryCounts[cat]} 篇文章`}>{categoryCounts[cat]}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -61,9 +71,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <button type="button" class="archive-filter-option" data-filter-option="" data-option-label="全部年份" role="option" aria-selected="true">
               全部年份
             </button>
-            <button type="button" class="archive-filter-option" data-filter-option="2026" data-option-label="2026 年" role="option">
-              2026 年
-            </button>
+            {years.map(yr => (
+              <button type="button" class="archive-filter-option" data-filter-option={yr} data-option-label={`${yr} 年`} role="option">
+                {yr} 年
+              </button>
+            ))}
           </div>
         </div>
 
@@ -76,166 +88,85 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </section>
 
     <!-- 文档列表 -->
-    <section class="post-list" aria-label="文档列表" data-blog-archive-posts data-blog-comment-counts data-post-reading-state data-comments-api-base="/api/comments" data-reading-api-base="/api/comments" data-visitor-enabled="true">
-      <!-- 文章 1: Obsidian -->
-      <div data-blog-post data-category="学习" data-year="2026" data-date="1790812800000">
-        <article class="post-card" data-reading-post-id="post-ae8ffbc6-9bdd-4f19-a6d2-de2b367032ac" data-reading-post-slug="2026-10-01-how-i-use-obsidian">
-          <a href="/blog/2026-10-01-how-i-use-obsidian/" class="post-card-link has-cover">
-            <div class="post-card-body">
-              <h2>
-                <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d="m3.5 11.5 5.5 5.5L20 6"></path></svg>
-                </span>
-                <span class="post-card-title-text">我是怎么使用 Obsidian 的</span>
-              </h2>
-              <p>Obsidian 的哲学和缺陷，双链笔记与本地知识库构建</p>
-              <div class="post-card-footer">
+    <section class="post-list" aria-label="文档列表" data-blog-archive-posts>
+      {allPosts.map((post) => (
+        <div data-blog-post data-category={post.category} data-year={new Date(post.date).getUTCFullYear()} data-date={new Date(post.date).getTime()}>
+          <article class="post-card" data-reading-post-slug={post.slug}>
+            <a href={`/blog/${post.slug}/`} class={`post-card-link ${post.cover ? 'has-cover' : ''}`}>
+              <div class="post-card-body">
+                <h2>
+                  <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
+                    <svg viewBox="0 0 640 640" focusable="false"><path d="M504.6 146.5c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L257.9 483.8c-12.5 12.5-32.8 12.5-45.3 0L86.6 357.8c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l103.4 103.4z"></path></svg>
+                  </span>
+                  <span class="post-card-title-text">{post.title}</span>
+                </h2>
+                {post.description && <p>{post.description}</p>}
                 <p class="post-meta post-card-meta">
-                  <time datetime="2026-10-01T00:00:00.000Z">10月1日</time>
+                  <time datetime={post.dateISO}>{post.dateFormatted}</time>
                   <span aria-hidden="true">/</span>
-                  <span>2994 字</span>
+                  <span>{post.words}</span>
                 </p>
               </div>
-            </div>
-            <div class="post-card-cover" aria-hidden="true">
-              <img src="/_astro/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif" alt="" width="640" height="320" loading="lazy" decoding="async">
-            </div>
-          </a>
-        </article>
-      </div>
-
-      <!-- 文章 2: UP主推荐 -->
-      <div data-blog-post data-category="UP主推荐" data-year="2026" data-date="1784937600000">
-        <article class="post-card" data-reading-post-id="post-b6811d8c-29c0-4397-bc2d-5516f0bea035" data-reading-post-slug="2026-07-25-recommended-up-creators-im-following-part-3">
-          <a href="/blog/2026-07-25-recommended-up-creators-im-following-part-3/" class="post-card-link has-cover">
-            <div class="post-card-body">
-              <h2>
-                <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d="m3.5 11.5 5.5 5.5L20 6"></path></svg>
-                </span>
-                <span class="post-card-title-text">推荐几位我在看的 UP（三）</span>
-              </h2>
-              <p>无关茉莉星、董晨宇、徐师傅、技术爬爬虾</p>
-              <div class="post-card-footer">
-                <p class="post-meta post-card-meta">
-                  <time datetime="2026-07-25T00:00:00.000Z">7月25日</time>
-                  <span aria-hidden="true">/</span>
-                  <span>1860 字</span>
-                </p>
-              </div>
-            </div>
-            <div class="post-card-cover" aria-hidden="true">
-              <img src="/_astro/wp8667993-bilibili-wallpapers%201-thumb.RWTKrlzg.avif" alt="" width="640" height="320" loading="lazy" decoding="async">
-            </div>
-          </a>
-        </article>
-      </div>
-
-      <!-- 文章 3: 拔智齿经历 -->
-      <div data-blog-post data-category="日常" data-year="2026" data-date="1784505600000">
-        <article class="post-card" data-reading-post-id="post-9638114f-8e1f-4b38-9106-faefa88a01ad" data-reading-post-slug="2026-07-20-my-wisdom-tooth-extraction-experience">
-          <a href="/blog/2026-07-20-my-wisdom-tooth-extraction-experience/" class="post-card-link has-cover">
-            <div class="post-card-body">
-              <h2>
-                <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d="m3.5 11.5 5.5 5.5L20 6"></path></svg>
-                </span>
-                <span class="post-card-title-text">拔智齿的经历</span>
-              </h2>
-              <p>拔智齿的全过程记录：拍片、付费、麻醉、手术，以及术后一周的恢复经验</p>
-              <div class="post-card-footer">
-                <p class="post-meta post-card-meta">
-                  <time datetime="2026-07-20T00:00:00.000Z">7月20日</time>
-                  <span aria-hidden="true">/</span>
-                  <span>3240 字</span>
-                </p>
-              </div>
-            </div>
-            <div class="post-card-cover" aria-hidden="true">
-              <img src="/_astro/ChatGPT%20Image%20Jul%2020_%202026_%2005_29_43%20PM-thumb.DmWba74d.avif" alt="" width="640" height="320" loading="lazy" decoding="async">
-            </div>
-          </a>
-        </article>
-      </div>
-
-      <!-- 文章 4: 视觉与交互设计 -->
-      <div data-blog-post data-category="博客站" data-year="2026" data-date="1781049600000">
-        <article class="post-card" data-reading-post-id="post-32298018-ffe2-468f-99af-804a8ac98c0e" data-reading-post-slug="2026-06-10-visual-and-interaction-design-of-this-blog-site">
-          <a href="/blog/2026-06-10-visual-and-interaction-design-of-this-blog-site/" class="post-card-link has-cover">
-            <div class="post-card-body">
-              <h2>
-                <span class="post-card-visited-icon post-visited-icon" data-post-visited-icon aria-hidden="true">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d="m3.5 11.5 5.5 5.5L20 6"></path></svg>
-                </span>
-                <span class="post-card-title-text">本博客站的视觉和交互设计</span>
-              </h2>
-              <p>对博客站的设计思路的记录，也是对参与博客站建设的人的致谢</p>
-              <div class="post-card-footer">
-                <p class="post-meta post-card-meta">
-                  <time datetime="2026-06-10T00:00:00.000Z">6月10日</time>
-                  <span aria-hidden="true">/</span>
-                  <span>3659 字</span>
-                </p>
-              </div>
-            </div>
-            <div class="post-card-cover" aria-hidden="true">
-              <img src="/_astro/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-thumb.CigA-ns2.avif" alt="" width="640" height="320" loading="lazy" decoding="async">
-            </div>
-          </a>
-        </article>
+              {post.cover && (
+                <div class="post-card-cover">
+                  <img src={post.cover} alt={post.title} width="640" height="320" loading="lazy" decoding="async" />
+                </div>
+              )}
+            </a>
+          </article>
+        </div>
+      ))}
+      <div class="archive-empty" data-blog-archive-empty hidden>
+        <p>没有找到符合条件的文档</p>
       </div>
     </section>
   </div>
 
+  <!-- 文档归档筛选与 60 度旋转排序自包含内联脚本 -->
   <script is:inline>
     (() => {
       function initArchive(archiveEl) {
-        if (!archiveEl || archiveEl.dataset.archiveInit === 'true') return;
-        archiveEl.dataset.archiveInit = 'true';
+        if (!archiveEl || archiveEl.dataset.initialized === 'true') return;
+        archiveEl.dataset.initialized = 'true';
 
-        const filterButtons = Array.from(archiveEl.querySelectorAll('[data-blog-filter]'));
-        const sortButton = archiveEl.querySelector('[data-blog-sort]');
+        const filterButtons = Array.from(archiveEl.querySelectorAll('.archive-filter-button'));
+        const sortButton = archiveEl.querySelector('.archive-sort-button');
         const postsContainer = archiveEl.querySelector('[data-blog-archive-posts]');
-        const postItems = Array.from(archiveEl.querySelectorAll('[data-blog-post]')).map((item, index) => ({
-          item,
-          index,
-          date: Number(item.dataset.date || 0),
-          category: item.dataset.category || '',
-          year: item.dataset.year || ''
-        }));
-        const emptyEl = archiveEl.querySelector('[data-filter-empty]');
+        const postItems = Array.from(archiveEl.querySelectorAll('[data-blog-post]'));
+        const emptyEl = archiveEl.querySelector('[data-blog-archive-empty]');
 
-        function closeAllMenus(exceptBtn) {
+        function closeAllMenus(exceptButton) {
           filterButtons.forEach(btn => {
-            if (btn !== exceptBtn) {
+            if (btn !== exceptButton) {
               btn.setAttribute('aria-expanded', 'false');
-              const menu = btn.closest('.archive-filter-control')?.querySelector('.archive-filter-menu');
+              const control = btn.closest('.archive-filter-control');
+              const menu = control?.querySelector('.archive-filter-menu');
               if (menu) menu.setAttribute('hidden', '');
             }
           });
         }
 
         function updateList() {
-          const categoryFilter = archiveEl.querySelector('[data-blog-filter="category"]')?.dataset.filterValue || '';
-          const yearFilter = archiveEl.querySelector('[data-blog-filter="year"]')?.dataset.filterValue || '';
-          const sortOrder = sortButton?.dataset.blogSort === 'asc' ? 'asc' : 'desc';
-
-          const sorted = [...postItems].sort((a, b) => {
-            return (sortOrder === 'asc' ? a.date - b.date : b.date - a.date) || a.index - b.index;
-          });
+          const selectedCategory = archiveEl.querySelector('[data-blog-filter="category"]')?.dataset.filterValue || '';
+          const selectedYear = archiveEl.querySelector('[data-blog-filter="year"]')?.dataset.filterValue || '';
+          const sortOrder = sortButton?.dataset.blogSort || 'desc';
 
           let visibleCount = 0;
-          sorted.forEach(({ item, category, year }) => {
-            const matchesCat = !categoryFilter || category === categoryFilter;
-            const matchesYear = !yearFilter || year === yearFilter;
-            const isVisible = matchesCat && matchesYear;
+
+          const sorted = [...postItems].sort((a, b) => {
+            const dateA = Number(a.dataset.date || 0);
+            const dateB = Number(b.dataset.date || 0);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          });
+
+          sorted.forEach(item => {
+            const matchCategory = !selectedCategory || item.dataset.category === selectedCategory;
+            const matchYear = !selectedYear || item.dataset.year === selectedYear;
+            const isVisible = matchCategory && matchYear;
+
             item.hidden = !isVisible;
-            if (isVisible) {
-              visibleCount++;
-            }
-            if (postsContainer) {
-              postsContainer.appendChild(item);
-            }
+            if (isVisible) visibleCount++;
+            postsContainer.appendChild(item);
           });
 
           if (emptyEl) {
@@ -272,7 +203,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           });
         }
 
-        // 1. 初始化时读取 URL 参数
         const currentParams = new URLSearchParams(window.location.search);
         filterButtons.forEach(btn => {
           const filterName = btn.dataset.blogFilter;
@@ -286,7 +216,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           }
         });
 
-        // 2. 绑定筛选下拉菜单点击展开/收起
         filterButtons.forEach(btn => {
           const control = btn.closest('.archive-filter-control');
           const menu = control?.querySelector('.archive-filter-menu');
@@ -317,7 +246,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           });
         });
 
-        // 3. 点击外部或按 ESC 关闭所有下拉菜单
         document.addEventListener('click', (e) => {
           if (!archiveEl.contains(e.target)) {
             closeAllMenus();
@@ -327,7 +255,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           if (e.key === 'Escape') closeAllMenus();
         });
 
-        // 4. 排序按钮交互（60° 三角形旋转与正倒序切换）
         if (sortButton) {
           sortButton.addEventListener('click', () => {
             const currentSort = sortButton.dataset.blogSort === 'asc' ? 'desc' : 'asc';
@@ -349,7 +276,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           });
         }
 
-        // 5. 初始渲染一次，确保 URL 过滤与排序生效
         updateList();
       }
 

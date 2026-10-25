@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import rehypeBlogContent from './src/plugins/rehype-blog-content.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -6,5 +7,15 @@ export default defineConfig({
   output: 'static',
   build: {
     format: 'directory'
+  },
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark'
+      },
+      wrap: false
+    },
+    rehypePlugins: [rehypeBlogContent]
   }
 });

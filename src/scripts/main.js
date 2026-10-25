@@ -264,9 +264,12 @@
   };
 
   const getLineHeight = (el) => {
-    const lh = window.getComputedStyle(el).lineHeight;
+    const s = window.getComputedStyle(el);
+    const lh = s.lineHeight;
     const num = Number.parseFloat(lh);
-    return Number.isFinite(num) ? num : Number.parseFloat(window.getComputedStyle(document.body).fontSize) * 1.6;
+    if (Number.isFinite(num)) return num;
+    const fs = Number.parseFloat(s.fontSize);
+    return Number.isFinite(fs) ? fs * 1.6 : 24;
   };
 
   const getPadding = (el) => {
@@ -399,7 +402,12 @@
         setupCollapsible(
           wrapper,
           pre,
-          () => getLineHeight(pre) * 7 + getPadding(pre),
+          () => {
+            const codeEl = pre.querySelector('code') || pre;
+            const lh = getLineHeight(codeEl);
+            const padTop = Number.parseFloat(window.getComputedStyle(pre).paddingTop) || 24;
+            return Math.round(lh * 6.6 + padTop);
+          },
           '代码块',
           { buttonPlacement: 'inside-start', insertAfterSelector: '.code-copy-button' }
         );
@@ -430,7 +438,11 @@
       setupCollapsible(
         wrapper,
         bq,
-        () => getLineHeight(bq) * 7 + getPadding(bq),
+        () => {
+          const lh = getLineHeight(bq);
+          const padTop = Number.parseFloat(window.getComputedStyle(bq).paddingTop) || 17;
+          return Math.round(lh * 6.6 + padTop);
+        },
         '引用块',
         { buttonPlacement: 'inside-start' }
       );

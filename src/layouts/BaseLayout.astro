@@ -118,15 +118,44 @@ const {
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="192x192" href="/favicons/avatar-192.png" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="f10w-0x00 RSS" />
+    <link rel="preload" href="/fonts/AnthropicSans_Roman_Web.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/_astro/BaseLayout.BXLOwkA9.css" />
+    <style is:inline>
+      @font-face {
+        font-family: 'Anthropic Sans';
+        src: url('/fonts/AnthropicSans_Roman_Web.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      :root, body, html {
+        font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif !important;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border-radius: 50%;
+        transition: transform 0.18s ease, opacity 0.18s ease;
+      }
+      .brand:hover {
+        opacity: 0.88;
+        transform: scale(1.08);
+      }
+      .brand-avatar {
+        border-radius: 50% !important;
+        display: block;
+        object-fit: cover;
+      }
+    </style>
   </head>
   <body>
     <div class="site-shell">
       <header class="site-header">
         <div class="site-header-inner">
-          <a class="brand" href="/" aria-label="f10w-0x00 首页">
-            <img class="brand-avatar" src="/avatar.png" alt="" width="22" height="22" style="border-radius: 4px; vertical-align: -3px; margin-right: 7px; display: inline-block; object-fit: cover;" />
-            f10w-0x00
+          <a class="brand" href="/" aria-label="首页" title="首页">
+            <img class="brand-avatar" src="/avatar.png" alt="首页" width="28" height="28" style="border-radius: 50%; display: block; object-fit: cover;" />
           </a>
           <nav class="site-nav" aria-label="主导航">
             <a href="/" aria-current={activeNav === 'home' ? 'page' : undefined}> 首页 </a>

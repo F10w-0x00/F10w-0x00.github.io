@@ -187,5 +187,182 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </section>
   </div>
 
-  <script type="module" src="/_astro/BlogArchive.astro_astro_type_script_index_0_lang.BJc606kA.js"></script>
+  <script is:inline>
+    (() => {
+      function initArchive(archiveEl) {
+        if (!archiveEl || archiveEl.dataset.archiveInit === 'true') return;
+        archiveEl.dataset.archiveInit = 'true';
+
+        const filterButtons = Array.from(archiveEl.querySelectorAll('[data-blog-filter]'));
+        const sortButton = archiveEl.querySelector('[data-blog-sort]');
+        const postsContainer = archiveEl.querySelector('[data-blog-archive-posts]');
+        const postItems = Array.from(archiveEl.querySelectorAll('[data-blog-post]')).map((item, index) => ({
+          item,
+          index,
+          date: Number(item.dataset.date || 0),
+          category: item.dataset.category || '',
+          year: item.dataset.year || ''
+        }));
+        const emptyEl = archiveEl.querySelector('[data-filter-empty]');
+
+        function closeAllMenus(exceptBtn) {
+          filterButtons.forEach(btn => {
+            if (btn !== exceptBtn) {
+              btn.setAttribute('aria-expanded', 'false');
+              const menu = btn.closest('.archive-filter-control')?.querySelector('.archive-filter-menu');
+              if (menu) menu.setAttribute('hidden', '');
+            }
+          });
+        }
+
+        function updateList() {
+          const categoryFilter = archiveEl.querySelector('[data-blog-filter="category"]')?.dataset.filterValue || '';
+          const yearFilter = archiveEl.querySelector('[data-blog-filter="year"]')?.dataset.filterValue || '';
+          const sortOrder = sortButton?.dataset.blogSort === 'asc' ? 'asc' : 'desc';
+
+          const sorted = [...postItems].sort((a, b) => {
+            return (sortOrder === 'asc' ? a.date - b.date : b.date - a.date) || a.index - b.index;
+          });
+
+          let visibleCount = 0;
+          sorted.forEach(({ item, category, year }) => {
+            const matchesCat = !categoryFilter || category === categoryFilter;
+            const matchesYear = !yearFilter || year === yearFilter;
+            const isVisible = matchesCat && matchesYear;
+            item.hidden = !isVisible;
+            if (isVisible) {
+              visibleCount++;
+            }
+            if (postsContainer) {
+              postsContainer.appendChild(item);
+            }
+          });
+
+          if (emptyEl) {
+            emptyEl.hidden = visibleCount > 0;
+          }
+        }
+
+        function syncUrlParams() {
+          const params = new URLSearchParams(window.location.search);
+          ['category', 'year'].forEach(name => {
+            const val = archiveEl.querySelector(`[data-blog-filter="${name}"]`)?.dataset.filterValue || '';
+            if (val) {
+              params.set(name, val);
+            } else {
+              params.delete(name);
+            }
+          });
+          const query = params.toString();
+          const newUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
+          window.history.replaceState(null, '', newUrl);
+        }
+
+        function selectOption(btn, optionEl) {
+          const control = btn.closest('.archive-filter-control');
+          const label = btn.querySelector('[data-filter-label]');
+          const options = Array.from(control?.querySelectorAll('[data-filter-option]') || []);
+          const val = optionEl.dataset.filterOption || '';
+          btn.dataset.filterValue = val;
+          if (label) {
+            label.textContent = optionEl.dataset.optionLabel || optionEl.textContent.trim() || '';
+          }
+          options.forEach(opt => {
+            opt.setAttribute('aria-selected', String(opt === optionEl));
+          });
+        }
+
+        // 1. 初始化时读取 URL 参数
+        const currentParams = new URLSearchParams(window.location.search);
+        filterButtons.forEach(btn => {
+          const filterName = btn.dataset.blogFilter;
+          const urlVal = filterName ? currentParams.get(filterName) : null;
+          if (urlVal) {
+            const control = btn.closest('.archive-filter-control');
+            const matchingOpt = control?.querySelector(`[data-filter-option="${CSS.escape(urlVal)}"]`);
+            if (matchingOpt) {
+              selectOption(btn, matchingOpt);
+            }
+          }
+        });
+
+        // 2. 绑定筛选下拉菜单点击展开/收起
+        filterButtons.forEach(btn => {
+          const control = btn.closest('.archive-filter-control');
+          const menu = control?.querySelector('.archive-filter-menu');
+          const options = Array.from(control?.querySelectorAll('[data-filter-option]') || []);
+
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            closeAllMenus(btn);
+            btn.setAttribute('aria-expanded', String(!isOpen));
+            if (menu) {
+              if (isOpen) {
+                menu.setAttribute('hidden', '');
+              } else {
+                menu.removeAttribute('hidden');
+              }
+            }
+          });
+
+          options.forEach(opt => {
+            opt.addEventListener('click', (e) => {
+              e.stopPropagation();
+              selectOption(btn, opt);
+              closeAllMenus();
+              syncUrlParams();
+              updateList();
+            });
+          });
+        });
+
+        // 3. 点击外部或按 ESC 关闭所有下拉菜单
+        document.addEventListener('click', (e) => {
+          if (!archiveEl.contains(e.target)) {
+            closeAllMenus();
+          }
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeAllMenus();
+        });
+
+        // 4. 排序按钮交互（60° 三角形旋转与正倒序切换）
+        if (sortButton) {
+          sortButton.addEventListener('click', () => {
+            const currentSort = sortButton.dataset.blogSort === 'asc' ? 'desc' : 'asc';
+            const labelEl = sortButton.querySelector('[data-sort-label]');
+            const prevRotation = Number(sortButton.dataset.sortRotation || 180);
+            const nextRotation = prevRotation + 60;
+
+            sortButton.dataset.blogSort = currentSort;
+            sortButton.dataset.sortRotation = String(nextRotation);
+            sortButton.style.setProperty('--sort-triangle-rotation', `${nextRotation}deg`);
+
+            if (labelEl) {
+              labelEl.textContent = currentSort === 'asc'
+                ? (sortButton.dataset.sortLabelAsc || '从旧到新')
+                : (sortButton.dataset.sortLabelDesc || '从新到旧');
+            }
+
+            updateList();
+          });
+        }
+
+        // 5. 初始渲染一次，确保 URL 过滤与排序生效
+        updateList();
+      }
+
+      function boot() {
+        document.querySelectorAll('[data-blog-archive]').forEach(initArchive);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot, { once: true });
+      } else {
+        boot();
+      }
+      document.addEventListener('astro:page-load', boot);
+    })();
+  </script>
 </BaseLayout>

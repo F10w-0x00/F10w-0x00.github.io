@@ -38,4 +38,7 @@
 | **F27** | 首页去小勾 | 首页 Recent Posts 卡片彻底移除已读打勾与裁剪框 | **已验证** | Agent-Index | 移除首页卡片 `data-reading-post-slug` 与打勾元素，保留 `/blog/` 归档页独立打勾功能 | 本次提交 |
 | **F28** | 代码块精细还原 | Shiki 语法高亮、浮动语言徽标、长代码折叠与内联复制 | **已验证** | Agent-Article | 补齐 Shiki Light/Dark 配色，浮动语言徽标，复制过渡与超 10 行平滑渐隐折叠 | 本次提交 |
 | **F29** | 4 篇博文排版深度精修 | 注入真实正文、figure/figcaption图片下小字、表格与Callout | **已验证** | Agent-Article | 拔智齿与UP主推荐全量内容对齐原站，规范图片下灰色小字与 Callout 提示框 | 本次提交 |
-| **F30** | 完整排版范例规范 | 全特性排版指南与全平台字体建议 | **已验证** | Agent-Docs-CI | 输出 `docs/TYPOGRAPHY_AND_STYLE_GUIDE.md`，覆盖 Frontmatter、小字、代码块及 Win/Mac 字体选型与自定义字体指南 | 本次提交 |
+| **F30** | 完整排版范例规范 | 全特性排版指南与全平台字体建议 | **已验证** | Agent-Docs-CI | 输出 `docs/TYPOGRAPHY_AND_STYLE_GUIDE.md`，覆盖 Frontmatter、小字、代码块及 Win/Mac 字体选型与自定义字体指南 | `e414f38` |
+| **F31** | 顶栏图标纯净化 | 顶栏仅保留圆形 Icon 并生成真透明圆形 Favicon | **已验证** | Agent-Core | 顶栏删除 `f10w-0x00` 文本，头像与 Tab Favicon 全部处理为真透明抗锯齿圆形 | 本次提交 |
+| **F32** | 文档归档交互 | 文档列表话题分类、年份筛选与正倒序排序修复 | **已验证** | Agent-Index | 剥离无用缺失模块，实装自包含内联交互脚本，经 DOM 测试所有类型、年份与 60° 旋转排序完全正常 | 本次提交 |
+| **F33** | 自定义字体实装 | 导入 Anthropic Sans 优质英文字体并注入字体栈 | **已验证** | Agent-Core | 导入 `AnthropicSans_Roman_Web.woff2`，配置 `@font-face` 并前置至首选西文字体，中文无缝回退系统黑体 | 本次提交 |

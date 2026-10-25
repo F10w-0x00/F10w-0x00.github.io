@@ -207,6 +207,9 @@
       });
     }
 
+    // 监听返回上一页（BFCache 恢复）时同步更新已读状态
+    window.addEventListener('pageshow', updateMarks);
+
     const readingElem = document.querySelector('[data-post-reading]');
     if (readingElem) {
       const slug = readingElem.getAttribute('data-reading-post-slug');
@@ -216,8 +219,9 @@
     document.addEventListener(
       'click',
       (e) => {
-        const link = e.target.closest('a[href*="/blog/20"]');
-        const card = link ? link.closest('[data-reading-post-slug]') : null;
+        const link = e.target.closest('a[href^="/blog/"]');
+        if (!link || link.getAttribute('href') === '/blog/' || link.getAttribute('href')?.startsWith('/blog/?')) return;
+        const card = link.closest('[data-reading-post-slug]');
         if (card) {
           const slug = card.getAttribute('data-reading-post-slug');
           if (slug) {
@@ -397,7 +401,8 @@
 
       pre.prepend(copyBtn);
 
-      if (lines.length > 10) {
+      // 遵循原 blog 的长代码折叠机制（超过 16 行触发自动折叠，避免短代码块频繁折叠打断阅读）
+      if (lines.length > 16) {
         wrapper.classList.add('collapsible-code-block');
         setupCollapsible(
           wrapper,
@@ -406,7 +411,7 @@
             const codeEl = pre.querySelector('code') || pre;
             const lh = getLineHeight(codeEl);
             const padTop = Number.parseFloat(window.getComputedStyle(pre).paddingTop) || 24;
-            return Math.round(lh * 6.6 + padTop);
+            return Math.round(lh * 8.2 + padTop);
           },
           '代码块',
           { buttonPlacement: 'inside-start', insertAfterSelector: '.code-copy-button' }
@@ -415,7 +420,7 @@
     });
   }
 
-  // 引用块初始化（非提示框且高度超过 10 行时自动折叠）
+  // 引用块初始化（非提示框且高度超过 16 行时自动折叠）
   function initQuoteBlocks() {
     document.querySelectorAll('.prose blockquote').forEach((bq) => {
       if (
@@ -428,7 +433,7 @@
 
       const lh = getLineHeight(bq);
       const estimatedLines = Math.ceil(bq.scrollHeight / lh);
-      if (estimatedLines <= 10) return;
+      if (estimatedLines <= 16) return;
 
       const wrapper = document.createElement('div');
       wrapper.className = 'collapsible-quote-block';
@@ -441,7 +446,7 @@
         () => {
           const lh = getLineHeight(bq);
           const padTop = Number.parseFloat(window.getComputedStyle(bq).paddingTop) || 17;
-          return Math.round(lh * 6.6 + padTop);
+          return Math.round(lh * 8.2 + padTop);
         },
         '引用块',
         { buttonPlacement: 'inside-start' }

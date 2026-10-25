@@ -26,14 +26,10 @@
 ---
 title: "我是怎么使用 Obsidian 的"
 description: "Obsidian 的哲学和缺陷，双链笔记与本地知识库构建"
-pubDate: 2026-10-01
+date: 2026-10-01
 category: "学习" # 可选: 学习 / 博客站 / 日常 / UP主推荐
-tags:
-  - "PKM"
-  - "Obsidian"
-  - "知识管理"
-cover: "/_astro/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
-slug: "2026-10-01-how-i-use-obsidian"
+words: 2994
+cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 ---
 ```
 
@@ -42,10 +38,10 @@ slug: "2026-10-01-how-i-use-obsidian"
 | :--- | :--- | :---: | :--- |
 | `title` | `string` | 必填 | 网页标题与卡片主标题，控制在 30 字以内最佳。 |
 | `description` | `string` | 必填 | 用于归档卡片正文摘录及 `<meta name="description">`。 |
-| `pubDate` | `date` | 必填 | 格式为 `YYYY-MM-DD`，排序引擎以此为时间戳依据。 |
+| `date` | `date / string` | 必填 | 格式为 `YYYY-MM-DD`，排序引擎以此为时间戳依据。 |
 | `category` | `string` | 推荐 | 文档页分类过滤器（按类型筛选）的聚合依据。 |
-| `cover` | `string` | 可选 | 列表卡片与文章头图，建议比例 `2:1`（如 1600x800）。 |
-| `slug` | `string` | 推荐 | 网页固定链接，推荐遵循 `YYYY-MM-DD-kebab-case`。 |
+| `words` | `number` | 推荐 | 正文字数统计（如 2994），展示为 "2994 字"。 |
+| `cover` | `string` | 可选 | 列表卡片与文章头图（如 `/images/...`），建议比例 `2:1`。 |
 
 ---
 
@@ -150,7 +146,7 @@ slug: "2026-10-01-how-i-use-obsidian"
 代码块严格对齐原站规格，具备三大特性：
 1. **左上角浮动语言药丸徽章**（通过 `data-language` 或 `data-code-language` 触发）
 2. **右上角圆形质感一键复制按钮**（自动读取代码纯文本，带有状态流转动画）
-3. **超长代码渐隐折叠与展开交互**（超过 10 行时自动触发底部渐隐遮罩与展开按钮）
+3. **超长代码渐隐折叠与展开交互**（超过 16 行时自动触发底部渐隐遮罩与展开按钮，展示约 8 行代码并优雅渐隐）
 
 ### 7.1 常规短代码块范例
 ```html
@@ -159,8 +155,8 @@ slug: "2026-10-01-how-i-use-obsidian"
 <span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">WHERE</span> <span style="--shiki-light:#8250df;--shiki-dark:#d2a8ff;">contains</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">(</span><span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">status</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">,</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"active"</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">)</span></span></code></pre>
 ```
 
-### 7.2 触发折叠的多行代码块范例（行数 > 10）
-任何指定了语言且行数大于 10 行的代码块，客户端脚本将自动为外部添加 `.collapsible-code-block` 容器，渲染出半透明渐变遮罩与“展开代码块”旋钮，点击后流畅展开全部代码。
+### 7.2 触发折叠的多行代码块范例（行数 > 16）
+任何指定了语言且行数大于 16 行的代码块，客户端脚本将自动为外部添加 `.collapsible-code-block` 容器，渲染出半透明渐变遮罩与“展开代码块”旋钮，点击后流畅展开全部代码。短代码块（1~16 行）默认完整展示，不折叠打扰阅读。
 
 ---
 
@@ -172,18 +168,17 @@ slug: "2026-10-01-how-i-use-obsidian"
 ```
 
 ### 8.2 附言与注意事项（Callout Note）
-```html
-<blockquote class="callout callout-note">
-  <p class="callout-title">附言</p>
-  <p>此前 Lia 就提议过注意事项的格式支持，有了注意事项后，便可在文首说明更新细节。</p>
-</blockquote>
+在 Markdown 中可直接使用 GitHub Alert 语法书写：
+```markdown
+> [!NOTE] 附言
+> 此前 Lia 就提议过注意事项的格式支持，有了注意事项后，便可在文首说明更新细节。
 ```
 
 ### 8.3 纯图标简短提示（Callout Icon Only）
-```html
-<blockquote class="callout callout-note callout-icon-only">
-  <p>有时发炎，所以想要拔。但想到看牙医很可怕，终于拔掉后，只会感觉解脱了……</p>
-</blockquote>
+若无需标题文本、仅保留圆形信息圆点图标：
+```markdown
+> [!NOTE CALLOUT-ICON-ONLY]
+> 有时发炎，所以想要拔。但想到看牙医很可怕，终于拔掉后，只会感觉解脱了……
 ```
 
 ---

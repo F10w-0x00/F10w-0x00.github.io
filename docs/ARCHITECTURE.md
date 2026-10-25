@@ -1,11 +1,12 @@
-# 系统架构设计与部署说明 (Architecture & CI/CD)
+# 系统架构设计说明 (Architecture)
 
 ## 1. 技术栈选型
 
-- **核心框架**：[Astro](https://astro.build/) (v5/v6 最新静态站点生成模式)
-  - **Zero-JS 默认理念**：文章正文及常规静态内容零客户端 JavaScript 开销，渲染性能极致。
-  - **原生 CSS 与 CSS 变量**：直接采用现代 CSS 特性与原站精准 Design Tokens，避免 Tailwind 造成的预设样式污染，确保 1:1 像素级复刻。
-  - **Vanilla 微交互**：等边三角形排序翻转、折叠代码块、外链自动 Favicon、已读打勾标记等均采用纯原生轻量 JS 驱动，内聚在各 Astro 孤岛组件中。
+- **核心框架**：[Astro 5.x](https://astro.build/) (静态生成模式 `output: 'static'`)
+  - **极致扁平化架构**：博客文章统一收敛在根目录 `posts/*.md`，无需手写繁杂的静态 HTML 页面。
+  - **全局纯净样式**：直接采用现代原生 CSS 与高精度 Design Tokens（莫兰迪色系、苹果极简语义），零预设样式污染。
+  - **集中式 Vanilla 交互引擎**：统一在 `src/scripts/main.js` 中驱动全站核心交互（设置抽屉平滑滑块、已读博文本地打勾、代码复制与长块渐隐折叠、BFCache 同步）。
+  - **编译管道**：挂载自定义 Rehype 编译器插件 (`src/plugins/rehype-blog-content.mjs`)，在编译阶段自动转换 Callout 提示框、图片懒加载图注与外链 Favicon。
 - **运行与构建环境**：
   - 基于 NixOS 声明式环境，统一由 `nix-shell -p nodejs pnpm git` 提供底层支撑。
 
@@ -15,40 +16,39 @@
 
 ```text
 /home/flynn/Documents/Blog/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml            # GitHub Pages 自动化 CI/CD 构建发布
-├── docs/                         # 伴随式全量规范文档
-│   ├── ARCHITECTURE.md           # 架构设计与部署说明
-│   ├── DESIGN_TOKENS.md          # 逆向设计 Token 规范 (色板、字体、断点)
-│   ├── COMPONENTS.md             # 核心组件结构与接口指南
-│   ├── MAINTENANCE.md            # 日常博文撰写与扩展维护手册
-│   └── EVIDENCE_LOG.md           # 限制项技术证据归档日志
-├── public/                       # 静态资源 (Favicons、图标、图片素材)
-│   ├── favicons/
-│   │   └── external-links/       # 站外链接自动 favicon 本地缓存/默认项
-│   └── favicon.png
+├── posts/                        # 核心博文目录（唯一正文写作源，标准 Markdown 格式）
+│   ├── 2026-06-10-visual-and-interaction-design-of-this-blog-site.md
+│   ├── 2026-07-20-my-wisdom-tooth-extraction-experience.md
+│   ├── 2026-07-25-recommended-up-creators-im-following-part-3.md
+│   └── 2026-10-01-how-i-use-obsidian.md
+├── docs/                         # 系统核心设计与写作规范指南
+│   ├── ARCHITECTURE.md           # 架构设计说明（本文档）
+│   ├── DESIGN_TOKENS.md          # 视觉设计 Token 规范（色板、字体、断点）
+│   ├── COMPONENTS.md             # 核心组件规范与微交互逻辑
+│   └── TYPOGRAPHY_AND_STYLE_GUIDE.md # 博客全量排版与写作指南
+├── public/                       # 静态资源
+│   ├── avatar.png                # 网站个人头像
+│   ├── favicon.png / favicon.ico # 浏览器 Favicon
+│   ├── fonts/                    # 自托管 Web 字体 (Anthropic Sans)
+│   ├── favicons/external-links/  # 站外链接自动注入的 Favicon 资源
+│   └── images/                   # 博文正文配图
 ├── src/
-│   ├── components/               # 语义化组件
-│   │   ├── common/               # SiteHeader, SiteFooter, SiteSettingsPanel
-│   │   ├── blog/                 # BlogFilterBar, PostCard, TriangleSortButton
-│   │   └── article/              # ImmersiveOutline, CodeBlock, ImageStack, Admonition
-│   ├── content/                  # 内容集合 (Content Collections)
-│   │   └── blog/                 # Markdown / MDX 博客文章源文件
 │   ├── layouts/
-│   │   ├── BaseLayout.astro      # 全局主容器、色彩系统注入、Header/Footer
-│   │   └── PostLayout.astro      # 文章详情专用版心、大纲控制器、阅读进度
+│   │   └── BaseLayout.astro      # 全局主容器、防闪烁设置初始化、顶栏 Header
 │   ├── pages/
-│   │   ├── index.astro           # 首页 (Welcome & Recent Posts)
+│   │   ├── index.astro           # 首页（Recent Posts 卡片流，无已读小勾干扰）
 │   │   ├── blog/
-│   │   │   ├── index.astro       # 博客列表展示页 (/blog/)
-│   │   │   └── [slug].astro      # 动态文章详情页 (/blog/:slug)
-│   │   └── rss.xml.ts            # RSS 订阅生成器
-│   └── styles/
-│       ├── global.css            # 全局重置、色彩变量、亮暗色定义
-│       ├── typography.css        # Prose 排版样式、代码块与引用块
-│       └── components.css        # 组件辅助样式
-├── CHECKLIST.md                  # Feature 唯一真值三态追踪表
+│   │   │   ├── index.astro       # 文档归档页（分类/年份过滤、60° 旋转排序、已读打勾）
+│   │   │   └── [slug].astro      # 动态文章页（Markdown 渲染、图注、分类导航、相邻翻页）
+│   │   └── rss.xml.js            # RSS 订阅源生成器
+│   ├── plugins/
+│   │   └── rehype-blog-content.mjs # 编译器插件（Callout、图注 Figure、外链 Favicon）
+│   ├── scripts/
+│   │   └── main.js               # 客户端主交互脚本（设置、折叠、复制、已读标记）
+│   ├── styles/
+│   │   └── global.css            # 统一样式系统（变量、暗黑模式、Prose 排版）
+│   └── utils/
+│       └── posts.js              # 博文元数据解析与排序辅助函数
 ├── astro.config.mjs              # Astro 配置文件
 ├── package.json
 └── tsconfig.json
@@ -56,21 +56,15 @@
 
 ---
 
-## 3. GitHub Pages 自动化部署拓扑
+## 3. 部署与维护
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Developer as 开发/Agent
-    participant Git as GitHub 仓库 (main)
-    participant Runner as GitHub Actions Runner
-    participant Pages as GitHub Pages (CDN)
+```bash
+# 启动本地开发服务 (默认端口 4321)
+nix-shell -p nodejs pnpm --run "pnpm dev"
 
-    Developer->>Git: git push origin main
-    Git->>Runner: 触发 push 事件 (deploy.yml)
-    Note over Runner: 检出代码、设置 Node.js 环境
-    Runner->>Runner: pnpm install --frozen-lockfile
-    Runner->>Runner: pnpm build (输出至 dist/)
-    Runner->>Pages: actions/deploy-pages 部署至 GitHub Pages
-    Pages-->>Developer: 静态站点发布完成 (HTTPS)
+# 生产环境静态打包 (产物位于 dist/)
+nix-shell -p nodejs pnpm --run "pnpm build"
+
+# 本地预览构建产物
+nix-shell -p nodejs pnpm --run "pnpm preview"
 ```

@@ -8,8 +8,10 @@
 
 ### 1.1 正文字体栈 (Sans-Serif / Prose)
 ```css
-font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
 ```
+- **首选字体**：自托管 `Anthropic Sans`（woff2 格式，预加载 `preload`，字重 100~900 变量支持），英文字符形态极具科技与人文质感。
+- **系统降级**：苹果 SF Pro SC / 苹方（PingFang SC） / 微软雅黑等高质量系统无衬线字族。
 - **基准字号**：`--site-font-size: 17.5px;`
 - **正文行高**：`line-height: 1.8;`
 - **渲染平滑**：`-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;`

@@ -6,7 +6,7 @@
   - **极致扁平化架构**：博客文章统一收敛在根目录 `posts/*.md`，无需手写繁杂的静态 HTML 页面。
   - **全局纯净样式**：直接采用现代原生 CSS 与高精度 Design Tokens（莫兰迪色系、苹果极简语义），零预设样式污染。
   - **集中式 Vanilla 交互引擎**：统一在 `src/scripts/main.js` 中驱动全站核心交互（设置抽屉平滑滑块、已读博文本地打勾、代码复制与长块渐隐折叠、BFCache 同步）。
-  - **编译管道**：挂载自定义 Rehype 编译器插件 (`src/plugins/rehype-blog-content.mjs`)，在编译阶段自动转换 Callout 提示框、图片懒加载图注与外链 Favicon。
+  - **编译管道**：挂载自定义 Rehype 编译器插件 (`src/plugins/rehype-blog-content.mjs`)，在编译阶段自动转换 Callout 提示框、图片懒加载图注、外链 Favicon，以及**编译期自动探测 `public/files/` 附件大小与格式并生成高保真下载卡片**。
 - **运行与构建环境**：
   - 基于 NixOS 声明式环境，统一由 `nix-shell -p nodejs pnpm git` 提供底层支撑。
 
@@ -29,6 +29,7 @@
 ├── public/                       # 静态资源
 │   ├── avatar.png                # 网站个人头像
 │   ├── favicon.png / favicon.ico # 浏览器 Favicon
+│   ├── files/                    # 附件下载资源（PDF、ZIP 等，由编译器自动读取体积）
 │   ├── fonts/                    # 自托管 Web 字体 (Anthropic Sans)
 │   ├── favicons/external-links/  # 站外链接自动注入的 Favicon 资源
 │   └── images/                   # 博文正文配图

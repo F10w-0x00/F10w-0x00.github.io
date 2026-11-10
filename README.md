@@ -19,6 +19,7 @@
 ├── public/                       # 静态资源
 │   ├── avatar.png                # 个人头像 Logo
 │   ├── favicon.png / favicon.ico # 浏览器 Favicon
+│   ├── files/                    # 【附件下载目录】存放供读者下载的 PDF、ZIP 等附件
 │   ├── fonts/                    # Anthropic Sans Web 字体
 │   └── images/                   # 文章配图与封面图
 ├── src/
@@ -133,3 +134,20 @@ echo "Hello World"
 | 性能 | 高速加载 | 静态预渲染 |
 | 维护 | 架构简单 | 纯 Markdown 驱动 |
 ```
+
+### 7. 文件下载卡片 (File Asset Cards)
+
+将附件（如 PDF、ZIP、EPUB 等）放入 **`public/files/`** 目录后，只需在 Markdown 中**单行独立引用**，系统会在静态编译时**全自动探测文件真实物理大小与格式**，渲染出苹果 AirDrop 风格的拟物下载卡片（无需手动填写大小或标签）：
+
+- **基础用法（直接引用物理文件名）**：
+  ```markdown
+  [wisdom-tooth-care-guide.pdf](/files/wisdom-tooth-care-guide.pdf)
+  ```
+  自动渲染为：大粗体文件名 + 副标 `PDF 文档 · 469 B` + 莫兰迪专属红粉色图标 + 胶囊下载按钮。
+
+- **进阶用法（自定义中文显示标题）**：
+  ```markdown
+  [拔牙术后全周期护理指南](/files/wisdom-tooth-care-guide.pdf)
+  ```
+  第一行展示自定义中文大标题，第二行同样全自动显示 `PDF 文档 · 469 B`，整卡可点击下载。
+

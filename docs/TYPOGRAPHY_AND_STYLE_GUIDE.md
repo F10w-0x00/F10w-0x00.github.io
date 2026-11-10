@@ -15,6 +15,7 @@
 8. [引用块与注意事项（Callout）](#8-引用块与注意事项callout)
 9. [表格排版与列宽策略](#9-表格排版与列宽策略)
 10. [字体系统深度解析与自选字体指南](#10-字体系统深度解析与自选字体指南)
+11. [文件资产与下载卡片规范（PDF / 压缩包等）](#11-文件资产与下载卡片规范pdf--压缩包等)
 
 ---
 
@@ -302,3 +303,66 @@ Google Fonts 针对部分开源中文字体（如 **Noto Sans SC 思源黑体**�
 }
 ```
 并在 `src/styles/global.css` 中将 `font-family` 赋值给需要的容器或正文。
+
+---
+
+## 11. 文件资产与下载卡片规范（PDF / 压缩包等）
+
+博客内置了符合苹果 AirDrop 风格的**双行精致下载卡片**（方案 1.1 + 语法 A 自动探测），支持在文章中引用 PDF、ZIP、EPUB 等各类附件，并在编译期**全自动读取真实文件大小与格式**，无需手动标注！
+
+### 11.1 文件存放与目录结构
+推荐将需要提供下载的静态文件存放在博客仓库的 `public/files/` 目录下：
+```text
+Blog/
+└── public/
+    └── files/
+        ├── wisdom-tooth-care-guide.pdf
+        └── sample-assets.zip
+```
+这样在推送到 GitHub 后，文件会被自动打包到站点根目录下的 `/files/...` 路径。
+
+### 11.2 编写语法（零配置单行引用）
+
+只需在 Markdown 中**单行独立引用**该文件链接：
+
+#### 基础用法：纯单行文件名引用
+```markdown
+[wisdom-tooth-care-guide.pdf](/files/wisdom-tooth-care-guide.pdf)
+```
+- **自动效果**：
+  - 第一行主标题：`wisdom-tooth-care-guide.pdf`（大粗体）；
+  - 第二行副标：`PDF 文档 · 469 B`（自动探测物理字节并智能换算为 B / KB / MB / GB）；
+  - 左侧：专属莫兰迪浅红底衬 PDF 折角图标与徽标；
+  - 右侧：药丸胶囊下载按钮（点击或点击整卡均可直接触发浏览器下载）。
+
+#### 进阶用法：自定义中文描述标题
+```markdown
+[拔牙术后全周期护理指南](/files/wisdom-tooth-care-guide.pdf)
+```
+- **效果**：
+  - 第一行主标题显示为中文：`拔牙术后全周期护理指南`；
+  - 第二行副标显示：`PDF 文档 · 469 B`；
+  - 悬停卡片时浮现物理文件名说明，触发下载时自动保存为真实文件名。
+
+#### 引用 GitHub Releases 或外部下载链接
+若文件体积极大（如几百 MB 的数据集或安装包），建议上传到 GitHub Releases 或网盘，并直接引用：
+```markdown
+[macOS-Obsidian-Theme-v2.0.zip](https://github.com/f10w-0x00/blog/releases/download/v2.0/theme.zip)
+```
+系统将自动识别扩展名为 `ZIP 压缩包` 并生成对应的莫兰迪琥珀黄下载卡片。
+
+### 11.3 支持的文件类型与配色系统
+| 扩展名 | 分类标签 | 专属莫兰迪低饱和色调 |
+| :--- | :--- | :--- |
+| `.pdf` | PDF 文档 | 珊瑚陶土红 |
+| `.zip`, `.tar.gz`, `.7z`, `.rar` | 压缩包 | 浅驼琥珀黄 |
+| `.epub`, `.mobi`, `.azw3` | 电子书 | 优雅灰紫 |
+| `.dmg`, `.pkg`, `.ipa` | Apple 镜像/安装包 | 静谧灰蓝 |
+| `.exe`, `.msi` | Windows 程序 | 靛青冷蓝 |
+| `.apk` | Android 安装包 | 草木浅绿 |
+| `.doc`, `.docx` | Word 文档 | 经典靛蓝 |
+| `.xls`, `.xlsx`, `.csv` | 电子表格 | 橄榄青绿 |
+| `.ppt`, `.pptx` | 演示幻灯片 | 砖褐橘红 |
+| `.mp3`, `.wav`, `.flac` | 音频资源 | 灰调粉紫 |
+| `.mp4`, `.mov` | 视频资源 | 薰衣草紫 |
+

@@ -401,8 +401,8 @@
 
       pre.prepend(copyBtn);
 
-      // 遵循原 blog 的长代码折叠机制（超过 16 行触发自动折叠，避免短代码块频繁折叠打断阅读）
-      if (lines.length > 16) {
+      // 遵循原 blog 的长代码折叠机制（超过 14 行触发自动折叠，折叠后保留 7 行高度，确保展开时有明显的阅读收益）
+      if (lines.length > 14) {
         wrapper.classList.add('collapsible-code-block');
         setupCollapsible(
           wrapper,
@@ -411,7 +411,7 @@
             const codeEl = pre.querySelector('code') || pre;
             const lh = getLineHeight(codeEl);
             const padTop = Number.parseFloat(window.getComputedStyle(pre).paddingTop) || 24;
-            return Math.round(lh * 8.2 + padTop);
+            return Math.round(lh * 7 + padTop);
           },
           '代码块',
           { buttonPlacement: 'inside-start', insertAfterSelector: '.code-copy-button' }
@@ -420,7 +420,7 @@
     });
   }
 
-  // 引用块初始化（非提示框且高度超过 16 行时自动折叠）
+  // 引用块初始化（非提示框且高度超过 14 行时自动折叠）
   function initQuoteBlocks() {
     document.querySelectorAll('.prose blockquote').forEach((bq) => {
       if (
@@ -433,7 +433,7 @@
 
       const lh = getLineHeight(bq);
       const estimatedLines = Math.ceil(bq.scrollHeight / lh);
-      if (estimatedLines <= 16) return;
+      if (estimatedLines <= 14) return;
 
       const wrapper = document.createElement('div');
       wrapper.className = 'collapsible-quote-block';
@@ -446,7 +446,7 @@
         () => {
           const lh = getLineHeight(bq);
           const padTop = Number.parseFloat(window.getComputedStyle(bq).paddingTop) || 17;
-          return Math.round(lh * 8.2 + padTop);
+          return Math.round(lh * 7 + padTop);
         },
         '引用块',
         { buttonPlacement: 'inside-start' }

@@ -15,7 +15,7 @@
   - `user.name`: `f10w-0x00`
   - `user.email`: `f10w.0x00@gmail.com`
   *(所有提交均须严格保持此身份，以确保 GitHub Contributions 正常统计与身份一致)*
-- **核心设计基准**：基于 [kenshelter.com](https://kenshelter.com) 视觉骨架深度演进，融合苹果极简设计理念、「温润莫兰迪风」全开源可变字体排版（`Figtree` + `Noto Sans SC` + `JetBrains Mono`）、莫兰迪低饱和度色彩体系（Design Tokens）与深浅模式无缝切换。
+- **核心设计基准**：基于 [kenshelter.com](https://kenshelter.com) 视觉骨架深度演进，融合苹果极简设计理念、自托管开源西文/代码字体（`Figtree` + `JetBrains Mono`）+ 原生系统高清晰中文字体排版、莫兰迪低饱和度色彩体系（Design Tokens）与深浅模式无缝切换。
 
 ---
 
@@ -111,10 +111,10 @@
 - **深浅扫光动画**：在支持现代浏览器的环境下，通过 View Transitions API 驱动自上而下的遮罩扫光过渡（`theme-wipe-to-dark` / `theme-wipe-to-light`）。
 - **分段控制器 (Segmented Control)**：类似 iOS 的滑动药丸指示器，利用 `data-active-index` 驱动纯 CSS 硬件加速平滑位移，并支持动态判断选项个数（2 或 3 项）。
 
-### 4.6 现代排版与全开源自托管字体系统
-- **西文与中文字体栈**：通过 `@fontsource-variable/figtree`（温润几何无衬线，含斜体）与 `@fontsource-variable/noto-sans-sc`（思源黑体，按 `unicode-range` 自动分片）在 `BaseLayout.astro` 统一引入，全部 SIL OFL 1.1 开源协议，构建期自托管输出至 `dist/_astro/`，无版权风险、无外部 CDN 依赖、Git 仓库零二进制字体膨胀。
-- **等宽代码字体**：通过 `@fontsource-variable/jetbrains-mono` 自托管，并统一绑定 `--font-mono`。
-- **排版精调（`src/styles/article.css`）**：克制标题字重（`680/650/620/600`）+ 轻微负字距、正文 `line-height: 1.84` / `letter-spacing: 0.012em`、`strong` 字重 `620`，以及元数据与表格全面开启 `tabular-nums`。
+### 4.6 现代排版与混合字体系统
+- **西文与代码字体**：通过 `@fontsource-variable/figtree`（温润几何无衬线，含斜体）与 `@fontsource-variable/jetbrains-mono`（等宽代码）在 `BaseLayout.astro` 统一引入，全部 SIL OFL 1.1 开源协议，构建期自托管输出至 `dist/_astro/`（约 80 KB），无版权风险、无外部 CDN 依赖。
+- **中文原生高清晰回退**：中文直接走操作系统原生经过像素级 Hinting 的黑体（macOS/iOS 苹方 `PingFang SC` / Windows 微软雅黑 `Microsoft YaHei`，且 `Segoe UI` 排在微软雅黑之前），彻底杜绝 Web 中文字体在 Windows 非 4K 屏上的偏细发虚问题，且零中文字体流量开销。
+- **排版精调（`src/styles/article.css`）**：克制标题字重（`680/650/620/600`）+ 轻微负字距、正文 `line-height: 1.82` / `letter-spacing: 0`、`strong` 字重 `620`，以及元数据与表格全面开启 `tabular-nums`。
 
 ---
 

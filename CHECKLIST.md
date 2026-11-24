@@ -49,4 +49,5 @@
 | **F38** | 瘦身与加固 | 清理 `public/_astro/` 与冗余图片、剔除死样式、移除锚点返回与长块折叠、RSS 转义与自动字数 | **已验证** | Agent-Core | 删除 78 个冗余静态资源与 635+ 条废弃 CSS，彻底移除代码/引用折叠并加固事件防重初始化 | `0b64367` |
 | **F39** | 长期架构重构 | 「一文一盒」Page Bundle + Astro 5 Content Layer + 图片自动压缩 + 同目录附件集成 + CSS 五层拆分 | **已验证** | Agent-Core | 新增 `src/content.config.ts`、`post-attachments.mjs`、5 层模块 CSS 与 `pnpm new`/`pnpm check` 脚手架，全站构建与真机验收通过 | `f79b156` |
 | **F40** | 细节修复与 LaTeX | 修复浅色代码高亮、补齐 5 种 Callout、正文图片自适应、跨年日期、`[...slug]` 容错、KaTeX 公式与全特性演示博文 | **已验证** | Agent-Article | 接入 `remark-math`/`rehype-katex` 自托管公式渲染，新建 `2026-11-24-style-and-syntax-showcase` 活范例，深浅双色真机验收通过 | `c0a6d8d` |
-| **F41** | 全开源可变字体升级 | 全面升级「温润莫兰迪风」字体栈并移除旧专有字体 | **已验证** | Agent-Core | 移除 `AnthropicSans_Roman_Web.woff2`，切换自托管 `@fontsource-variable/figtree` + `noto-sans-sc` + `jetbrains-mono`（SIL OFL 1.1 + `unicode-range` 分片）并完成排版字重/字距/等宽数字精调 | 本次提交 |
+| **F41** | 全开源可变字体升级 | 全面升级「温润莫兰迪风」字体栈并移除旧专有字体 | **已验证** | Agent-Core | 移除 `AnthropicSans_Roman_Web.woff2`，切换自托管 `@fontsource-variable/figtree` + `noto-sans-sc` + `jetbrains-mono`（SIL OFL 1.1 + `unicode-range` 分片）并完成排版字重/字距/等宽数字精调 | `4381177` |
+| **F42** | Windows 清晰度优化 | 中文回归系统原生 Hinting 字体，保留 Figtree 西文与 JetBrains Mono 代码 | **已验证** | Agent-Core | 移除 `@fontsource-variable/noto-sans-sc`，中文交回 Win 微软雅黑 / Mac 苹方以根治 Windows 偏细发虚，总字体传输降至 ~80 KB，正文字距收实为 `0` | 本次提交 |

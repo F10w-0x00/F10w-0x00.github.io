@@ -186,20 +186,20 @@ SELECT title, date FROM posts WHERE category = '学习' ORDER BY date DESC;
 针对你关心的字体选择与定制方案，以下是深度专业分析与实施建议：
 
 ### 10.1 当前博客使用的是什么字体？
-查看设计变量样式表 `src/styles/tokens.css` 与全局骨架 `src/layouts/BaseLayout.astro`，当前站点采用**「温润莫兰迪风」全开源自托管可变字体方案**（全部基于 SIL OFL 1.1 协议，通过 `@fontsource-variable/*` 在构建期自动切片）：
+查看设计变量样式表 `src/styles/tokens.css` 与全局骨架 `src/layouts/BaseLayout.astro`，当前站点采用**「自托管开源西文/代码可变字体 + 系统原生 Hinting 中文」**的黄金组合（西文与代码均为 SIL OFL 1.1 协议，通过 `@fontsource-variable/*` 构建期自托管）：
 ```css
-/* 正文全局字体栈（Figtree 温润西文 + 思源黑体 Noto Sans SC 中文 + 苹果原生回退） */
---font-sans: 'Figtree Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+/* 正文全局字体栈（Figtree 温润西文 + 系统原生高清晰中文：Mac 苹方 / Win 微软雅黑） */
+--font-sans: 'Figtree Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
 
 /* 代码与等宽字体栈（JetBrains Mono 可变字体） */
 --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 ```
 **当前方案的核心优势**：
-- **零版权风险、零外部 CDN 依赖**：全部字体为 SIL OFL 1.1 开源协议，通过 npm 包在构建期自托管至 `dist/_astro/`，Git 仓库零二进制膨胀，国内直连无需访问 Google Fonts CDN。
-- **按字按需分片（Unicode Range）**：思源黑体中文被自动切分为百余个小 `.woff2` 分片，浏览器仅按当前页面实际出现的汉字按需加载，兼顾 Windows / macOS / Linux 跨平台一致的细腻阅读观感与加载速度。
-- **设计师排版精调（`src/styles/article.css`）**：
-  1. **克制标题字重 + 轻微负字距**：H1–H5 字重收敛至 `680 / 650 / 620 / 600`，配合 `-0.024em` 至 `-0.01em` 紧凑字距，大屏观感利落克制；
-  2. **舒展正文呼吸感**：正文 `line-height: 1.84`、`letter-spacing: 0.012em`、`strong` 字重 `620`，代码块重置 `letter-spacing: 0`；
+- **中文极致锐利不发虚、0 体积加载**：中文直接交给操作系统自带、经过底层像素网格 Hinting 的原生字体（Windows 走 ClearType 优化的微软雅黑，macOS/iOS 走苹方），避免无 Hinting 的 Web 中文字体在 Windows 非 4K 屏上发细发虚，同时免去近 1MB 中文切片下载。
+- **西文与代码全开源高质感**：英文和数字走自托管 `Figtree Variable`（降级态也先走 `Segoe UI` 绝不落入雅黑拉丁），代码块走 `JetBrains Mono Variable`，全部 SIL OFL 1.1 无版权风险、无外部 CDN 依赖，总字体开销仅约 80 KB。
+- **排版精调（`src/styles/article.css`）**：
+  1. **克制标题字重 + 轻负字距**：H1–H5 字重为 `680 / 650 / 620 / 600`，H1–H3 配合 `-0.018em` 至 `-0.006em` 轻微负字距；
+  2. **扎实正文节奏**：正文 `font-weight: 400`、`letter-spacing: 0`、`line-height: 1.82`、`strong` 字重 `620`；
   3. **表格与元信息等宽数字**：全面启用 `font-variant-numeric: tabular-nums`，日期、字数与表格列精准对齐。
 
 ---

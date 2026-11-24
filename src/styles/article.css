@@ -1210,32 +1210,32 @@ html[data-theme=dark] .prose pre.astro-code span {
 .article-header h1,
 .prose h1 {
   font-weight: 680;
-  letter-spacing: -0.024em;
+  letter-spacing: -0.018em;
 }
 
 .home-section h2,
 .post-card h2,
 .prose h2 {
   font-weight: 650;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.012em;
 }
 
 .home-post-card h3,
 .prose h3 {
   font-weight: 620;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.006em;
 }
 
 .prose h4,
 .prose h5 {
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .prose {
   font-weight: 400;
-  letter-spacing: 0.012em;
-  line-height: 1.84;
+  letter-spacing: 0;
+  line-height: 1.82;
 }
 
 .prose strong {
@@ -1246,12 +1246,6 @@ html[data-theme=dark] .prose pre.astro-code span {
 .prose code,
 .prose pre {
   letter-spacing: 0;
-}
-
-.home-post-card p:not(.post-meta),
-.post-card p:not(.post-meta),
-.article-header > p:not(.post-meta) {
-  letter-spacing: 0.01em;
 }
 
 .post-meta,

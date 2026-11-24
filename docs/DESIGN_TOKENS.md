@@ -8,13 +8,12 @@
 
 ### 1.1 正文字体栈 (Sans-Serif / Prose)
 ```css
---font-sans: 'Figtree Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+--font-sans: 'Figtree Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
 ```
-- **首选西文字体**：自托管可变字体 `@fontsource-variable/figtree`（SIL OFL 1.1，含斜体变体），温润几何无衬线，圆弧过渡与站点圆角及莫兰迪色系高度契合。
-- **首选中文正文字体**：自托管可变字体 `@fontsource-variable/noto-sans-sc`（思源黑体，SIL OFL 1.1），构建期自动按 `unicode-range` 切片输出至 `dist/_astro/`，消除 Windows 微软雅黑生硬观感，同时不依赖大陆受限的外部字体 CDN。
-- **系统降级**：苹果 SF Pro SC / 苹方（PingFang SC） / 冬青黑体等原生无衬线字族。
+- **首选西文字体**：自托管可变字体 `@fontsource-variable/figtree`（SIL OFL 1.1，含斜体变体，体积轻量），温润几何无衬线，圆弧过渡与站点圆角及莫兰迪色系高度契合。
+- **中文正文字体（操作系统原生 Hinting）**：macOS / iOS 自动调用 **SF Pro SC / PingFang SC（苹方）**，Windows 自动调用经过 ClearType 像素网格对齐的 **Microsoft YaHei（微软雅黑）**（同时将 `Segoe UI` 置于微软雅黑之前，避免降级态英文落入雅黑拉丁字形），兼顾 Windows 屏幕扎实锐利度与 0 体积中文字体加载负担。
 - **基准字号**：`--site-font-size: 17.5px;`
-- **正文呼吸感**：`font-weight: 400; letter-spacing: 0.012em; line-height: 1.84;`；正文字重强调（`strong`）收敛至 `620`。
+- **正文节奏**：`font-weight: 400; letter-spacing: 0; line-height: 1.82;`；正文字重强调（`strong`）收敛至 `620`。
 - **等宽数字对齐**：文章元信息、目录日期、附件大小与正文表格统一开启 `font-variant-numeric: tabular-nums;`。
 - **渲染平滑**：`-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;`
 
@@ -30,12 +29,12 @@
 
 | 标签 | 字号公式 (`clamp`) | 行高 (`line-height`) | 字重 (`font-weight`) | 字距 (`letter-spacing`) | 边距 (`margin`) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **H1 (页面主标题)** | `clamp(2.75rem, 8vw, 5.4rem)` | `1.04` | 680 | `-0.024em` | `0 0 16px` |
-| **H1 (Prose 文章)** | `clamp(2rem, 4vw, 2.75rem)` | `1.04` | 680 | `-0.024em` | `max(1.95rem, 1em) 0 1.95rem` |
-| **H2 (二级小节)** | `clamp(1.55rem, 3.2vw, 1.95rem)` | `1.22` | 650 | `-0.02em` | `2.4rem 0 1rem` |
-| **H3 (三级小节)** | `clamp(1.35rem, 3vw, 1.65rem)` | `1.3` | 620 | `-0.015em` | `1.8rem 0 0.8rem` |
-| **H4 (四级小节)** | `clamp(1.2rem, 2.5vw, 1.35rem)` | `1.4` | 600 | `-0.01em` | `1.4rem 0 0.6rem` |
-| **H5 (五级小节)** | `clamp(1.08rem, 2vw, 1.16rem)` | `1.45` | 600 | `-0.01em` | `1.2rem 0 0.5rem` |
+| **H1 (页面主标题)** | `clamp(2.75rem, 8vw, 5.4rem)` | `1.04` | 680 | `-0.018em` | `0 0 16px` |
+| **H1 (Prose 文章)** | `clamp(2rem, 4vw, 2.75rem)` | `1.04` | 680 | `-0.018em` | `max(1.95rem, 1em) 0 1.95rem` |
+| **H2 (二级小节)** | `clamp(1.55rem, 3.2vw, 1.95rem)` | `1.22` | 650 | `-0.012em` | `2.4rem 0 1rem` |
+| **H3 (三级小节)** | `clamp(1.35rem, 3vw, 1.65rem)` | `1.3` | 620 | `-0.006em` | `1.8rem 0 0.8rem` |
+| **H4 (四级小节)** | `clamp(1.2rem, 2.5vw, 1.35rem)` | `1.4` | 600 | `0` | `1.4rem 0 0.6rem` |
+| **H5 (五级小节)** | `clamp(1.08rem, 2vw, 1.16rem)` | `1.45` | 600 | `0` | `1.2rem 0 0.5rem` |
 
 ---
 

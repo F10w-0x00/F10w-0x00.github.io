@@ -40,7 +40,7 @@
   --radius-lg: 34px;
   --radius-md: 24px;
   --radius-sm: 16px;
-  --font-sans: 'Figtree Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  --font-sans: 'Figtree Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-family: var(--font-sans);
 }

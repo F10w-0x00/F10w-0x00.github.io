@@ -16,7 +16,7 @@
 │   │   ├── index.md                            # 正文
 │   │   └── assets/                             # 本文专属封面、配图与下载附件
 │   └── 2026-11-24-short-note.md                # 【兼容】无图纯文字文章也可直接放单文件 .md
-├── public/                                     # 【全站公共资产】只放头像与 Favicon（字体由 Fontsource 编译期自托管分片）
+├── public/                                     # 【全站公共资产】只放头像与 Favicon（西文与代码字体由 Fontsource 自托管）
 │   ├── avatar.png
 │   ├── favicon.png / favicon.ico
 │   └── favicons/                               # Apple Touch Icon 与外链 Favicon

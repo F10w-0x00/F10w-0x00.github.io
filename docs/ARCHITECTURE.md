@@ -5,7 +5,7 @@
 本博客遵循**三层严格分离**原则，确保写作 5–10 年也不会演变为孤儿图片与杂乱样式堆积的“屎山”：
 
 1. **纯内容层 (`posts/`)**：采用 **Page Bundle（一文一盒）** 结构，每篇文章拥有独立文件夹 `posts/YYYY-MM-DD-slug/index.md` 与 `assets/` 子目录，同时兼容无图单文件 `posts/YYYY-MM-DD-slug.md`。100% 标准 Markdown + 相对路径，与框架完全解耦。
-2. **全站公共资产层 (`public/`)**：仅存放站点级共享资产（头像、Favicon、外链 Favicon），永不混入单篇文章配图或附件；Web 字体由 `@fontsource-variable/*` 在构建期自动按 `unicode-range` 分片自托管输出至 `dist/_astro/`。
+2. **全站公共资产层 (`public/`)**：仅存放站点级共享资产（头像、Favicon、外链 Favicon），永不混入单篇文章配图或附件；西文与代码字体由 `@fontsource-variable/*` 在构建期自托管输出至 `dist/_astro/`，中文直接走操作系统原生 Hinting 字体（Win 微软雅黑 / Mac 苹方）。
 3. **纯程序层 (`src/` & `scripts/`)**：
    - **Astro 5 Content Layer (`src/content.config.ts`)**：通过 `glob()` loader 托管 `posts/`，配合 Zod 强类型 Schema 与原生 `image()` 校验，编译期拦截缺失封面/非法日期，并由内置 `sharp` 自动将原图优化为现代 WebP。
    - **Markdown 编译扩展**：`remark-math` + `rehype-katex`（编译期零 JS 渲染 LaTeX 公式，自托管 `katex` CSS/字体）+ 自定义 `rehype-blog-content.mjs`（极简下载卡片、图注、5 种 Callout、外链图标）+ `post-attachments.mjs` 附件集成。

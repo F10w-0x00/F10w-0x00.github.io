@@ -122,7 +122,17 @@ function runHelperSelfTests() {
     ['第一节 code', '第二节 链接', '第三节']
   );
   assert.equal(resolveShelfMeta({ tags: ['日常'], title: '随笔', date: '2026-11-24' }), null);
-  assert.equal(resolveShelfMeta({ tags: ['paper'], title: 'Transformer', date: '2026-11-24' })?.type, 'paper');
+  const paperAuto = resolveShelfMeta({ tags: ['paper', 'ai'], title: 'Transformer', date: '2026-11-24' });
+  assert.equal(paperAuto?.type, 'paper');
+  assert.equal(paperAuto?.domain, 'AI');
+  const paperRedundant = resolveShelfMeta({
+    tags: ['paper'],
+    shelf: { type: 'paper', group: 'Papers' },
+    title: 'Plain Paper',
+    date: '2026-11-24',
+  });
+  assert.equal(paperRedundant?.type, 'paper');
+  assert.equal(paperRedundant?.domain, null);
   assert.equal(resolveShelfMeta({ tags: ['book'], shelf: false, title: 'Ignored', date: '2026-11-24' }), null);
   assert.ok(computeShelfDimensions({ type: 'paper', pages: 15 }).spineWidth <= 16);
   assert.ok(

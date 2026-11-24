@@ -6,7 +6,7 @@ category: "学习"
 tags: ["book", "systems"]
 shelf:
   type: book
-  group: "Books"
+  domain: "Systems"
   title: "Designing Data-Intensive Applications"
   author: "Martin Kleppmann"
   year: 2017

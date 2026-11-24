@@ -31,7 +31,9 @@
 
   const isInfinite = root.dataset.shelfInfinite === 'true';
   const slots = Array.from(track.querySelectorAll('[data-shelf-slot]'));
-  const tabs = Array.from(root.querySelectorAll('[data-shelf-group]'));
+  const tabs = Array.from(root.querySelectorAll('[data-shelf-type]'));
+  const domainLists = Array.from(root.querySelectorAll('[data-domain-section]'));
+  const domainChips = Array.from(root.querySelectorAll('[data-shelf-domain]'));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(pointer: fine) and (hover: hover)');
 
@@ -323,26 +325,40 @@
     cursorEl?.classList.remove('is-open');
   }
 
-  function syncTabs(activeGroupName) {
-    if (!tabsWrap || !tabIndicator || tabs.length === 0) return;
+  function syncTabs(activeType, activeDomain) {
+    if (tabsWrap && tabIndicator && tabs.length > 0) {
+      let activeBtn = tabs.find((b) => b.dataset.shelfType === activeType);
+      if (!activeBtn) activeBtn = tabs[0];
 
-    let activeBtn = tabs.find((b) => b.dataset.shelfGroup === activeGroupName);
-    if (!activeBtn) activeBtn = tabs[0];
+      tabs.forEach((btn) => {
+        const isAct = btn === activeBtn;
+        btn.classList.toggle('is-active', isAct);
+        btn.setAttribute('aria-selected', String(isAct));
+      });
 
-    tabs.forEach((btn) => {
-      const isAct = btn === activeBtn;
-      btn.classList.toggle('is-active', isAct);
-      btn.setAttribute('aria-selected', String(isAct));
-    });
+      if (activeBtn) {
+        const metrics = tabMetrics.get(activeBtn) || {
+          left: activeBtn.offsetLeft,
+          width: activeBtn.offsetWidth,
+        };
+        tabIndicator.style.transform = `translate3d(${metrics.left}px, 0, 0)`;
+        tabIndicator.style.width = `${metrics.width}px`;
+        tabIndicator.classList.add('is-ready');
+      }
+    }
 
-    if (activeBtn) {
-      const metrics = tabMetrics.get(activeBtn) || {
-        left: activeBtn.offsetLeft,
-        width: activeBtn.offsetWidth,
-      };
-      tabIndicator.style.transform = `translate3d(${metrics.left}px, 0, 0)`;
-      tabIndicator.style.width = `${metrics.width}px`;
-      tabIndicator.classList.add('is-ready');
+    if (domainLists.length > 0) {
+      domainLists.forEach((list) => {
+        const isCurrentSection = list.dataset.domainSection === activeType;
+        list.hidden = !isCurrentSection;
+        if (isCurrentSection) {
+          list.querySelectorAll('[data-shelf-domain]').forEach((chip) => {
+            const isAct = Boolean(activeDomain && chip.dataset.shelfDomain === activeDomain);
+            chip.classList.toggle('is-active', isAct);
+            chip.setAttribute('aria-pressed', String(isAct));
+          });
+        }
+      });
     }
   }
 
@@ -376,7 +392,7 @@
 
     const activeItem = items[logicalCenter];
     if (activeItem) {
-      syncTabs(activeItem.group);
+      syncTabs(activeItem.type, activeItem.domain);
     }
   }
 
@@ -524,14 +540,9 @@
       let ry = lerp(pA.ry, pB.ry, frac);
       let rx = lerp(pA.rx, pB.rx, frac);
 
-      if (h > 0.001) {
-        if (node.isPaper) {
-          // 悬停论文微微朝向视线展开 14°，更易预览第一页
-          ry += (dist < 0 ? -14 : 14) * h;
-        } else {
-          // 悬停书籍仅自然上浮前探 + 微微仰角，不拧转封面字
-          rx += 1.8 * h;
-        }
+      if (h > 0.001 && node.isPaper) {
+        // 悬停论文微微朝向视线展开 14°，更易预览第一页；书籍保持纯垂直书脊仅上浮前探，杜绝斜边亚像素虚线缝
+        ry += (dist < 0 ? -14 : 14) * h;
       }
 
       // 槽位仅承载排布位移（.shelf-hit 保持绝对静止，彻底杜绝悬停上移把热区从光标下抽走导致的上下抽搐！）
@@ -732,16 +743,20 @@
   });
 
   // ==========================================
-  // 4. 顶部胶囊分组切换
+  // 4. 两级分类切换（一级载体 Books / Papers + 二级领域）
   // ==========================================
   tabs.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const group = btn.dataset.shelfGroup;
-      if (group === '__all__') {
-        goToLogicalIndex(0);
-        return;
-      }
       const firstIdx = Number(btn.dataset.firstIndex);
+      if (Number.isFinite(firstIdx)) {
+        goToLogicalIndex(firstIdx);
+      }
+    });
+  });
+
+  domainChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const firstIdx = Number(chip.dataset.firstIndex);
       if (Number.isFinite(firstIdx)) {
         goToLogicalIndex(firstIdx);
       }
@@ -942,13 +957,21 @@
 
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      if (document.activeElement instanceof HTMLElement && document.activeElement.classList.contains('shelf-tab')) {
+      if (
+        document.activeElement instanceof HTMLElement &&
+        (document.activeElement.classList.contains('shelf-tab') ||
+          document.activeElement.classList.contains('shelf-domain-chip'))
+      ) {
         document.activeElement.blur();
       }
       stepBy(-1);
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      if (document.activeElement instanceof HTMLElement && document.activeElement.classList.contains('shelf-tab')) {
+      if (
+        document.activeElement instanceof HTMLElement &&
+        (document.activeElement.classList.contains('shelf-tab') ||
+          document.activeElement.classList.contains('shelf-domain-chip'))
+      ) {
         document.activeElement.blur();
       }
       stepBy(1);
@@ -1074,7 +1097,9 @@
     lastFocusedBeforeModal = triggerEl || document.activeElement;
 
     if (modalKicker) {
-      modalKicker.textContent = `${item.typeLabel} ${item.numberLabel} · ${item.group}`;
+      modalKicker.textContent = item.domain
+        ? `${item.typeLabel} ${item.numberLabel} · ${item.domain}`
+        : `${item.typeLabel} ${item.numberLabel}`;
     }
     if (modalTitle) {
       modalTitle.textContent = item.postTitle;
@@ -1201,6 +1226,6 @@
   document.fonts?.ready?.then(() => {
     cacheTabMetrics();
     const activeItem = items[getLogicalIndex(Math.round(currentPos))];
-    if (activeItem) syncTabs(activeItem.group);
+    if (activeItem) syncTabs(activeItem.type, activeItem.domain);
   });
 })();

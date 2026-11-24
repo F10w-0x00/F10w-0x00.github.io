@@ -42,7 +42,9 @@ const isPaper = item.type === 'paper';
       </div>
       <div class="editorial-paper-rule" aria-hidden="true"></div>
       <div class="editorial-paper-body">
-        <p class="editorial-paper-kicker">PAPER NOTE · {item.group.toUpperCase()}</p>
+        <p class="editorial-paper-kicker">
+          {item.domain ? `PAPER NOTE · ${item.domain.toUpperCase()}` : 'PAPER NOTE'}
+        </p>
         <p class="editorial-paper-title">{item.spineTitle}</p>
         {item.description && <p class="editorial-paper-abstract">{item.description}</p>}
       </div>
@@ -68,7 +70,7 @@ const isPaper = item.type === 'paper';
     <div class="editorial-book">
       <div class="editorial-book-band">
         <span class="editorial-book-num">{item.numberLabel}</span>
-        <span class="editorial-book-group">{item.group}</span>
+        <span class="editorial-book-group">{item.domain ?? item.typeLabel}</span>
       </div>
       <div class="editorial-book-body">
         <p class="editorial-book-title">{item.spineTitle}</p>

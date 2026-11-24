@@ -28,6 +28,7 @@ export interface ShelfItem {
   url: string;
   type: 'book' | 'paper';
   typeLabel: string;
+  domain: string | null;
   group: string;
   postTitle: string;
   spineTitle: string;
@@ -48,6 +49,20 @@ export interface ShelfItem {
   palette: ShelfPalette;
   order: number | null;
   timestamp: number;
+}
+
+export interface ShelfDomainGroup {
+  name: string;
+  firstIndex: number;
+  count: number;
+}
+
+export interface ShelfSection {
+  type: 'book' | 'paper';
+  label: 'Books' | 'Papers';
+  firstIndex: number;
+  count: number;
+  domains: ShelfDomainGroup[];
 }
 
 export interface ShelfGroup {
@@ -231,6 +246,7 @@ export async function getAllPosts(options: { includeDrafts?: boolean } = {}): Pr
 
 export async function getShelfData(options: { includeDrafts?: boolean } = {}): Promise<{
   items: ShelfItem[];
+  sections: ShelfSection[];
   groups: ShelfGroup[];
 }> {
   const posts = await getAllPosts(options);
@@ -257,12 +273,11 @@ export async function getShelfData(options: { includeDrafts?: boolean } = {}): P
     rawItems.push({ post, meta, shelfCover });
   }
 
-  // 分区排序：所有书籍集中在一侧，所有论文集中在另一侧；同区内部优先按显式 order 升序，其余按日期降序
-  rawItems.sort((a, b) => {
-    const aTypeRank = a.meta.type === 'paper' ? 1 : 0;
-    const bTypeRank = b.meta.type === 'paper' ? 1 : 0;
-    if (aTypeRank !== bTypeRank) return aTypeRank - bTypeRank;
-
+  // 一级按载体严格分区（Books 在左，Papers 在右），二级在各自载体内部按领域连续聚类，三级按 order / 日期排序
+  const compareWithinBucket = (
+    a: (typeof rawItems)[number],
+    b: (typeof rawItems)[number]
+  ) => {
     const aHas = a.meta.order !== null;
     const bHas = b.meta.order !== null;
     if (aHas && bHas) {
@@ -271,6 +286,41 @@ export async function getShelfData(options: { includeDrafts?: boolean } = {}): P
     if (aHas) return -1;
     if (bHas) return 1;
     return b.post.timestamp - a.post.timestamp || a.post.slug.localeCompare(b.post.slug);
+  };
+
+  // 先为每个 (type, domain) 桶计算优先排序键（该领域内最早 order / 最新时间戳），保证领域聚簇连续不乱跳
+  const domainRank = new Map<string, { minOrder: number; maxTs: number }>();
+  for (const entry of rawItems) {
+    const t = entry.meta.type === 'paper' ? 'paper' : 'book';
+    const dKey = `${t}::${entry.meta.domain ?? '__none__'}`;
+    const prev = domainRank.get(dKey);
+    const ord = entry.meta.order !== null ? entry.meta.order : Number.POSITIVE_INFINITY;
+    if (!prev) {
+      domainRank.set(dKey, { minOrder: ord, maxTs: entry.post.timestamp });
+    } else {
+      if (ord < prev.minOrder) prev.minOrder = ord;
+      if (entry.post.timestamp > prev.maxTs) prev.maxTs = entry.post.timestamp;
+    }
+  }
+
+  rawItems.sort((a, b) => {
+    const aType = a.meta.type === 'paper' ? 'paper' : 'book';
+    const bType = b.meta.type === 'paper' ? 'paper' : 'book';
+    if (aType !== bType) return aType === 'book' ? -1 : 1;
+
+    const aDom = a.meta.domain;
+    const bDom = b.meta.domain;
+    if (aDom !== bDom) {
+      if (!aDom) return 1;
+      if (!bDom) return -1;
+      const ra = domainRank.get(`${aType}::${aDom}`)!;
+      const rb = domainRank.get(`${bType}::${bDom}`)!;
+      if (ra.minOrder !== rb.minOrder) return ra.minOrder - rb.minOrder;
+      if (ra.maxTs !== rb.maxTs) return rb.maxTs - ra.maxTs;
+      return aDom.localeCompare(bDom);
+    }
+
+    return compareWithinBucket(a, b);
   });
 
   let bookColorIdx = 0;
@@ -288,6 +338,7 @@ export async function getShelfData(options: { includeDrafts?: boolean } = {}): P
       url: `/blog/${post.slug}/`,
       type: shelfType,
       typeLabel: shelfType === 'paper' ? 'Paper' : 'Book',
+      domain: meta.domain,
       group: meta.group,
       postTitle: post.title,
       spineTitle: meta.spineTitle,
@@ -311,18 +362,53 @@ export async function getShelfData(options: { includeDrafts?: boolean } = {}): P
     };
   });
 
-  const groupMap = new Map<string, ShelfGroup>();
+  // 构建两级结构：一级载体（Books / Papers），二级该载体下的领域列表
+  const sectionMap = new Map<'book' | 'paper', ShelfSection>();
+  const domainMaps: Record<'book' | 'paper', Map<string, ShelfDomainGroup>> = {
+    book: new Map(),
+    paper: new Map(),
+  };
+
   items.forEach((item, idx) => {
-    const existing = groupMap.get(item.group);
-    if (existing) {
-      existing.count += 1;
-    } else {
-      groupMap.set(item.group, { name: item.group, firstIndex: idx, count: 1 });
+    let sec = sectionMap.get(item.type);
+    if (!sec) {
+      sec = {
+        type: item.type,
+        label: item.type === 'paper' ? 'Papers' : 'Books',
+        firstIndex: idx,
+        count: 0,
+        domains: [],
+      };
+      sectionMap.set(item.type, sec);
+    }
+    sec.count += 1;
+
+    if (item.domain) {
+      const dMap = domainMaps[item.type];
+      const existingDom = dMap.get(item.domain);
+      if (existingDom) {
+        existingDom.count += 1;
+      } else {
+        const entry: ShelfDomainGroup = { name: item.domain, firstIndex: idx, count: 1 };
+        dMap.set(item.domain, entry);
+        sec.domains.push(entry);
+      }
     }
   });
 
+  const sections = (['book', 'paper'] as const)
+    .map((t) => sectionMap.get(t))
+    .filter((s): s is ShelfSection => Boolean(s));
+
+  const groups: ShelfGroup[] = sections.map((sec) => ({
+    name: sec.label,
+    firstIndex: sec.firstIndex,
+    count: sec.count,
+  }));
+
   return {
     items,
-    groups: [...groupMap.values()],
+    sections,
+    groups,
   };
 }

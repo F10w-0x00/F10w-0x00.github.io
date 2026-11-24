@@ -6,7 +6,7 @@ category: "学习"
 tags: ["paper", "ai"]
 shelf:
   type: paper
-  group: "Papers"
+  domain: "AI"
   title: "Attention Is All You Need"
   author: "Vaswani et al. · NeurIPS 2017"
   year: 2017

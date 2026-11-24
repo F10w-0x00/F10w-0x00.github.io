@@ -5,7 +5,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ShelfCover from '../components/ShelfCover.astro';
 import { getShelfData } from '../utils/posts';
 
-const { items, groups } = await getShelfData();
+const { items, sections } = await getShelfData();
+const hasAnyDomains = sections.some((sec) => sec.domains.length > 0);
 const isInfinite = items.length >= 7;
 const rawSlots = isInfinite
   ? [0, 1, 2].flatMap((copy) => items.map((item) => ({ item, copy })))
@@ -33,6 +34,7 @@ const clientPayload = items.map((item) => ({
   url: item.url,
   type: item.type,
   typeLabel: item.typeLabel,
+  domain: item.domain,
   group: item.group,
   postTitle: item.postTitle,
   spineTitle: item.spineTitle,
@@ -78,31 +80,47 @@ const clientPayload = items.map((item) => ({
     {items.length > 0 ? (
       <>
         <div class="shelf-tabs-wrap">
-          <div class="shelf-tabs" role="tablist" aria-label="书架分类" data-shelf-tabs>
+          <div class="shelf-tabs" role="tablist" aria-label="书架载体分区" data-shelf-tabs>
             <span class="shelf-tabs-indicator" aria-hidden="true" data-shelf-tab-indicator></span>
-            <button
-              type="button"
-              class="shelf-tab"
-              role="tab"
-              aria-selected="false"
-              data-shelf-group="__all__"
-              data-first-index="0"
-            >
-              All
-            </button>
-            {groups.map((grp, idx) => (
+            {sections.map((sec, idx) => (
               <button
                 type="button"
                 class:list={['shelf-tab', idx === 0 && 'is-active']}
                 role="tab"
                 aria-selected={idx === 0 ? 'true' : 'false'}
-                data-shelf-group={grp.name}
-                data-first-index={grp.firstIndex}
+                data-shelf-type={sec.type}
+                data-first-index={sec.firstIndex}
               >
-                {grp.name}
+                {sec.label}
               </button>
             ))}
           </div>
+
+          {hasAnyDomains && (
+            <div class="shelf-domains-wrap" data-shelf-domains>
+              {sections.map((sec, secIdx) => (
+                <div
+                  class="shelf-domain-list"
+                  role="group"
+                  aria-label={`${sec.label} 领域`}
+                  data-domain-section={sec.type}
+                  hidden={secIdx !== 0}
+                >
+                  {sec.domains.map((dom, domIdx) => (
+                    <button
+                      type="button"
+                      class:list={['shelf-domain-chip', secIdx === 0 && domIdx === 0 && 'is-active']}
+                      aria-pressed={secIdx === 0 && domIdx === 0 ? 'true' : 'false'}
+                      data-shelf-domain={dom.name}
+                      data-first-index={dom.firstIndex}
+                    >
+                      {dom.name}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div class="shelf-stage" data-shelf-stage>

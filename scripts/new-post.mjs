@@ -95,7 +95,7 @@ const shelfLines = shelfType
       `tags: ["${shelfType}"]`,
       'shelf:',
       `  type: ${shelfType}`,
-      `  group: "${shelfType === 'paper' ? 'Papers' : 'Books'}"`,
+      `  domain: "${shelfType === 'paper' ? 'AI' : 'Systems'}"`,
       `  title: "${escapedTitle}"`,
       '  author: ""',
       `  # pages: ${shelfType === 'paper' ? '15' : '400'}`,

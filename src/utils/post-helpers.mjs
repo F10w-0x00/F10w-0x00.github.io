@@ -95,15 +95,75 @@ export function extractMarkdownHeadings(rawMarkdown, maxCount = 12) {
   return chosen.slice(0, maxCount);
 }
 
+const REDUNDANT_TYPE_LABELS = new Set([
+  'book',
+  'books',
+  'paper',
+  'papers',
+  'reading',
+  'reading-notes',
+  'paper-note',
+  '书',
+  '书籍',
+  '图书',
+  '读书',
+  '读后感',
+  '论文',
+  '文献',
+]);
+
+const UPPERCASE_DOMAIN_ACRONYMS = new Set([
+  'ai',
+  'ml',
+  'dl',
+  'llm',
+  'llms',
+  'cv',
+  'nlp',
+  'rl',
+  'os',
+  'db',
+  'gpu',
+  'cuda',
+  'rag',
+  'cs',
+  'hpc',
+  'hci',
+]);
+
+/**
+ * 规范化领域名称，自动过滤与载体（Books/Papers）重复的标签，并保留中英文惯用大小写
+ * @param {unknown} raw
+ * @returns {string | null}
+ */
+export function normalizeDomainLabel(raw) {
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  const lower = trimmed.toLowerCase();
+  if (REDUNDANT_TYPE_LABELS.has(lower)) return null;
+  if (UPPERCASE_DOMAIN_ACRONYMS.has(lower)) return lower.toUpperCase();
+  if (/^[a-z0-9][a-z0-9\s\-/&+]*$/.test(trimmed)) {
+    return trimmed
+      .replace(/[-_]+/g, ' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => (UPPERCASE_DOMAIN_ACRONYMS.has(w) ? w.toUpperCase() : w[0].toUpperCase() + w.slice(1)))
+      .join(' ');
+  }
+  return trimmed;
+}
+
 /**
  * @param {{ tags?: string[], shelf?: unknown, title?: string, date?: Date | string | number }} [opts]
  */
 export function resolveShelfMeta({ tags = [], shelf, title = '', date } = {}) {
   if (shelf === false) return null;
 
-  const normalizedTags = Array.isArray(tags)
-    ? tags.map((t) => String(t).trim().toLowerCase()).filter(Boolean)
+  const rawTags = Array.isArray(tags)
+    ? tags.map((t) => String(t).trim()).filter(Boolean)
     : [];
+  const normalizedTags = rawTags.map((t) => t.toLowerCase());
 
   const hasPaperTag = normalizedTags.some((t) => PAPER_TAGS.has(t));
   const hasBookTag = normalizedTags.some((t) => BOOK_TAGS.has(t));
@@ -131,12 +191,18 @@ export function resolveShelfMeta({ tags = [], shelf, title = '', date } = {}) {
       ? String(shelfObj.year).trim()
       : String(parseDate(date).getUTCFullYear());
 
-  const group =
-    typeof shelfObj.group === 'string' && shelfObj.group.trim()
-      ? shelfObj.group.trim()
-      : type === 'paper'
-        ? 'Papers'
-        : 'Books';
+  let domain = normalizeDomainLabel(shelfObj.domain) ?? normalizeDomainLabel(shelfObj.group);
+  if (!domain) {
+    for (const tag of rawTags) {
+      const candidate = normalizeDomainLabel(tag);
+      if (candidate) {
+        domain = candidate;
+        break;
+      }
+    }
+  }
+
+  const group = domain ?? (type === 'paper' ? 'Papers' : 'Books');
 
   const spineTitle =
     typeof shelfObj.title === 'string' && shelfObj.title.trim() ? shelfObj.title.trim() : String(title).trim();
@@ -168,6 +234,7 @@ export function resolveShelfMeta({ tags = [], shelf, title = '', date } = {}) {
 
   return {
     type,
+    domain,
     group,
     spineTitle,
     author,

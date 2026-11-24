@@ -26,6 +26,7 @@ const blog = defineCollection({
           z.enum(['book', 'paper']),
           z.object({
             type: z.enum(['book', 'paper']).optional(),
+            domain: z.string().optional(),
             group: z.string().optional(),
             title: z.string().optional(),
             author: z.string().optional(),

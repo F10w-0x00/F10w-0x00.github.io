@@ -8,31 +8,34 @@
 
 ### 1.1 正文字体栈 (Sans-Serif / Prose)
 ```css
-font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+--font-sans: 'Figtree Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
 ```
-- **首选字体**：自托管 `Anthropic Sans`（woff2 格式，预加载 `preload`，字重 100~900 变量支持），英文字符形态极具科技与人文质感。
-- **系统降级**：苹果 SF Pro SC / 苹方（PingFang SC） / 微软雅黑等高质量系统无衬线字族。
+- **首选西文字体**：自托管可变字体 `@fontsource-variable/figtree`（SIL OFL 1.1，含斜体变体），温润几何无衬线，圆弧过渡与站点圆角及莫兰迪色系高度契合。
+- **首选中文正文字体**：自托管可变字体 `@fontsource-variable/noto-sans-sc`（思源黑体，SIL OFL 1.1），构建期自动按 `unicode-range` 切片输出至 `dist/_astro/`，消除 Windows 微软雅黑生硬观感，同时不依赖大陆受限的外部字体 CDN。
+- **系统降级**：苹果 SF Pro SC / 苹方（PingFang SC） / 冬青黑体等原生无衬线字族。
 - **基准字号**：`--site-font-size: 17.5px;`
-- **正文行高**：`line-height: 1.8;`
+- **正文呼吸感**：`font-weight: 400; letter-spacing: 0.012em; line-height: 1.84;`；正文字重强调（`strong`）收敛至 `620`。
+- **等宽数字对齐**：文章元信息、目录日期、附件大小与正文表格统一开启 `font-variant-numeric: tabular-nums;`。
 - **渲染平滑**：`-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;`
 
 ### 1.2 等宽代码字体栈 (Monospace)
 ```css
-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+--font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 ```
+- **首选代码字体**：自托管可变字体 `@fontsource-variable/jetbrains-mono`（SIL OFL 1.1），高 x-height、清晰区分 `0/O` 与 `1/l/I`，并与 `code` / `pre` 重置 `letter-spacing: 0;` 保持精准对齐。
 
 ---
 
 ## 2. 标题层级字号与行高阶梯 (Headings Scale)
 
-| 标签 | 字号公式 (`clamp`) | 行高 (`line-height`) | 字重 (`font-weight`) | 边距 (`margin`) |
-| :--- | :--- | :--- | :--- | :--- |
-| **H1 (页面主标题)** | `clamp(2.75rem, 8vw, 5.4rem)` | `1.04` | 760 | `0 0 16px` |
-| **H1 (Prose 文章)** | `clamp(2rem, 4vw, 2.75rem)` | `1.04` | 760 | `max(1.95rem, 1em) 0 1.95rem` |
-| **H2 (二级小节)** | `clamp(1.55rem, 3.2vw, 1.95rem)` | `1.22` | 720 | `2.4rem 0 1rem` |
-| **H3 (三级小节)** | `clamp(1.35rem, 3vw, 1.65rem)` | `1.3` | 680 | `1.8rem 0 0.8rem` |
-| **H4 (四级小节)** | `clamp(1.2rem, 2.5vw, 1.35rem)` | `1.4` | 640 | `1.4rem 0 0.6rem` |
-| **H5 (五级小节)** | `clamp(1.08rem, 2vw, 1.16rem)` | `1.45` | 600 | `1.2rem 0 0.5rem` |
+| 标签 | 字号公式 (`clamp`) | 行高 (`line-height`) | 字重 (`font-weight`) | 字距 (`letter-spacing`) | 边距 (`margin`) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **H1 (页面主标题)** | `clamp(2.75rem, 8vw, 5.4rem)` | `1.04` | 680 | `-0.024em` | `0 0 16px` |
+| **H1 (Prose 文章)** | `clamp(2rem, 4vw, 2.75rem)` | `1.04` | 680 | `-0.024em` | `max(1.95rem, 1em) 0 1.95rem` |
+| **H2 (二级小节)** | `clamp(1.55rem, 3.2vw, 1.95rem)` | `1.22` | 650 | `-0.02em` | `2.4rem 0 1rem` |
+| **H3 (三级小节)** | `clamp(1.35rem, 3vw, 1.65rem)` | `1.3` | 620 | `-0.015em` | `1.8rem 0 0.8rem` |
+| **H4 (四级小节)** | `clamp(1.2rem, 2.5vw, 1.35rem)` | `1.4` | 600 | `-0.01em` | `1.4rem 0 0.6rem` |
+| **H5 (五级小节)** | `clamp(1.08rem, 2vw, 1.16rem)` | `1.45` | 600 | `-0.01em` | `1.2rem 0 0.5rem` |
 
 ---
 

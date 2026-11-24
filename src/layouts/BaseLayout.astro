@@ -1,5 +1,9 @@
 ---
 // src/layouts/BaseLayout.astro
+import '@fontsource-variable/figtree';
+import '@fontsource-variable/figtree/wght-italic.css';
+import '@fontsource-variable/noto-sans-sc';
+import '@fontsource-variable/jetbrains-mono';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 
@@ -58,7 +62,6 @@ const {
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="192x192" href="/favicons/avatar-192.png" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="f10w-0x00 RSS" />
-    <link rel="preload" href="/fonts/AnthropicSans_Roman_Web.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div class="site-shell">

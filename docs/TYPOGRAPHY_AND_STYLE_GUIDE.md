@@ -186,21 +186,21 @@ SELECT title, date FROM posts WHERE category = '学习' ORDER BY date DESC;
 针对你关心的字体选择与定制方案，以下是深度专业分析与实施建议：
 
 ### 10.1 当前博客使用的是什么字体？
-查看设计变量样式表 `src/styles/tokens.css`，当前站点的核心字体规则为：
+查看设计变量样式表 `src/styles/tokens.css` 与全局骨架 `src/layouts/BaseLayout.astro`，当前站点采用**「温润莫兰迪风」全开源自托管可变字体方案**（全部基于 SIL OFL 1.1 协议，通过 `@fontsource-variable/*` 在构建期自动切片）：
 ```css
-/* 正文全局字体栈（自托管西文 Anthropic Sans + 系统原生中文字体） */
-font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+/* 正文全局字体栈（Figtree 温润西文 + 思源黑体 Noto Sans SC 中文 + 苹果原生回退） */
+--font-sans: 'Figtree Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
 
-/* 代码与等宽字体栈 */
-font-family: SF Mono, Menlo, Consolas, monospace;
+/* 代码与等宽字体栈（JetBrains Mono 可变字体） */
+--font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 ```
-**当前方案结合了轻量化自托管英文字体（`public/fonts/AnthropicSans_Roman_Web.woff2`，约 116 KB 且预加载）与“无感系统原生中文字体栈”**：
-- **Apple 生态（Mac / iPhone / iPad）**：系统自动调用 **SF Pro**（西文）与 **PingFang SC（苹方-简）**。这正是苹果官网、Safari 阅读模式的标准排版基调，字形工整、笔锋极简、灰度平衡极佳。
-- **Windows 生态**：自动回退至 **Segoe UI**（西文）与 **Microsoft YaHei（微软雅黑）**。
-- **等宽代码**：Mac 走 **SF Mono**，Windows 走 **Consolas**。
-- **优势**：
-  1. **零延迟白屏（0ms FOIT）**：无需下载几十兆的中文字体包，秒开网页。
-  2. **渲染清晰度最高**：各大操作系统的字体平滑与子像素渲染引擎都是为自带字体量身定制的。
+**当前方案的核心优势**：
+- **零版权风险、零外部 CDN 依赖**：全部字体为 SIL OFL 1.1 开源协议，通过 npm 包在构建期自托管至 `dist/_astro/`，Git 仓库零二进制膨胀，国内直连无需访问 Google Fonts CDN。
+- **按字按需分片（Unicode Range）**：思源黑体中文被自动切分为百余个小 `.woff2` 分片，浏览器仅按当前页面实际出现的汉字按需加载，兼顾 Windows / macOS / Linux 跨平台一致的细腻阅读观感与加载速度。
+- **设计师排版精调（`src/styles/article.css`）**：
+  1. **克制标题字重 + 轻微负字距**：H1–H5 字重收敛至 `680 / 650 / 620 / 600`，配合 `-0.024em` 至 `-0.01em` 紧凑字距，大屏观感利落克制；
+  2. **舒展正文呼吸感**：正文 `line-height: 1.84`、`letter-spacing: 0.012em`、`strong` 字重 `620`，代码块重置 `letter-spacing: 0`；
+  3. **表格与元信息等宽数字**：全面启用 `font-variant-numeric: tabular-nums`，日期、字数与表格列精准对齐。
 
 ---
 

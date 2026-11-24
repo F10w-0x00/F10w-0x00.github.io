@@ -16,11 +16,10 @@
 │   │   ├── index.md                            # 正文
 │   │   └── assets/                             # 本文专属封面、配图与下载附件
 │   └── 2026-11-24-short-note.md                # 【兼容】无图纯文字文章也可直接放单文件 .md
-├── public/                                     # 【全站公共资产】只放头像、Favicon 与字体（不放文章配图）
+├── public/                                     # 【全站公共资产】只放头像与 Favicon（字体由 Fontsource 编译期自托管分片）
 │   ├── avatar.png
 │   ├── favicon.png / favicon.ico
-│   ├── favicons/                               # Apple Touch Icon 与外链 Favicon
-│   └── fonts/                                  # Anthropic Sans Web 字体
+│   └── favicons/                               # Apple Touch Icon 与外链 Favicon
 ├── scripts/
 │   ├── new-post.mjs                            # pnpm new：一键创建标准文章盒子
 │   └── check-blog.mjs                          # pnpm check：断链、孤儿资源与大文件体检

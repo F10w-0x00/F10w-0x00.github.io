@@ -15,7 +15,7 @@
   - `user.name`: `f10w-0x00`
   - `user.email`: `f10w.0x00@gmail.com`
   *(所有提交均须严格保持此身份，以确保 GitHub Contributions 正常统计与身份一致)*
-- **核心设计基准**：基于 [kenshelter.com](https://kenshelter.com) 进行 1:1 像素级逆向复刻，融合苹果极简设计理念、Anthropic Sans 现代西文字体排版、莫兰迪低饱和度色彩体系（Design Tokens）与深浅模式无缝切换。
+- **核心设计基准**：基于 [kenshelter.com](https://kenshelter.com) 视觉骨架深度演进，融合苹果极简设计理念、「温润莫兰迪风」全开源可变字体排版（`Figtree` + `Noto Sans SC` + `JetBrains Mono`）、莫兰迪低饱和度色彩体系（Design Tokens）与深浅模式无缝切换。
 
 ---
 
@@ -39,11 +39,10 @@
 ```text
 .
 ├── posts/                                # 【核心内容】一文一盒（posts/<slug>/index.md + assets/）
-├── public/                               # 【全站公共资产】仅存放头像、Favicon、字体（不放单篇配图）
+├── public/                               # 【全站公共资产】仅存放头像与 Favicon（字体由 Fontsource 构建期自托管）
 │   ├── avatar.png
 │   ├── favicon.ico / favicon.png
-│   ├── favicons/
-│   └── fonts/
+│   └── favicons/
 ├── scripts/
 │   ├── new-post.mjs                      # pnpm new：一键创建标准文章盒子
 │   └── check-blog.mjs                    # pnpm check：断链、孤儿文件、大文件体检
@@ -112,9 +111,10 @@
 - **深浅扫光动画**：在支持现代浏览器的环境下，通过 View Transitions API 驱动自上而下的遮罩扫光过渡（`theme-wipe-to-dark` / `theme-wipe-to-light`）。
 - **分段控制器 (Segmented Control)**：类似 iOS 的滑动药丸指示器，利用 `data-active-index` 驱动纯 CSS 硬件加速平滑位移，并支持动态判断选项个数（2 或 3 项）。
 
-### 4.6 现代排版与字体系统
-- **西文字体栈**：首选导入自托管的高质感 Anthropic Sans（`public/fonts/AnthropicSans_Roman_Web.woff2`），数字与英文字符现代典雅。
-- **中文字体回退**：中文无缝回退至系统原生高保真黑体（macOS 苹方 / Windows 微软雅黑），兼顾极致视觉与零体积加载负担。
+### 4.6 现代排版与全开源自托管字体系统
+- **西文与中文字体栈**：通过 `@fontsource-variable/figtree`（温润几何无衬线，含斜体）与 `@fontsource-variable/noto-sans-sc`（思源黑体，按 `unicode-range` 自动分片）在 `BaseLayout.astro` 统一引入，全部 SIL OFL 1.1 开源协议，构建期自托管输出至 `dist/_astro/`，无版权风险、无外部 CDN 依赖、Git 仓库零二进制字体膨胀。
+- **等宽代码字体**：通过 `@fontsource-variable/jetbrains-mono` 自托管，并统一绑定 `--font-mono`。
+- **排版精调（`src/styles/article.css`）**：克制标题字重（`680/650/620/600`）+ 轻微负字距、正文 `line-height: 1.84` / `letter-spacing: 0.012em`、`strong` 字重 `620`，以及元数据与表格全面开启 `tabular-nums`。
 
 ---
 

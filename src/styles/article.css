@@ -875,8 +875,8 @@ html[data-theme=dark] .prose blockquote.callout-caution {
   border-radius: 8px;
   background: var(--code-soft);
   color: var(--inline-code-text);
-  font-family: SF Mono,Menlo,Consolas,monospace;
-  font-size: .92em;
+  font-family: var(--font-mono);
+  font-size: .88em;
   padding: .14em .38em;
 }
 
@@ -918,8 +918,8 @@ html[data-theme=dark] .prose blockquote.callout-caution {
   background: var(--code-bg);
   color: var(--code-accent);
   content: attr(data-code-language);
-  font-family: SF Mono,Menlo,Consolas,monospace;
-  font-size: .92rem;
+  font-family: var(--font-mono);
+  font-size: .86rem;
   font-weight: 700;
   line-height: 1;
   padding: .22em .62em;
@@ -944,7 +944,8 @@ html[data-theme=dark] .prose blockquote.callout-caution {
   border-radius: 0;
   background: transparent;
   color: inherit;
-  font-size: .9rem;
+  font-family: var(--font-mono);
+  font-size: .88rem;
   line-height: inherit;
   padding: 0;
 }
@@ -1200,4 +1201,62 @@ html[data-theme=dark] .prose pre.astro-code span {
   .file-asset-download {
     transition: none;
   }
+}
+
+/* ==========================================================================
+   Morandi / Apple Modern Sans Typography Refinements
+   ========================================================================== */
+.page-heading h1,
+.article-header h1,
+.prose h1 {
+  font-weight: 680;
+  letter-spacing: -0.024em;
+}
+
+.home-section h2,
+.post-card h2,
+.prose h2 {
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.home-post-card h3,
+.prose h3 {
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+.prose h4,
+.prose h5 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.prose {
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  line-height: 1.84;
+}
+
+.prose strong {
+  font-weight: 620;
+  color: var(--text);
+}
+
+.prose code,
+.prose pre {
+  letter-spacing: 0;
+}
+
+.home-post-card p:not(.post-meta),
+.post-card p:not(.post-meta),
+.article-header > p:not(.post-meta) {
+  letter-spacing: 0.01em;
+}
+
+.post-meta,
+.post-category-directory-meta,
+.file-asset-meta,
+.prose table {
+  font-variant-numeric: tabular-nums;
 }

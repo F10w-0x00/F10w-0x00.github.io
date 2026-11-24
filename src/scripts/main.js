@@ -1,16 +1,22 @@
 // src/scripts/main.js
-// 统一客户端交互主脚本：包含网站设置、已读文章标记、代码块增强与长内容（代码/引用）渐隐折叠
+// 统一客户端交互主脚本：包含网站设置、已读文章标记与代码块复制增强
 
 (() => {
-  const STORAGE_PREFIX = 'KenShelter';
+  const STORAGE_PREFIX = document.documentElement.dataset.storageNamespace || 'KenShelter';
 
   // ==========================================
   // 1. 网站设置抽屉面板与偏好切换（分段控制器平滑滑动）
   // ==========================================
+  let settingsGlobalBound = false;
+  let activeCloseSettingsPanel = null;
+  let activeFocusSettingsToggle = null;
+
   function initSettingsPanel() {
     const toggleBtn = document.querySelector('[data-settings-toggle]');
     const panel = document.querySelector('[data-settings-panel]');
     if (!toggleBtn || !panel) return;
+    if (panel.dataset.settingsReady === 'true') return;
+    panel.dataset.settingsReady = 'true';
 
     const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const getSystemTheme = () => (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -142,18 +148,27 @@
       else closePanel();
     });
 
-    document.addEventListener('pointerdown', (e) => {
-      if (!panel.hidden && !panel.contains(e.target) && !toggleBtn.contains(e.target)) {
-        closePanel();
-      }
-    });
+    activeCloseSettingsPanel = closePanel;
+    activeFocusSettingsToggle = () => toggleBtn.focus({ preventScroll: true });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !panel.hidden) {
-        closePanel();
-        toggleBtn.focus({ preventScroll: true });
-      }
-    });
+    if (!settingsGlobalBound) {
+      settingsGlobalBound = true;
+      document.addEventListener('pointerdown', (e) => {
+        const curPanel = document.querySelector('[data-settings-panel]');
+        const curToggle = document.querySelector('[data-settings-toggle]');
+        if (curPanel && !curPanel.hidden && !curPanel.contains(e.target) && (!curToggle || !curToggle.contains(e.target))) {
+          activeCloseSettingsPanel?.();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const curPanel = document.querySelector('[data-settings-panel]');
+        if (e.key === 'Escape' && curPanel && !curPanel.hidden) {
+          activeCloseSettingsPanel?.();
+          activeFocusSettingsToggle?.();
+        }
+      });
+    }
 
     panel.addEventListener('animationend', (e) => {
       if (e.target === panel && e.animationName === 'site-settings-panel-out' && panel.classList.contains('is-closing')) {
@@ -176,6 +191,8 @@
   // ==========================================
   // 2. 已读博文（Visited Checkmark）本地标记
   // ==========================================
+  let visitedGlobalBound = false;
+
   function initVisitedMarks() {
     const visitedKey = `${STORAGE_PREFIX}-visited-posts`;
 
@@ -207,44 +224,42 @@
       });
     }
 
-    // 监听返回上一页（BFCache 恢复）时同步更新已读状态
-    window.addEventListener('pageshow', updateMarks);
-
     const readingElem = document.querySelector('[data-post-reading]');
     if (readingElem) {
       const slug = readingElem.getAttribute('data-reading-post-slug');
       if (slug) saveVisited(slug);
     }
 
-    document.addEventListener(
-      'click',
-      (e) => {
-        const link = e.target.closest('a[href^="/blog/"]');
-        if (!link || link.getAttribute('href') === '/blog/' || link.getAttribute('href')?.startsWith('/blog/?')) return;
-        const card = link.closest('[data-reading-post-slug]');
-        if (card) {
-          const slug = card.getAttribute('data-reading-post-slug');
-          if (slug) {
-            saveVisited(slug);
-            const icon = card.querySelector('[data-post-visited-icon]');
-            if (icon) icon.classList.add('is-visited');
+    if (!visitedGlobalBound) {
+      visitedGlobalBound = true;
+      // 监听返回上一页（BFCache 恢复）时同步更新已读状态
+      window.addEventListener('pageshow', updateMarks);
+
+      document.addEventListener(
+        'click',
+        (e) => {
+          const link = e.target.closest('a[href^="/blog/"]');
+          if (!link || link.getAttribute('href') === '/blog/' || link.getAttribute('href')?.startsWith('/blog/?')) return;
+          const card = link.closest('[data-reading-post-slug]');
+          if (card) {
+            const slug = card.getAttribute('data-reading-post-slug');
+            if (slug) {
+              saveVisited(slug);
+              const icon = card.querySelector('[data-post-visited-icon]');
+              if (icon) icon.classList.add('is-visited');
+            }
           }
-        }
-      },
-      { passive: true }
-    );
+        },
+        { passive: true }
+      );
+    }
 
     updateMarks();
   }
 
   // ==========================================
-  // 3. 通用长块（代码块 & 引用块）渐隐折叠与交互引擎
+  // 3. 代码块语言容器与一键复制按钮
   // ==========================================
-  const CHEVRON_SVG = `
-    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-      <path d="m6 9 6 6 6-6"></path>
-    </svg>
-  `;
   const COPY_SVG = `
     <svg class="code-copy-button__copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
@@ -255,109 +270,6 @@
     </svg>
   `;
 
-  const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const recalcFns = [];
-  let recalcRafId = 0;
-
-  const scheduleRecalc = () => {
-    if (recalcRafId) return;
-    recalcRafId = window.requestAnimationFrame(() => {
-      recalcRafId = 0;
-      recalcFns.forEach((fn) => fn());
-    });
-  };
-
-  const getLineHeight = (el) => {
-    const s = window.getComputedStyle(el);
-    const lh = s.lineHeight;
-    const num = Number.parseFloat(lh);
-    if (Number.isFinite(num)) return num;
-    const fs = Number.parseFloat(s.fontSize);
-    return Number.isFinite(fs) ? fs * 1.6 : 24;
-  };
-
-  const getPadding = (el) => {
-    const s = window.getComputedStyle(el);
-    return Number.parseFloat(s.paddingTop) + Number.parseFloat(s.paddingBottom);
-  };
-
-  const setToggleState = (btn, isCollapsed, targetName) => {
-    const actionText = isCollapsed ? '展开' : '收起';
-    btn.innerHTML = `<span>${actionText}</span>${CHEVRON_SVG}`;
-    btn.setAttribute('aria-expanded', String(!isCollapsed));
-    btn.setAttribute('aria-label', `${actionText}${targetName}`);
-    btn.title = actionText;
-  };
-
-  const updateExpandedHeight = (contentEl) => {
-    const h = contentEl.scrollHeight + contentEl.offsetHeight - contentEl.clientHeight;
-    contentEl.style.setProperty('--collapsible-expanded-height', `${h}px`);
-  };
-
-  const setCollapsedState = (wrapper, contentEl, toggleBtn, shouldCollapse) => {
-    const targetName = toggleBtn.dataset.targetName || '内容';
-    updateExpandedHeight(contentEl);
-    wrapper.classList.toggle('is-collapsed', shouldCollapse);
-    setToggleState(toggleBtn, shouldCollapse, targetName);
-    if (!isReducedMotion()) {
-      updateExpandedHeight(contentEl);
-    }
-  };
-
-  const setupCollapsible = (wrapper, contentEl, calcHeightFn, targetName, options = {}) => {
-    if (wrapper.dataset.collapsibleReady === 'true') return;
-    wrapper.dataset.collapsibleReady = 'true';
-
-    const toggleBtn = document.createElement('button');
-    toggleBtn.type = 'button';
-    toggleBtn.className = 'collapsible-block-toggle';
-    toggleBtn.dataset.targetName = targetName;
-    setToggleState(toggleBtn, true, targetName);
-
-    const revealBtn = document.createElement('button');
-    revealBtn.type = 'button';
-    revealBtn.className = 'collapsible-block-reveal';
-    revealBtn.setAttribute('aria-label', `展开${targetName}`);
-    revealBtn.title = `展开${targetName}`;
-
-    wrapper.classList.add('collapsible-block', 'is-collapsed');
-    contentEl.classList.add('collapsible-block-content');
-
-    toggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setCollapsedState(wrapper, contentEl, toggleBtn, !wrapper.classList.contains('is-collapsed'));
-    });
-
-    revealBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (wrapper.classList.contains('is-collapsed')) {
-        setCollapsedState(wrapper, contentEl, toggleBtn, false);
-      }
-    });
-
-    if (options.buttonPlacement === 'inside-start') {
-      const afterElem = options.insertAfterSelector ? contentEl.querySelector(options.insertAfterSelector) : null;
-      if (afterElem) {
-        afterElem.after(toggleBtn);
-      } else {
-        contentEl.prepend(toggleBtn);
-      }
-    } else {
-      wrapper.append(toggleBtn);
-    }
-    wrapper.append(revealBtn);
-
-    const applyHeights = () => {
-      const h = typeof calcHeightFn === 'function' ? calcHeightFn() : calcHeightFn;
-      contentEl.style.setProperty('--collapsible-collapsed-height', `${h}px`);
-      updateExpandedHeight(contentEl);
-    };
-
-    recalcFns.push(applyHeights);
-    applyHeights();
-  };
-
-  // 代码块初始化（复制按钮 + 超过 10 行自动折叠）
   function initCodeBlocks() {
     document.querySelectorAll('.prose pre').forEach((pre, idx) => {
       if (pre.dataset.codeReady === 'true') return;
@@ -365,7 +277,6 @@
 
       const code = pre.querySelector('code');
       const rawText = code ? code.textContent || '' : pre.textContent || '';
-      const lines = rawText.replace(/\n$/, '').split('\n');
       const lang = pre.getAttribute('data-language') || pre.className.match(/language-(\w+)/)?.[1] || '';
 
       const wrapper = document.createElement('div');
@@ -400,67 +311,6 @@
       });
 
       pre.prepend(copyBtn);
-
-      // 遵循原 blog 的长代码折叠机制（超过 14 行触发自动折叠，折叠后保留 7 行高度，确保展开时有明显的阅读收益）
-      if (lines.length > 14) {
-        wrapper.classList.add('collapsible-code-block');
-        setupCollapsible(
-          wrapper,
-          pre,
-          () => {
-            const codeEl = pre.querySelector('code') || pre;
-            const lh = getLineHeight(codeEl);
-            const padTop = Number.parseFloat(window.getComputedStyle(pre).paddingTop) || 24;
-            return Math.round(lh * 7 + padTop);
-          },
-          '代码块',
-          { buttonPlacement: 'inside-start', insertAfterSelector: '.code-copy-button' }
-        );
-      }
-    });
-  }
-
-  // 引用块初始化（非提示框且高度超过 14 行时自动折叠）
-  function initQuoteBlocks() {
-    document.querySelectorAll('.prose blockquote').forEach((bq) => {
-      if (
-        bq.classList.contains('callout') ||
-        bq.closest('.collapsible-block') ||
-        bq.classList.contains('collapsible-block-content')
-      ) {
-        return;
-      }
-
-      const lh = getLineHeight(bq);
-      const estimatedLines = Math.ceil(bq.scrollHeight / lh);
-      if (estimatedLines <= 14) return;
-
-      const wrapper = document.createElement('div');
-      wrapper.className = 'collapsible-quote-block';
-      bq.parentNode?.insertBefore(wrapper, bq);
-      wrapper.append(bq);
-
-      setupCollapsible(
-        wrapper,
-        bq,
-        () => {
-          const lh = getLineHeight(bq);
-          const padTop = Number.parseFloat(window.getComputedStyle(bq).paddingTop) || 17;
-          return Math.round(lh * 7 + padTop);
-        },
-        '引用块',
-        { buttonPlacement: 'inside-start' }
-      );
-    });
-  }
-
-  // 监听窗口尺寸和设置变更时重新计算折叠高度
-  function initCollapsibleResizeWatcher() {
-    if (recalcFns.length === 0) return;
-    window.addEventListener('resize', scheduleRecalc, { passive: true });
-    new MutationObserver(scheduleRecalc).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-font-size', 'data-content-width']
     });
   }
 
@@ -471,8 +321,6 @@
     initSettingsPanel();
     initVisitedMarks();
     initCodeBlocks();
-    initQuoteBlocks();
-    initCollapsibleResizeWatcher();
   }
 
   if (document.readyState === 'loading') {

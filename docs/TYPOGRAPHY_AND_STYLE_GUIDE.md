@@ -10,8 +10,8 @@
 3. [文本格式与中英文混排（盘古之白）](#3-文本格式与中英文混排盘古之白)
 4. [超链接系统：站内蓝链与外链 Favicon](#4-超链接系统站内蓝链与外链-favicon)
 5. [图片排版与图片下方小字说明（Caption）](#5-图片排版与图片下方小字说明caption)
-6. [多图轮播堆叠（Image Carousel）](#6-多图轮播堆叠image-carousel)
-7. [代码块高保真系统（Shiki 语法高亮、语言徽标与折叠）](#7-代码块高保真系统shiki-语法高亮语言徽标与折叠)
+6. [多图排版说明](#6-多图排版说明)
+7. [代码块高保真系统（Shiki 语法高亮、语言徽标与一键复制）](#7-代码块高保真系统shiki-语法高亮语言徽标与一键复制)
 8. [引用块与注意事项（Callout）](#8-引用块与注意事项callout)
 9. [表格排版与列宽策略](#9-表格排版与列宽策略)
 10. [字体系统深度解析与自选字体指南](#10-字体系统深度解析与自选字体指南)
@@ -41,7 +41,7 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 | `description` | `string` | 必填 | 用于归档卡片正文摘录及 `<meta name="description">`。 |
 | `date` | `date / string` | 必填 | 格式为 `YYYY-MM-DD`，排序引擎以此为时间戳依据。 |
 | `category` | `string` | 推荐 | 文档页分类过滤器（按类型筛选）的聚合依据。 |
-| `words` | `number` | 推荐 | 正文字数统计（如 2994），展示为 "2994 字"。 |
+| `words` | `number` | 可选 | 正文字数统计（如 2994），展示为 "2994 字"；留空时构建期自动统计中文字数与英文词数。 |
 | `cover` | `string` | 可选 | 列表卡片与文章头图（如 `/images/...`），建议比例 `2:1`。 |
 
 ---
@@ -62,9 +62,8 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
    - 粗体：`**核心观点**` -> 呈现加粗深色文字。
    - 斜体：`*专有名词*` -> 呈现倾斜体。
    - 删除线：`~~过时论点~~` -> 呈现贯穿删除线。
-3. **内联代码（Inline Code）与一键复制**：
-   - 使用单个反引号包裹：`` `const site = "f10w-0x00";` ``。
-   - **交互特性**：正文中的内联代码内置了 `data-copy-ready` 复制能力，读者在桌面上点击即可静默复制内容至剪贴板，并呈现绿色对勾反馈！
+3. **内联代码（Inline Code）**：
+   - 使用单个反引号包裹：`` `const site = "f10w-0x00";` ``，自动应用等宽字体与莫兰迪浅蓝底色。
 
 ---
 
@@ -73,19 +72,15 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 博客站对超链接做了严密的视觉语义设计：
 
 ### 4.1 站内链接（蓝链）
-指向站内其他文档或同页锚点的链接为蓝色：
-```html
-<a href="/blog/2026-06-10-visual-and-interaction-design-of-this-blog-site/" data-link-reading-kind="internal">本博客站的视觉和交互设计</a>
+指向站内其他文档或同页锚点的链接为莫兰迪蓝色：
+```markdown
+[本博客站的视觉和交互设计](/blog/2026-06-10-visual-and-interaction-design-of-this-blog-site/)
 ```
-当点击同页锚点（例如 `<a href="#section-1" class="same-page-anchor-with-indicator">`）时，顶栏会自动浮现返回按钮，点击后平滑滚动回跳转前的位置。
 
 ### 4.2 外部链接（棕链 + Favicon）
-指向外网的链接统一为莫兰迪棕色，并带有外链专属图标：
-```html
-<a href="https://obsidian.md" target="_blank" rel="noopener noreferrer" class="external-link-with-favicon" data-link-reading-kind="external">
-  <img src="/favicons/external-links/obsidian-md.ico" alt="" class="external-link-favicon" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">
-  Obsidian 官网
-</a>
+指向外网的链接会在编译期由 `rehype-blog-content.mjs` 自动转为莫兰迪棕色并新标签页打开；命中 `faviconMap` 的站点还会自动注入本地 Favicon：
+```markdown
+[Obsidian 官网](https://obsidian.md)
 ```
 
 ---
@@ -94,14 +89,20 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 
 ### 5.1 如何在图片下写小字说明（重点）
 
-在博客中，有三种方式为图片添加精致、居中且带微灰度的说明小字：
+博客推荐两种方式为图片添加居中、柔和灰度的说明小字：
 
-#### 方式一：语义化 HTML 标签（100% 还原原版视觉，推荐）
-原版博客的样式系统直接为 `<figure class="post-image-figure">` 和 `<figcaption class="post-image-caption">` 提供了像素级对齐规则：
+#### 方式一：标准 Markdown 带 `title` 属性（最简洁，推荐）
+只需在独占一行的 Markdown 图片语法中加上引号图注，`rehype-blog-content.mjs` 会在编译期自动将其转为语义化的 `<figure class="post-image-figure">` + `<figcaption class="post-image-caption">`，并补齐 `loading="lazy" decoding="async"`：
+```markdown
+![Obsidian 网状关系图谱](/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Obsidian 网状关系图谱：过早编织的复杂网状图往往沦为视觉摆设")
+```
+
+#### 方式二：直接编写语义化 HTML 标签
+当需要精确指定宽高或自定义结构时，可直接写 `<figure class="post-image-figure">`：
 ```html
 <figure class="post-image-figure">
   <img
-    src="/_astro/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif"
+    src="/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif"
     alt="Obsidian 网状关系图谱"
     loading="lazy"
     decoding="async"
@@ -111,53 +112,29 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
   <figcaption class="post-image-caption">Obsidian 网状关系图谱：过早编织的复杂网状图往往沦为视觉摆设</figcaption>
 </figure>
 ```
-- **视觉效果**：图片自适应容器，下方带有 `-2px` 负边距贴合的小字，字体为 `--muted` 灰色，字号为 `0.92rem`，多行居中。
-
-#### 方式二：纯 Markdown 紧凑模式
-若不愿编写 HTML，可在标准 Markdown 图片下方紧随一行居中斜体小字：
-```markdown
-![维基百科对网页侧面的占用](/_astro/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif)
-<p align="center"><small style="color: var(--muted);">维基百科对网页侧面的占用：繁复的侧边配置破坏了专注感</small></p>
-```
-
-#### 方式三：图片 `data-caption` 属性（触发灯箱浮层小字）
-若通过 Astro 原生脚本渲染，直接在 `<img>` 标签中写入 `data-caption`：
-```html
-<img src="/path/to/image.png" alt="说明文字" data-caption="展开全屏后在底部药丸浮层显示的标题小字" />
-```
-前端 JS 会在页面就绪时将其自动包装为支持点击放大的画廊容器。
+- **视觉效果**：图片自适应容器，下方带有微距贴合的小字，字体为 `--muted` 灰色，字号为 `0.92rem`，多行居中。
 
 ---
 
-## 6. 多图轮播堆叠（Image Carousel）
+## 6. 多图排版说明
 
-当一个 `<p>` 标签中包含连续两张或多张图片时，系统会自动激活交互式堆叠轮播组件：
-```html
-<p>
-  <img alt="Saral Theme 的 demo" data-caption="Saral Theme 的 demo" src="/_astro/Screenshot%202026-06-09%20at%2014.05.08@2x-thumb.n6G8qpch_2a1Atg.avif" />
-  <img alt="我的博客站首页" data-caption="我的博客站首页" src="/_astro/Screenshot%202026-06-09%20at%2014.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif" />
-</p>
-```
-用户点击翻页箭头时，图片具备带有物理弹性的拟物翻页卡片堆叠动画，并支持全屏灯箱浏览。
+本站坚持轻量化静态阅读流，不引入重型轮播或灯箱脚本。多张配图建议各自独占一行编写标准 Markdown 图片语法（可附带图注），在桌面端与移动端均会自适应等比展示。
 
 ---
 
-## 7. 代码块高保真系统（Shiki 语法高亮、语言徽标与折叠）
+## 7. 代码块高保真系统（Shiki 语法高亮、语言徽标与一键复制）
 
-代码块严格对齐原站规格，具备三大特性：
-1. **左上角浮动语言药丸徽章**（通过 `data-language` 或 `data-code-language` 触发）
-2. **右上角圆形质感一键复制按钮**（自动读取代码纯文本，带有状态流转动画）
-3. **超长代码渐隐折叠与展开交互**（超过 16 行时自动触发底部渐隐遮罩与展开按钮，展示约 8 行代码并优雅渐隐）
+代码块具备以下特性：
+1. **左上角浮动语言药丸徽章**（通过 `data-language` / `data-code-language` 自动显示）
+2. **右上角圆形质感一键复制按钮**（自动读取代码纯文本，带有复制成功对勾动画）
+3. **全文完整展示**：不折叠截断，长行原生支持横向平滑滚动。
 
-### 7.1 常规短代码块范例
-```html
-<pre class="astro-code astro-code-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e;" tabindex="0" data-language="dataview"><code><span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">TABLE</span> <span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">file.mtime</span> <span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">AS</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"最后修改"</span></span>
-<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">FROM</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"02_Knowledge"</span></span>
-<span class="line"><span style="--shiki-light:#cf222e;--shiki-dark:#ff7b72;">WHERE</span> <span style="--shiki-light:#8250df;--shiki-dark:#d2a8ff;">contains</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">(</span><span style="--shiki-light:#0550ae;--shiki-dark:#79c0ff;">status</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">,</span> <span style="--shiki-light:#0a3069;--shiki-dark:#a5d6ff;">"active"</span><span style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;">)</span></span></code></pre>
+### 7.1 代码块范例
+````markdown
+```sql
+SELECT title, date FROM posts WHERE category = '学习' ORDER BY date DESC;
 ```
-
-### 7.2 触发折叠的多行代码块范例（行数 > 16）
-任何指定了语言且行数大于 16 行的代码块，客户端脚本将自动为外部添加 `.collapsible-code-block` 容器，渲染出半透明渐变遮罩与“展开代码块”旋钮，点击后流畅展开全部代码。短代码块（1~16 行）默认完整展示，不折叠打扰阅读。
+````
 
 ---
 
@@ -216,16 +193,16 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 
 针对你关心的字体选择与定制方案，以下是深度专业分析与实施建议：
 
-### 10.1 原博客究竟用的是什么字体？
-查看全局编译后的样式表 `BaseLayout.BXLOwkA9.css`，原站的核心字体规则为：
+### 10.1 当前博客使用的是什么字体？
+查看全局样式表 `src/styles/global.css`，当前站点的核心字体规则为：
 ```css
-/* 正文全局字体栈 */
-font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+/* 正文全局字体栈（自托管西文 Anthropic Sans + 系统原生中文字体） */
+font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
 
 /* 代码与等宽字体栈 */
-font-family: "SF Mono", Menlo, Consolas, monospace;
+font-family: SF Mono, Menlo, Consolas, monospace;
 ```
-**原博客之所以阅读体验极佳，是因为它完全没有采用笨重的外部网络字体，而是使用了“无感系统原生字体栈”**：
+**当前方案结合了轻量化自托管英文字体（`public/fonts/AnthropicSans_Roman_Web.woff2`，约 116 KB 且预加载）与“无感系统原生中文字体栈”**：
 - **Apple 生态（Mac / iPhone / iPad）**：系统自动调用 **SF Pro**（西文）与 **PingFang SC（苹方-简）**。这正是苹果官网、Safari 阅读模式的标准排版基调，字形工整、笔锋极简、灰度平衡极佳。
 - **Windows 生态**：自动回退至 **Segoe UI**（西文）与 **Microsoft YaHei（微软雅黑）**。
 - **等宽代码**：Mac 走 **SF Mono**，Windows 走 **Consolas**。
@@ -308,7 +285,7 @@ Google Fonts 针对部分开源中文字体（如 **Noto Sans SC 思源黑体**�
 
 ## 11. 文件资产与下载卡片规范（PDF / 压缩包等）
 
-博客内置了符合苹果 AirDrop 风格的**双行精致下载卡片**（方案 1.1 + 语法 A 自动探测），支持在文章中引用 PDF、ZIP、EPUB 等各类附件，并在编译期**全自动读取真实文件大小与格式**，无需手动标注！
+博客内置了**极简圆角附件下载卡片**，支持在文章中引用 PDF、Markdown、ZIP、EPUB 等各类附件，并在编译期**全自动读取真实文件大小与格式**，无需手动标注。
 
 ### 11.1 文件存放与目录结构
 推荐将需要提供下载的静态文件存放在博客仓库的 `public/files/` 目录下：
@@ -330,10 +307,9 @@ Blog/
 [wisdom-tooth-care-guide.pdf](/files/wisdom-tooth-care-guide.pdf)
 ```
 - **自动效果**：
-  - 第一行主标题：`wisdom-tooth-care-guide.pdf`（大粗体）；
-  - 第二行副标：`PDF 文档 · 469 B`（自动探测物理字节并智能换算为 B / KB / MB / GB）；
-  - 左侧：专属莫兰迪浅红底衬 PDF 折角图标与徽标；
-  - 右侧：药丸胶囊下载按钮（点击或点击整卡均可直接触发浏览器下载）。
+  - 左侧：柔和蓝灰圆角方块 + 干净的线框折角文档图标；
+  - 中间：第一行主标题 `wisdom-tooth-care-guide.pdf`，第二行静默副标 `PDF 文档 · 500 B`（编译期自动换算 `B / KB / MB / GB`）；
+  - 右侧：默认留白，悬停时底色柔和提亮并浮现极简下载图标（点击整卡任意位置直接下载）。
 
 #### 进阶用法：自定义中文描述标题
 ```markdown
@@ -341,28 +317,29 @@ Blog/
 ```
 - **效果**：
   - 第一行主标题显示为中文：`拔牙术后全周期护理指南`；
-  - 第二行副标显示：`PDF 文档 · 469 B`；
-  - 悬停卡片时浮现物理文件名说明，触发下载时自动保存为真实文件名。
+  - 第二行副标显示：`PDF 文档 · 500 B`；
+  - 触发下载时自动保存为真实文件名。
 
 #### 引用 GitHub Releases 或外部下载链接
 若文件体积极大（如几百 MB 的数据集或安装包），建议上传到 GitHub Releases 或网盘，并直接引用：
 ```markdown
 [macOS-Obsidian-Theme-v2.0.zip](https://github.com/f10w-0x00/blog/releases/download/v2.0/theme.zip)
 ```
-系统将自动识别扩展名为 `ZIP 压缩包` 并生成对应的莫兰迪琥珀黄下载卡片。
+系统会自动识别扩展名为 `ZIP 压缩包` 并生成对应的极简下载卡片。
 
-### 11.3 支持的文件类型与配色系统
-| 扩展名 | 分类标签 | 专属莫兰迪低饱和色调 |
-| :--- | :--- | :--- |
-| `.pdf` | PDF 文档 | 珊瑚陶土红 |
-| `.zip`, `.tar.gz`, `.7z`, `.rar` | 压缩包 | 浅驼琥珀黄 |
-| `.epub`, `.mobi`, `.azw3` | 电子书 | 优雅灰紫 |
-| `.dmg`, `.pkg`, `.ipa` | Apple 镜像/安装包 | 静谧灰蓝 |
-| `.exe`, `.msi` | Windows 程序 | 靛青冷蓝 |
-| `.apk` | Android 安装包 | 草木浅绿 |
-| `.doc`, `.docx` | Word 文档 | 经典靛蓝 |
-| `.xls`, `.xlsx`, `.csv` | 电子表格 | 橄榄青绿 |
-| `.ppt`, `.pptx` | 演示幻灯片 | 砖褐橘红 |
-| `.mp3`, `.wav`, `.flac` | 音频资源 | 灰调粉紫 |
-| `.mp4`, `.mov` | 视频资源 | 薰衣草紫 |
+### 11.3 支持的文件类型标签
+| 扩展名 | 分类标签 |
+| :--- | :--- |
+| `.pdf` | PDF 文档 |
+| `.md`, `.txt`, `.csv` | Markdown 文档 / 文本文件 / CSV 数据 |
+| `.zip`, `.tar`, `.gz`, `.7z`, `.rar` | 压缩包 / 归档 |
+| `.epub`, `.mobi`, `.azw3` | 电子书 |
+| `.dmg`, `.pkg`, `.ipa` | Apple 镜像 / 安装包 |
+| `.exe`, `.msi` | Windows 程序 / 安装包 |
+| `.apk` | Android 安装包 |
+| `.doc`, `.docx` | Word 文档 |
+| `.xls`, `.xlsx` | Excel 表格 |
+| `.ppt`, `.pptx` | PPT 演示 |
+| `.mp3`, `.wav`, `.flac` | 音频文件 / 无损音频 |
+| `.mp4`, `.mov` | 视频文件 |
 

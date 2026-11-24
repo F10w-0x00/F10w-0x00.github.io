@@ -25,45 +25,39 @@
 - **纯净样式理念**：全站使用现代原生 CSS 与 CSS Custom Properties，**无** Tailwind CSS、**无** CSS-in-JS 框架，无预设类名污染。
 - **纯粹交互理念**：客户端交互由集中式 Vanilla JavaScript 驱动（位于 `src/scripts/main.js`），无庞大的 React/Vue 运行时开销，保证首屏秒开。
 - **静态 Markdown 编译器扩展**：通过自定义 Rehype 插件（`src/plugins/rehype-blog-content.mjs`）在静态编译期处理 Callout 提示框、图片 Figure 图注、外链 Favicon 自动注入，以及**附件真实物理大小与格式全自动探测**。
-- **运行与构建环境**：Linux / NixOS，通过 `nix-shell -p nodejs pnpm git` 提供底层编译支持。
+- **运行与构建环境**：标准 Node.js（22+）+ `pnpm@10.5.2`（支持 Windows / macOS / Linux / NixOS）。
 
 ---
 
 ## 3. 目录拓扑与文件权责划分
 
 ```text
-/home/flynn/Documents/Blog/
+.
 ├── posts/                                # 【核心内容】博客所有正文（100% 纯 Markdown 驱动）
-│   ├── 2026-06-10-visual-and-interaction-design-of-this-blog-site.md
-│   ├── 2026-07-20-my-wisdom-tooth-extraction-experience.md
-│   ├── 2026-07-25-recommended-up-creators-im-following-part-3.md
-│   └── 2026-10-01-how-i-use-obsidian.md
 ├── public/                               # 静态资产目录（打包时原样输出至站点根路径）
-│   ├── avatar.png / avatar.jpg           # 个人头像徽标
+│   ├── avatar.png                        # 个人头像徽标
 │   ├── favicon.ico / favicon.png         # 浏览器标签页真透明高清图标
 │   ├── files/                            # 【附件目录】供读者下载的 PDF、ZIP 等附件
 │   ├── fonts/                            # Anthropic Sans Web 字体 (woff2)
-│   ├── favicons/external-links/          # 站外链接自动外挂的 Favicon 图标
+│   ├── favicons/                         # Apple Touch Icon 与站外链接 Favicon 图标
 │   └── images/                           # 文章封面与正文插图
 ├── src/
-│   ├── components/common/
-│   │   └── SiteHeader.astro              # 顶栏导航、品牌圆形头像、锚点返回按钮与设置抽屉入口
 │   ├── layouts/
-│   │   └── BaseLayout.astro              # 全局 HTML 骨架（防白屏闪烁偏好脚本、全局 Header/Footer）
+│   │   └── BaseLayout.astro              # 全局 HTML 骨架（防白屏闪烁偏好脚本、顶栏与设置抽屉）
 │   ├── pages/
 │   │   ├── index.astro                   # 首页（Recent Posts 网格流，保持纯净无已读小勾）
-│   │   ├── rss.xml.js                    # RSS 2.0 订阅端点
+│   │   ├── rss.xml.js                    # RSS 2.0 订阅端点（含 XML/CDATA 安全转义）
 │   │   └── blog/
 │   │       ├── index.astro               # 文档归档页（分类/年份筛选、60° 旋转排序、已读小勾）
 │   │       └── [slug].astro              # 动态博文渲染页（目录元数据、图注、相邻翻页、分类归属）
 │   ├── plugins/
-│   │   └── rehype-blog-content.mjs       # Markdown 编译器插件（核心扩展逻辑）
+│   │   └── rehype-blog-content.mjs       # Markdown 编译器插件（下载卡片、图注、Callout、外链 Favicon）
 │   ├── scripts/
-│   │   └── main.js                       # 集中式客户端交互脚本（设置、折叠、复制、打勾）
+│   │   └── main.js                       # 集中式客户端交互脚本（设置、复制、已读标记）
 │   ├── styles/
-│   │   └── global.css                    # 全局统一样式表（Design Tokens、组件类名、暗色模式）
+│   │   └── global.css                    # 全局统一样式表（已精简无用遗留样式并格式化）
 │   └── utils/
-│       └── posts.js                      # 博文加载与排序通用辅助函数
+│       └── posts.js                      # 统一博文加载（getAllPosts）、日期兜底与自动字数统计
 ├── docs/                                 # 伴随式系统文档库
 │   ├── ARCHITECTURE.md                   # 系统架构说明
 │   ├── COMPONENTS.md                     # 核心组件规范与微交互设计
@@ -83,20 +77,18 @@
 
 接手维护时，请重点关注以下核心交互与业务机制，避免反向退化：
 
-### 4.1 代码块与引用块长块折叠机制
-- **触发折叠阈值**：**14 行**。代码块（`lines.length > 14`）和长引用块（`estimatedLines > 14`）才会触发折叠；低于 14 行的长块直接完整展示，不打断短代码阅读。
-- **折叠后高度**：**固定 7 行**（`Math.round(lh * 7 + padTop)`，约为 250px~257px），与原站 kenshelter.com 像素级一致。
-- **设计铁律**：「触发折叠阈值 (14行)」必须严格大于「折叠后高度 (7行)」，确保读者点击展开时能够一次性多展开 7 行以上的内容，展开体验有实质收益。
-- **暗色模式边框修复**：已彻底剔除 `:after` 伪元素上的假边框，统一由外部 `pre` / `blockquote` 容器承载 1px 细边框，杜绝次像素双层框与折角白边；遮罩采用通透的低饱和平滑多段渐变（`0% 透明 -> 28% 半透 -> 78% 高透 -> 100% 实底`）。
+### 4.1 代码块与引用块展示
+- **全文完整展示**：所有代码块与引用块均默认完整展示，不触发折叠截断；
+- **代码块增强**：自动包裹 `.code-block`，展示左上角语言徽标与右上角一键复制按钮，并原生支持横向滚动。
 
 ### 4.2 文件资产下载卡片组件 (`.file-asset-card`)
-- **苹果 AirDrop 风格双行排版**：
-  - **左侧**：46x46px 莫兰迪微色底衬（按格式分别着色），内置折角文件 SVG 与格式徽标；
-  - **中间**：第一行为大粗体文件名（支持中文自定义大标题）；第二行为清爽的副标格式与物理大小（如 `PDF 文档 · 469 B`）；
-  - **右侧**：药丸胶囊下载按钮（下箭头悬停轻弹 +「下载」字样）；
-  - **无障碍与原生体验**：整张卡片语义化为带有 `download` 属性的 `<a>` 标签，点击整卡任意位置或右侧按钮均可触发原生文件下载。
+- **极简圆角附件卡片设计**：
+  - **左侧**：`38x38px` 柔和蓝灰圆角底块 + 干净的线框折角文档 SVG（无多余文字徽标）；
+  - **中间**：第一行为清爽主标题（支持自定义中文标题或物理文件名）；第二行为静默副标格式与物理大小（如 `PDF 文档 · 500 B`）；
+  - **右侧**：默认留白，桌面端悬停/聚焦整卡时平滑浮现极简线框下载图标（触屏端常显柔和图标）；
+  - **无障碍与原生体验**：整张卡片语义化为带有 `download` 属性的 `<a>` 标签，点击整卡任意位置即可触发原生文件下载。
 - **编译期全自动探测引擎**：
-  - 静态编译时由 `src/plugins/rehype-blog-content.mjs` 调用 Node.js `fs.statSync` 瞬间读取物理文件大小，支持 `B / KB / MB / GB` 智能换算；
+  - 静态编译时由 `src/plugins/rehype-blog-content.mjs` 调用 Node.js `fs.statSync`（含 `public/` 路径边界校验）瞬间读取物理文件大小，支持 `B / KB / MB / GB` 智能换算；
   - 零客户端 JavaScript 运行时开销，首屏秒开。
 
 ### 4.3 已读博文追踪系统 (`post-card-visited-icon`)
@@ -154,20 +146,23 @@
 3. 编译时系统会自动获取文件大小并生成双行拟物下载卡片，无需任何额外配置。
 
 ### 5.3 本地开发与调试
-在项目根目录下通过 NixOS 环境运行命令：
+在项目根目录下运行：
 ```bash
+# 安装依赖
+pnpm install
+
 # 启动本地实时热重载开发服务器 (默认端口 http://localhost:4321)
-nix-shell -p nodejs pnpm --run "pnpm start"
+pnpm start
 ```
 
 ### 5.4 静态编译与本地验证
 在提交前必须执行静态全量构建，确保 0 报错：
 ```bash
 # 执行 Astro 静态打包 (生成物位于 dist/)
-nix-shell -p nodejs pnpm --run "pnpm build"
+pnpm build
 
 # 本地预览编译后的真实静态站点
-nix-shell -p nodejs pnpm --run "pnpm preview"
+pnpm preview
 ```
 
 ### 5.5 Git 提交与推送规范
@@ -202,20 +197,18 @@ nix-shell -p nodejs pnpm --run "pnpm preview"
 
 1. **不要在 `src/styles/global.css` 中直接破坏 Design Tokens**：
    全站所有颜色均收敛在 `:root`、`html[data-theme=dark]` 与 `html[data-theme=light]` 中（如 `--bg`、`--surface`、`--accent`、`--code-bg`）。改动样式时请复用 Token 或使用 `color-mix(in srgb, ...)`，切忌写死十六进制颜色。
-2. **长块折叠高度不可随意调小**：
-   折叠后高度当前为展示 7 行（约 250px~257px），触发行数阈值不可低于 14 行，否则会再次导致展开后只增加 1~2 行的尴尬体验。
-3. **外链 Favicon 自动注入白名单**：
+2. **外链 Favicon 自动注入白名单**：
    若需扩展外部链接的 Favicon 图标，请将 16x16 / 32x32 图标放入 `public/favicons/external-links/`，并在 `src/plugins/rehype-blog-content.mjs` 中的 `faviconMap` 登记对应域名。
-4. **下载卡片单行独占要求**：
+3. **下载卡片单行独占要求**：
    Markdown 中的文件下载链接必须是所在 `<p>` 标签的唯一有效子元素（即前后换行独占一行）。若将链接写在正文句号中间，系统会智能将其作为正文普通行内链接处理，不会破坏自然段落流。
 
 ---
 
 ## 8. 关联参考文档
 
-- [README.md](file:///home/flynn/Documents/Blog/README.md)：仓库基础说明与写作速查表
-- [docs/ARCHITECTURE.md](file:///home/flynn/Documents/Blog/docs/ARCHITECTURE.md)：系统底层架构与技术选型
-- [docs/COMPONENTS.md](file:///home/flynn/Documents/Blog/docs/COMPONENTS.md)：组件 DOM 骨架与客户端交互规范
-- [docs/DESIGN_TOKENS.md](file:///home/flynn/Documents/Blog/docs/DESIGN_TOKENS.md)：莫兰迪色彩体系与设计参数
-- [docs/TYPOGRAPHY_AND_STYLE_GUIDE.md](file:///home/flynn/Documents/Blog/docs/TYPOGRAPHY_AND_STYLE_GUIDE.md)：博客全量排版与写作活范例
-- [CHECKLIST.md](file:///home/flynn/Documents/Blog/CHECKLIST.md)：Feature 交付与三态门禁状态表
+- [README.md](../README.md)：仓库基础说明与写作速查表
+- [docs/ARCHITECTURE.md](./ARCHITECTURE.md)：系统底层架构与技术选型
+- [docs/COMPONENTS.md](./COMPONENTS.md)：组件 DOM 骨架与客户端交互规范
+- [docs/DESIGN_TOKENS.md](./DESIGN_TOKENS.md)：莫兰迪色彩体系与设计参数
+- [docs/TYPOGRAPHY_AND_STYLE_GUIDE.md](./TYPOGRAPHY_AND_STYLE_GUIDE.md)：博客全量排版与写作活范例
+- [CHECKLIST.md](../CHECKLIST.md)：Feature 交付与三态门禁状态表

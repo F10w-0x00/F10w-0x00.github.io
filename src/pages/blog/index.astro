@@ -1,10 +1,9 @@
 ---
 // src/pages/blog/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { processPosts } from '../../utils/posts.js';
+import { getAllPosts } from '../../utils/posts.js';
 
-const postFiles = import.meta.glob('../../../posts/*.md', { eager: true });
-const allPosts = processPosts(postFiles);
+const allPosts = getAllPosts();
 
 // 提取分类与计数
 const categoryCounts = {};
@@ -16,10 +15,9 @@ const categories = Object.keys(categoryCounts);
 // 提取年份与计数
 const yearCounts = {};
 allPosts.forEach(p => {
-  const y = new Date(p.date).getUTCFullYear();
-  yearCounts[y] = (yearCounts[y] || 0) + 1;
+  yearCounts[p.year] = (yearCounts[p.year] || 0) + 1;
 });
-const years = Object.keys(yearCounts).sort((a, b) => b - a);
+const years = Object.keys(yearCounts).sort((a, b) => Number(b) - Number(a));
 ---
 
 <BaseLayout
@@ -90,7 +88,7 @@ const years = Object.keys(yearCounts).sort((a, b) => b - a);
     <!-- 文档列表 -->
     <section class="post-list" aria-label="文档列表" data-blog-archive-posts>
       {allPosts.map((post) => (
-        <div data-blog-post data-category={post.category} data-year={new Date(post.date).getUTCFullYear()} data-date={new Date(post.date).getTime()}>
+        <div data-blog-post data-category={post.category} data-year={post.year} data-date={post.timestamp}>
           <article class="post-card" data-reading-post-slug={post.slug}>
             <a href={`/blog/${post.slug}/`} class={`post-card-link ${post.cover ? 'has-cover' : ''}`}>
               <div class="post-card-body">

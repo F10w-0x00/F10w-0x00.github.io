@@ -19,6 +19,7 @@
 ├── public/                       # 静态资源
 │   ├── avatar.png                # 个人头像 Logo
 │   ├── favicon.png / favicon.ico # 浏览器 Favicon
+│   ├── favicons/                 # Apple Touch Icon 与外链 Favicon
 │   ├── files/                    # 【附件下载目录】存放供读者下载的 PDF、ZIP 等附件
 │   ├── fonts/                    # Anthropic Sans Web 字体
 │   └── images/                   # 文章配图与封面图
@@ -26,17 +27,19 @@
 │   ├── layouts/
 │   │   └── BaseLayout.astro      # 全局骨架（防闪烁偏好脚本、顶栏、设置抽屉）
 │   ├── pages/
-│   │   ├── index.astro           # 首页（Hero + Recent Posts）
-│   │   ├── rss.xml.js            # RSS 订阅生成端点
+│   │   ├── index.astro           # 首页（Recent Posts 最新 4 篇文章网格）
+│   │   ├── rss.xml.js            # RSS 2.0 订阅生成端点（含 XML/CDATA 转义）
 │   │   └── blog/
 │   │       ├── index.astro       # 文档归档页（分类/年份过滤 + 60°旋转排序）
 │   │       └── [slug].astro      # 文章详情动态路由（自动渲染 posts/*.md）
-│   ├── styles/
-│   │   └── global.css            # 全局样式表
+│   ├── plugins/
+│   │   └── rehype-blog-content.mjs # Markdown 编译期插件（下载卡片、图注、Callout、外链图标）
 │   ├── scripts/
-│   │   └── main.js               # 全局客户端交互（设置、已读标记、代码块复制与折叠）
-│   └── plugins/
-│       └── rehype-blog-content.mjs # Markdown 语法编译器插件（Callout、图注、外链图标）
+│   │   └── main.js               # 全局客户端交互（设置、已读标记、代码块一键复制）
+│   ├── styles/
+│   │   └── global.css            # 全局样式表（已精简无用样式并格式化）
+│   └── utils/
+│       └── posts.js              # 统一文章加载、日期兜底与自动字数统计
 ├── astro.config.mjs              # Astro 核心配置文件
 └── package.json
 ```
@@ -45,18 +48,19 @@
 
 ## 本地开发与构建
 
-在 NixOS 或已安装 Node.js 的环境下运行：
+在已安装 Node.js（推荐 Node 22+）与 pnpm（或启用 `corepack`）的环境下运行：
 
 ```bash
+# 安装依赖
+pnpm install
+# 或未全局安装 pnpm 时
+corepack pnpm install
+
 # 启动本地开发服务器
 pnpm start
-# 或
-nix-shell -p nodejs pnpm --run "pnpm start"
 
 # 生产环境编译构建
 pnpm build
-# 或
-nix-shell -p nodejs pnpm --run "pnpm build"
 
 # 本地预览构建产物
 pnpm preview
@@ -98,7 +102,7 @@ words: 2500 # 可选：显式指定字数或留空由构建程序自动统计
 
 ### 3. 代码块 (Code Blocks)
 
-原生支持 Shiki 语法高亮、右上角一键复制与长代码自动折叠：
+原生支持 Shiki 双主题语法高亮、左上角语言徽标与右上角一键复制（全文完整展示，不折叠）：
 
 ````markdown
 ```bash
@@ -137,17 +141,17 @@ echo "Hello World"
 
 ### 7. 文件下载卡片 (File Asset Cards)
 
-将附件（如 PDF、ZIP、EPUB 等）放入 **`public/files/`** 目录后，只需在 Markdown 中**单行独立引用**，系统会在静态编译时**全自动探测文件真实物理大小与格式**，渲染出苹果 AirDrop 风格的拟物下载卡片（无需手动填写大小或标签）：
+将附件（如 PDF、ZIP、EPUB 等）放入 **`public/files/`** 目录后，只需在 Markdown 中**单行独立引用**，系统会在静态编译时**全自动探测文件真实物理大小与格式**，渲染出极简圆角下载卡片（默认清爽无多余按钮，悬停时右侧浮现极简下载图标）：
 
 - **基础用法（直接引用物理文件名）**：
   ```markdown
   [wisdom-tooth-care-guide.pdf](/files/wisdom-tooth-care-guide.pdf)
   ```
-  自动渲染为：大粗体文件名 + 副标 `PDF 文档 · 469 B` + 莫兰迪专属红粉色图标 + 胶囊下载按钮。
+  自动渲染为：左侧极简线框文件图标 + 文件名与副标（如 `PDF 文档 · 500 B`），悬停时右侧柔和浮现下载箭头图标。
 
 - **进阶用法（自定义中文显示标题）**：
   ```markdown
   [拔牙术后全周期护理指南](/files/wisdom-tooth-care-guide.pdf)
   ```
-  第一行展示自定义中文大标题，第二行同样全自动显示 `PDF 文档 · 469 B`，整卡可点击下载。
+  第一行展示自定义中文标题，第二行自动显示 `PDF 文档 · 500 B`，整卡可点击下载。
 

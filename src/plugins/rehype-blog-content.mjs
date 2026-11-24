@@ -16,34 +16,36 @@ const faviconMap = {
   "zh.wikipedia.org": "/favicons/external-links/zh-wikipedia-org.ico"
 };
 
-const EXT_CONFIG = {
-  pdf: { label: 'PDF 文档', badge: 'PDF', themeColor: '#c75450', themeBg: 'rgba(199, 84, 80, 0.12)' },
-  zip: { label: 'ZIP 压缩包', badge: 'ZIP', themeColor: '#b88636', themeBg: 'rgba(184, 134, 54, 0.12)' },
-  rar: { label: 'RAR 压缩包', badge: 'RAR', themeColor: '#b88636', themeBg: 'rgba(184, 134, 54, 0.12)' },
-  '7z': { label: '7Z 压缩包', badge: '7Z', themeColor: '#b88636', themeBg: 'rgba(184, 134, 54, 0.12)' },
-  tar: { label: 'TAR 归档', badge: 'TAR', themeColor: '#b88636', themeBg: 'rgba(184, 134, 54, 0.12)' },
-  gz: { label: 'GZ 压缩包', badge: 'GZ', themeColor: '#b88636', themeBg: 'rgba(184, 134, 54, 0.12)' },
-  dmg: { label: 'macOS 镜像', badge: 'DMG', themeColor: '#4a7c91', themeBg: 'rgba(74, 124, 145, 0.12)' },
-  pkg: { label: 'macOS 安装包', badge: 'PKG', themeColor: '#4a7c91', themeBg: 'rgba(74, 124, 145, 0.12)' },
-  exe: { label: 'Windows 程序', badge: 'EXE', themeColor: '#4b6e96', themeBg: 'rgba(75, 110, 150, 0.12)' },
-  apk: { label: 'Android 安装包', badge: 'APK', themeColor: '#4d8b67', themeBg: 'rgba(77, 139, 103, 0.12)' },
-  ipa: { label: 'iOS 安装包', badge: 'IPA', themeColor: '#4a7c91', themeBg: 'rgba(74, 124, 145, 0.12)' },
-  epub: { label: 'EPUB 电子书', badge: 'EPUB', themeColor: '#7d6a91', themeBg: 'rgba(125, 106, 145, 0.12)' },
-  mobi: { label: 'MOBI 电子书', badge: 'MOBI', themeColor: '#7d6a91', themeBg: 'rgba(125, 106, 145, 0.12)' },
-  azw3: { label: 'Kindle 电子书', badge: 'AZW3', themeColor: '#7d6a91', themeBg: 'rgba(125, 106, 145, 0.12)' },
-  doc: { label: 'Word 文档', badge: 'DOC', themeColor: '#4b7194', themeBg: 'rgba(75, 113, 148, 0.12)' },
-  docx: { label: 'Word 文档', badge: 'DOCX', themeColor: '#4b7194', themeBg: 'rgba(75, 113, 148, 0.12)' },
-  xls: { label: 'Excel 表格', badge: 'XLS', themeColor: '#3f7e59', themeBg: 'rgba(63, 126, 89, 0.12)' },
-  xlsx: { label: 'Excel 表格', badge: 'XLSX', themeColor: '#3f7e59', themeBg: 'rgba(63, 126, 89, 0.12)' },
-  ppt: { label: 'PPT 演示', badge: 'PPT', themeColor: '#a85d47', themeBg: 'rgba(168, 93, 71, 0.12)' },
-  pptx: { label: 'PPT 演示', badge: 'PPTX', themeColor: '#a85d47', themeBg: 'rgba(168, 93, 71, 0.12)' },
-  mp3: { label: '音频文件', badge: 'MP3', themeColor: '#9c5471', themeBg: 'rgba(156, 84, 113, 0.12)' },
-  wav: { label: '音频文件', badge: 'WAV', themeColor: '#9c5471', themeBg: 'rgba(156, 84, 113, 0.12)' },
-  flac: { label: '无损音频', badge: 'FLAC', themeColor: '#9c5471', themeBg: 'rgba(156, 84, 113, 0.12)' },
-  mp4: { label: '视频文件', badge: 'MP4', themeColor: '#6c628e', themeBg: 'rgba(108, 98, 142, 0.12)' },
-  mov: { label: '视频文件', badge: 'MOV', themeColor: '#6c628e', themeBg: 'rgba(108, 98, 142, 0.12)' },
-  txt: { label: '文本文件', badge: 'TXT', themeColor: '#6b7280', themeBg: 'rgba(107, 114, 128, 0.12)' },
-  csv: { label: 'CSV 数据', badge: 'CSV', themeColor: '#3f7e59', themeBg: 'rgba(63, 126, 89, 0.12)' }
+const EXT_LABELS = {
+  pdf: 'PDF 文档',
+  md: 'Markdown 文档',
+  txt: '文本文件',
+  csv: 'CSV 数据',
+  zip: 'ZIP 压缩包',
+  rar: 'RAR 压缩包',
+  '7z': '7Z 压缩包',
+  tar: 'TAR 归档',
+  gz: 'GZ 压缩包',
+  dmg: 'macOS 镜像',
+  pkg: 'macOS 安装包',
+  exe: 'Windows 程序',
+  msi: 'Windows 安装包',
+  apk: 'Android 安装包',
+  ipa: 'iOS 安装包',
+  epub: 'EPUB 电子书',
+  mobi: 'MOBI 电子书',
+  azw3: 'Kindle 电子书',
+  doc: 'Word 文档',
+  docx: 'Word 文档',
+  xls: 'Excel 表格',
+  xlsx: 'Excel 表格',
+  ppt: 'PPT 演示',
+  pptx: 'PPT 演示',
+  mp3: '音频文件',
+  wav: '音频文件',
+  flac: '无损音频',
+  mp4: '视频文件',
+  mov: '视频文件'
 };
 
 function formatBytes(bytes) {
@@ -65,11 +67,11 @@ function getNodeDeepText(n) {
 
 export default function rehypeBlogContent() {
   return function transformer(tree) {
-    function visit(node, parent, index) {
+    function visit(node) {
       if (!node) return;
 
       if (node.type === "element") {
-        // 0. 单行文件引用自动转换为下载卡片（方案 1.1 双行排版 + 语法 A 自动探测）
+        // 0. 单行文件引用自动转换为极简附件下载卡片
         if (node.tagName === "p" && node.children && Array.isArray(node.children)) {
           const nonWhitespace = node.children.filter(c => !(c.type === "text" && !c.value.trim()));
           if (nonWhitespace.length === 1 && nonWhitespace[0].tagName === "a") {
@@ -83,40 +85,38 @@ export default function rehypeBlogContent() {
             const extMatch = cleanUrl.match(/\.([a-z0-9]+)$/i);
             const ext = extMatch ? extMatch[1].toLowerCase() : "";
             const isFilesDir = cleanUrl.includes("/files/");
-            const isDownloadable = isExplicitDownload || isFilesDir || (ext && EXT_CONFIG[ext]);
+            const isDownloadable = isExplicitDownload || isFilesDir || (ext && EXT_LABELS[ext]);
 
             if (isDownloadable) {
-              const decodedClean = decodeURIComponent(cleanUrl);
+              let decodedClean = cleanUrl;
+              try {
+                decodedClean = decodeURIComponent(cleanUrl);
+              } catch {}
               const physicalName = path.basename(decodedClean) || "download";
               let fileSizeBytes = null;
 
               if (!href.startsWith("http://") && !href.startsWith("https://") && !href.startsWith("//")) {
-                const relativePath = decodedClean.replace(/^\//, "");
-                const localPath = path.resolve(process.cwd(), "public", relativePath);
-                try {
-                  if (fs.existsSync(localPath)) {
-                    const st = fs.statSync(localPath);
-                    if (st.isFile()) fileSizeBytes = st.size;
-                  }
-                } catch (e) {}
+                const publicDir = path.resolve(process.cwd(), "public");
+                const relativePath = decodedClean.replace(/^\/+/, "");
+                const localPath = path.resolve(publicDir, relativePath);
+                if (localPath.startsWith(publicDir + path.sep)) {
+                  try {
+                    if (fs.existsSync(localPath)) {
+                      const st = fs.statSync(localPath);
+                      if (st.isFile()) fileSizeBytes = st.size;
+                    }
+                  } catch (e) {}
+                }
               }
 
               const formattedSize = formatBytes(fileSizeBytes);
-              const extConfig = EXT_CONFIG[ext] || {
-                label: ext ? `${ext.toUpperCase()} 文件` : "文件下载",
-                badge: ext ? ext.toUpperCase().slice(0, 4) : "FILE",
-                themeColor: "#6b7280",
-                themeBg: "rgba(107, 114, 128, 0.12)"
-              };
-
+              const typeLabel = EXT_LABELS[ext] || (ext ? `${ext.toUpperCase()} 文件` : "文件");
               const rawUserText = getNodeDeepText(aNode).trim();
               let displayTitle = physicalName;
               if (rawUserText && rawUserText !== href && rawUserText !== cleanUrl) {
                 displayTitle = rawUserText;
               }
-
-              // 方案 1.1: 第二行统一展示「格式 · 文件大小」，如「PDF 文档 · 2.4 MB」，保持清爽无冗余
-              const displayMeta = formattedSize ? `${extConfig.label} · ${formattedSize}` : extConfig.label;
+              const displayMeta = formattedSize ? `${typeLabel} · ${formattedSize}` : typeLabel;
 
               node.tagName = "a";
               node.properties = {
@@ -131,21 +131,21 @@ export default function rehypeBlogContent() {
               node.children = [
                 {
                   type: "element",
-                  tagName: "div",
-                  properties: {
-                    className: ["file-asset-icon-box"],
-                    style: `--file-theme-color: ${extConfig.themeColor}; --file-theme-bg: ${extConfig.themeBg};`
-                  },
+                  tagName: "span",
+                  properties: { className: ["file-asset-icon"], ariaHidden: "true" },
                   children: [
                     {
                       type: "element",
                       tagName: "svg",
                       properties: {
-                        className: ["file-asset-icon-svg"],
-                        viewBox: "0 0 32 32",
+                        viewBox: "0 0 24 24",
                         fill: "none",
-                        width: 28,
-                        height: 28,
+                        stroke: "currentColor",
+                        strokeWidth: "1.85",
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        width: 19,
+                        height: 19,
                         ariaHidden: "true",
                         focusable: "false"
                       },
@@ -154,50 +154,34 @@ export default function rehypeBlogContent() {
                           type: "element",
                           tagName: "path",
                           properties: {
-                            d: "M6 5C6 3.89543 6.89543 3 8 3H19L26 10V27C26 28.1046 25.1046 29 24 29H8C6.89543 29 6 28.1046 6 27V5Z",
-                            fill: "currentColor",
-                            fillOpacity: "0.12",
-                            stroke: "currentColor",
-                            strokeWidth: "1.8",
-                            strokeLinejoin: "round"
+                            d: "M14.5 3.5H7.5A2 2 0 0 0 5.5 5.5v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8.5L14.5 3.5Z"
                           },
                           children: []
                         },
                         {
                           type: "element",
                           tagName: "path",
-                          properties: {
-                            d: "M19 3V10H26",
-                            stroke: "currentColor",
-                            strokeWidth: "1.8",
-                            strokeLinejoin: "round"
-                          },
+                          properties: { d: "M14 3.5v4.5a1 1 0 0 0 1 1h3.5" },
                           children: []
                         }
                       ]
-                    },
-                    {
-                      type: "element",
-                      tagName: "span",
-                      properties: { className: ["file-asset-ext-badge"] },
-                      children: [{ type: "text", value: extConfig.badge }]
                     }
                   ]
                 },
                 {
                   type: "element",
-                  tagName: "div",
+                  tagName: "span",
                   properties: { className: ["file-asset-body"] },
                   children: [
                     {
                       type: "element",
-                      tagName: "div",
-                      properties: { className: ["file-asset-title"], title: displayTitle },
+                      tagName: "span",
+                      properties: { className: ["file-asset-title"] },
                       children: [{ type: "text", value: displayTitle }]
                     },
                     {
                       type: "element",
-                      tagName: "div",
+                      tagName: "span",
                       properties: { className: ["file-asset-meta"] },
                       children: [{ type: "text", value: displayMeta }]
                     }
@@ -205,55 +189,42 @@ export default function rehypeBlogContent() {
                 },
                 {
                   type: "element",
-                  tagName: "div",
-                  properties: { className: ["file-asset-action"] },
+                  tagName: "span",
+                  properties: { className: ["file-asset-download"], ariaHidden: "true" },
                   children: [
                     {
                       type: "element",
-                      tagName: "span",
-                      properties: { className: ["file-asset-btn"] },
+                      tagName: "svg",
+                      properties: {
+                        viewBox: "0 0 24 24",
+                        fill: "none",
+                        stroke: "currentColor",
+                        strokeWidth: "1.85",
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        width: 20,
+                        height: 20,
+                        ariaHidden: "true",
+                        focusable: "false"
+                      },
                       children: [
                         {
                           type: "element",
-                          tagName: "svg",
-                          properties: {
-                            className: ["file-asset-download-arrow"],
-                            viewBox: "0 0 24 24",
-                            fill: "none",
-                            stroke: "currentColor",
-                            strokeWidth: "2",
-                            strokeLinecap: "round",
-                            strokeLinejoin: "round",
-                            width: 15,
-                            height: 15,
-                            ariaHidden: "true"
-                          },
-                          children: [
-                            {
-                              type: "element",
-                              tagName: "path",
-                              properties: { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" },
-                              children: []
-                            },
-                            {
-                              type: "element",
-                              tagName: "polyline",
-                              properties: { points: "7 10 12 15 17 10" },
-                              children: []
-                            },
-                            {
-                              type: "element",
-                              tagName: "line",
-                              properties: { x1: "12", y1: "15", x2: "12", y2: "3" },
-                              children: []
-                            }
-                          ]
+                          tagName: "path",
+                          properties: { d: "M12 4.5v11" },
+                          children: []
                         },
                         {
                           type: "element",
-                          tagName: "span",
-                          properties: { className: ["file-asset-btn-text"] },
-                          children: [{ type: "text", value: "下载" }]
+                          tagName: "path",
+                          properties: { d: "m7.75 11.25 4.25 4.25 4.25-4.25" },
+                          children: []
+                        },
+                        {
+                          type: "element",
+                          tagName: "path",
+                          properties: { d: "M5.5 19.5h13" },
+                          children: []
                         }
                       ]
                     }
@@ -392,18 +363,18 @@ export default function rehypeBlogContent() {
                   }
                 }
               }
-            } catch(e) {}
+            } catch (e) {}
           }
         }
       }
 
       if (node.children && Array.isArray(node.children)) {
         for (let i = 0; i < node.children.length; i++) {
-          visit(node.children[i], node, i);
+          visit(node.children[i]);
         }
       }
     }
 
-    visit(tree, null, 0);
+    visit(tree);
   };
 }

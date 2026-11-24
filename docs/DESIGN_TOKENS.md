@@ -170,7 +170,4 @@ html[data-page="blog-index"] {
 - **常规微交互耗时**：`160ms ~ 240ms`
 - **主题切换过度**：`color 200ms ease, background-color 200ms ease, border-color 200ms ease`
 - **等边三角形排序翻转**：`transform: rotate(60deg); transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);`
-- **代码/引用折叠阈值**：
-  - 触发折叠阈值：`max-height: 420px;`
-  - 折叠后显示高度：`max-height: 280px;`
-  - 渐隐蒙层高度：`120px` 线性渐变（`to bottom, transparent, var(--bg)`）
+- **极简文件下载卡片悬停**：`background-color 160ms ease, border-color 160ms ease`，右侧下载图标 `opacity: 0 -> 0.92` 平滑浮现。

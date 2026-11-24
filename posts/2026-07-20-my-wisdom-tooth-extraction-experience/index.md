@@ -2,7 +2,7 @@
 title: "拔智齿的经历"
 description: "拔智齿的全过程记录：拍片、付费、麻醉、手术，以及术后一周的恢复经验"
 date: 2026-07-20
-cover: "/images/ChatGPT%20Image%20Jul%2020_%202026_%2005_29_43%20PM-thumb.DmWba74d.avif"
+cover: "./assets/ChatGPT-Image-Jul-20_-2026_-05_29_43-PM-thumb.DmWba74d.avif"
 category: "日常"
 words: 3240
 ---
@@ -275,5 +275,5 @@ GPT 经常说医学相关需要咨询医生，但是我觉得中国的大部分�
 
 之后发现这次的情况更糟糕，现在麻药的药效还没消退，就非常痛了……好在痛了 20 多分钟，就好多了。
 
-[拔牙术后全周期护理指南.pdf](/files/wisdom-tooth-care-guide.pdf)
+[拔牙术后全周期护理指南.pdf](./assets/wisdom-tooth-care-guide.pdf)
 

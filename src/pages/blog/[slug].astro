@@ -1,20 +1,20 @@
 ---
 // src/pages/blog/[slug].astro
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getAllPosts } from '../../utils/posts.js';
+import { getAllPosts, type BlogPost } from '../../utils/posts';
 
 export async function getStaticPaths() {
-  const allPosts = getAllPosts();
+  const allPosts = await getAllPosts();
 
   return allPosts.map((post, idx) => {
-    // 按时间顺序（allPosts是按最新在前排列）：
+    // 按时间降序（最新在前）：
     // prevPost（更新的一篇）：idx > 0 ? allPosts[idx - 1]
     // nextPost（更旧的一篇）：idx < allPosts.length - 1 ? allPosts[idx + 1]
     const prevPost = idx > 0 ? allPosts[idx - 1] : null;
     const nextPost = idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
-
-    // 同分类文章列表
-    const categoryPosts = allPosts.filter(p => p.category === post.category);
+    const categoryPosts = allPosts.filter((p) => p.category === post.category);
 
     return {
       params: { slug: post.slug },
@@ -22,14 +22,21 @@ export async function getStaticPaths() {
         post,
         prevPost,
         nextPost,
-        categoryPosts
-      }
+        categoryPosts,
+      },
     };
   });
 }
 
+interface Props {
+  post: BlogPost;
+  prevPost: BlogPost | null;
+  nextPost: BlogPost | null;
+  categoryPosts: BlogPost[];
+}
+
 const { post, prevPost, nextPost, categoryPosts } = Astro.props;
-const { Content } = post;
+const { Content } = await render(post.entry);
 ---
 
 <BaseLayout
@@ -57,11 +64,10 @@ const { Content } = post;
 
       {post.cover && (
         <figure class="article-cover">
-          <img
+          <Image
             src={post.cover}
             alt={post.title}
-            width="1600"
-            height="800"
+            width={Math.min(post.cover.width, 1600)}
             fetchpriority="high"
             decoding="async"
           />

@@ -1,14 +1,17 @@
 # 系统架构设计说明 (Architecture)
 
-## 1. 技术栈选型
+## 1. 核心架构理念（长期主义「一文一盒」）
 
-- **核心框架**：[Astro 5.x](https://astro.build/) (静态生成模式 `output: 'static'`)
-  - **极致扁平化架构**：博客文章统一收敛在根目录 `posts/*.md`，无需手写繁杂的静态 HTML 页面。
-  - **全局纯净样式**：直接采用现代原生 CSS 与高精度 Design Tokens（莫兰迪色系、苹果极简语义），零预设样式污染。
-  - **集中式 Vanilla 交互引擎**：统一在 `src/scripts/main.js` 中驱动全站核心交互（设置抽屉平滑滑块、已读博文本地打勾、代码块一键复制、BFCache 同步）。
-  - **编译管道**：挂载自定义 Rehype 编译器插件 (`src/plugins/rehype-blog-content.mjs`)，在编译阶段自动转换 Callout 提示框、图片懒加载图注、外链 Favicon，以及**编译期自动探测 `public/files/` 附件大小与格式并生成高保真下载卡片**。
-- **运行与构建环境**：
-  - 标准 Node.js（22+）+ `pnpm@10.5.2`（可通过 `corepack pnpm` 或 NixOS `nix-shell -p nodejs pnpm` 使用）。
+本博客遵循**三层严格分离**原则，确保写作 5–10 年也不会演变为孤儿图片与杂乱样式堆积的“屎山”：
+
+1. **纯内容层 (`posts/`)**：采用 **Page Bundle（一文一盒）** 结构，每篇文章拥有独立文件夹 `posts/YYYY-MM-DD-slug/index.md` 与 `assets/` 子目录，同时兼容无图单文件 `posts/YYYY-MM-DD-slug.md`。100% 标准 Markdown + 相对路径，与框架完全解耦。
+2. **全站公共资产层 (`public/`)**：仅存放站点级共享资产（头像、Favicon、自托管字体、外链 Favicon），永不混入单篇文章配图或附件。
+3. **纯程序层 (`src/` & `scripts/`)**：
+   - **Astro 5 Content Layer (`src/content.config.ts`)**：通过 `glob()` loader 托管 `posts/`，配合 Zod 强类型 Schema 与原生 `image()` 校验，编译期拦截缺失封面/非法日期，并由内置 `sharp` 自动将原图优化为现代 WebP。
+   - **同目录附件自动集成 (`src/integrations/post-attachments.mjs`)**：配合 `rehype-blog-content.mjs` 将 `./assets/*.pdf` 等相对附件重写为 `/post-assets/<slug>/...`——开发模式由 Vite 中间件直出，生产构建仅将已发布页面实际引用的附件拷贝进 `dist/post-assets/`（草稿与孤儿文件绝不泄露）。
+   - **模块化原生 CSS (`src/styles/`)**：拆分为 `tokens.css`、`base.css`、`archive.css`、`article.css`、`responsive.css` 五层，构建期自动合并压缩。
+   - **集中式轻量化交互 (`src/scripts/main.js`)**：零前端框架依赖，仅负责设置抽屉、View Transitions 主题扫光、已读打勾与代码块一键复制。
+   - **自动化防劣化脚手架 (`scripts/`)**：`pnpm new` 标准化创建文章盒子，`pnpm check` 一键检查断链、孤儿文件、超大图片与 Frontmatter 完整性。
 
 ---
 
@@ -16,56 +19,55 @@
 
 ```text
 .
-├── posts/                        # 核心博文目录（唯一正文写作源，标准 Markdown 格式）
-├── docs/                         # 系统核心设计与写作规范指南
-│   ├── ARCHITECTURE.md           # 架构设计说明（本文档）
-│   ├── DESIGN_TOKENS.md          # 视觉设计 Token 规范（色板、字体、断点）
-│   ├── COMPONENTS.md             # 核心组件规范与微交互逻辑
-│   ├── TYPOGRAPHY_AND_STYLE_GUIDE.md # 博客全量排版与写作指南
-│   └── handoff.md                # 项目交接与维护指南
-├── public/                       # 静态资源
-│   ├── avatar.png                # 网站个人头像
-│   ├── favicon.png / favicon.ico # 浏览器 Favicon
-│   ├── files/                    # 附件下载资源（PDF、ZIP 等，由编译器自动读取体积）
-│   ├── fonts/                    # 自托管 Web 字体 (Anthropic Sans)
-│   ├── favicons/                 # Apple Touch Icon 与站外链接 Favicon 资源
-│   └── images/                   # 博文正文配图与封面图
+├── posts/                                # 核心内容层（一文一盒：index.md + assets/）
+├── public/                               # 全站公共静态资产（avatar、favicon、favicons、fonts）
+├── scripts/
+│   ├── new-post.mjs                      # 一键创建文章盒子
+│   └── check-blog.mjs                    # 全站断链 / 孤儿资源 / 大文件体检
+├── docs/                                 # 系统设计与排版规范文档
 ├── src/
+│   ├── content.config.ts                 # Astro 5 Content Collections Schema
+│   ├── integrations/
+│   │   └── post-attachments.mjs          # 同目录附件 dev/build 集成
 │   ├── layouts/
-│   │   └── BaseLayout.astro      # 全局主容器、防闪烁设置初始化、顶栏 Header 与设置抽屉
+│   │   └── BaseLayout.astro              # 全局骨架、防闪烁脚本、顶栏与设置抽屉
 │   ├── pages/
-│   │   ├── index.astro           # 首页（Recent Posts 卡片流，无已读小勾干扰）
+│   │   ├── index.astro                   # 首页（Recent Posts）
 │   │   ├── blog/
-│   │   │   ├── index.astro       # 文档归档页（分类/年份过滤、60° 旋转排序、已读打勾）
-│   │   │   └── [slug].astro      # 动态文章页（Markdown 渲染、图注、分类导航、相邻翻页）
-│   │   └── rss.xml.js            # RSS 2.0 订阅源生成器（含 XML/CDATA 安全转义）
+│   │   │   ├── index.astro               # 文档归档页（分类/年份过滤、60° 排序、已读打勾）
+│   │   │   └── [slug].astro              # 动态文章详情页
+│   │   └── rss.xml.js                    # RSS 2.0 订阅源（自动过滤草稿、XML/CDATA 转义）
 │   ├── plugins/
-│   │   └── rehype-blog-content.mjs # 编译器插件（下载卡片、图注 Figure、Callout、外链 Favicon）
+│   │   └── rehype-blog-content.mjs       # Rehype 插件（下载卡片、图注、Callout、外链图标）
 │   ├── scripts/
-│   │   └── main.js               # 客户端主交互脚本（设置、复制、已读标记）
+│   │   └── main.js                       # 客户端主脚本
 │   ├── styles/
-│   │   └── global.css            # 统一样式系统（已剔除无用遗留样式并格式化）
+│   │   ├── global.css                    # 总入口
+│   │   ├── tokens.css                    # Design Tokens 与字体声明
+│   │   ├── base.css                      # 基础重置、顶栏与设置抽屉
+│   │   ├── archive.css                   # 首页与归档页样式
+│   │   ├── article.css                   # 文章正文、代码块、Callout 与下载卡片
+│   │   └── responsive.css                # 响应式断点
 │   └── utils/
-│       └── posts.js              # 统一博文加载（getAllPosts）、日期兜底与自动字数统计
-├── astro.config.mjs              # Astro 配置文件
+│       ├── post-helpers.mjs              # 纯 Node 辅助方法（日期、Slug、字数统计）
+│       └── posts.ts                      # 统一文章查询与排序层
+├── astro.config.mjs
 ├── package.json
 └── tsconfig.json
 ```
 
 ---
 
-## 3. 部署与维护
+## 3. 发布与可选本地命令
+
+- **日常发布（零命令行）**：直接将单篇 `.md` 或「一文一盒」文件夹放入 `posts/` 并推送/网页上传至 GitHub `main` 分支，GitHub Actions（`.github/workflows/deploy.yml`）会在云端自动完成构建、图片压缩与上线。
+- **可选本地命令**（仅在本地预览、改造代码或运行快捷脚本时需要）：
 
 ```bash
-# 安装依赖
-pnpm install
-
-# 启动本地开发服务 (默认端口 4321)
-pnpm dev
-
-# 生产环境静态打包 (产物位于 dist/)
-pnpm build
-
-# 本地预览构建产物
-pnpm preview
+pnpm install        # 安装依赖（含 astro 与 sharp）
+pnpm new <slug>     # 可选：快捷创建新文章盒子
+pnpm start          # 可选：启动本地开发服务（http://localhost:4321）
+pnpm check          # 可选：运行内容与资源体检
+pnpm build          # 可选：本地静态打包至 dist/（自动优化图片并过滤草稿）
+pnpm preview        # 可选：本地预览 dist/
 ```

@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import postAttachments from './src/integrations/post-attachments.mjs';
 import rehypeBlogContent from './src/plugins/rehype-blog-content.mjs';
 
 // https://astro.build/config
@@ -6,16 +7,17 @@ export default defineConfig({
   site: 'https://f10w-0x00.github.io',
   output: 'static',
   build: {
-    format: 'directory'
+    format: 'directory',
   },
+  integrations: [postAttachments()],
   markdown: {
     shikiConfig: {
       themes: {
         light: 'github-light',
-        dark: 'github-dark'
+        dark: 'github-dark',
       },
-      wrap: false
+      wrap: false,
     },
-    rehypePlugins: [rehypeBlogContent]
-  }
+    rehypePlugins: [rehypeBlogContent],
+  },
 });

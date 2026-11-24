@@ -66,12 +66,17 @@ function getNodeDeepText(n) {
 }
 
 export default function rehypeBlogContent() {
-  return function transformer(tree) {
+  const postsDir = path.resolve(process.cwd(), "posts");
+  const publicDir = path.resolve(process.cwd(), "public");
+
+  return function transformer(tree, vfile) {
+    const sourceFile = (vfile && Array.isArray(vfile.history) && vfile.history[0]) || (vfile && vfile.path) || "";
+
     function visit(node) {
       if (!node) return;
 
       if (node.type === "element") {
-        // 0. 单行文件引用自动转换为极简附件下载卡片
+        // 0. 单行文件引用自动转换为极简附件下载卡片（支持同目录相对路径 ./assets/xxx、传统 /files/xxx 与外链）
         if (node.tagName === "p" && node.children && Array.isArray(node.children)) {
           const nonWhitespace = node.children.filter(c => !(c.type === "text" && !c.value.trim()));
           if (nonWhitespace.length === 1 && nonWhitespace[0].tagName === "a") {
@@ -94,18 +99,36 @@ export default function rehypeBlogContent() {
               } catch {}
               const physicalName = path.basename(decodedClean) || "download";
               let fileSizeBytes = null;
+              let resolvedHref = href;
 
-              if (!href.startsWith("http://") && !href.startsWith("https://") && !href.startsWith("//")) {
-                const publicDir = path.resolve(process.cwd(), "public");
-                const relativePath = decodedClean.replace(/^\/+/, "");
-                const localPath = path.resolve(publicDir, relativePath);
-                if (localPath.startsWith(publicDir + path.sep)) {
-                  try {
-                    if (fs.existsSync(localPath)) {
-                      const st = fs.statSync(localPath);
-                      if (st.isFile()) fileSizeBytes = st.size;
-                    }
-                  } catch (e) {}
+              const isExternal = href.startsWith("http://") || href.startsWith("https://") || href.startsWith("//");
+              if (!isExternal && !href.startsWith("#") && !href.startsWith("mailto:") && !href.startsWith("tel:")) {
+                if (href.startsWith("/")) {
+                  // 兼容旧版 public/ 绝对路径（如 /files/...）
+                  const relativePath = decodedClean.replace(/^\/+/, "");
+                  const localPath = path.resolve(publicDir, relativePath);
+                  if (localPath.startsWith(publicDir + path.sep)) {
+                    try {
+                      if (fs.existsSync(localPath)) {
+                        const st = fs.statSync(localPath);
+                        if (st.isFile()) fileSizeBytes = st.size;
+                      }
+                    } catch (e) {}
+                  }
+                } else if (sourceFile) {
+                  // 「一文一盒」同目录相对路径（如 ./assets/guide.pdf）
+                  const localPath = path.resolve(path.dirname(sourceFile), decodedClean);
+                  if (localPath.startsWith(postsDir + path.sep)) {
+                    try {
+                      if (fs.existsSync(localPath)) {
+                        const st = fs.statSync(localPath);
+                        if (st.isFile()) fileSizeBytes = st.size;
+                      }
+                    } catch (e) {}
+                    const relFromPosts = path.relative(postsDir, localPath);
+                    const encodedRel = relFromPosts.split(path.sep).map(encodeURIComponent).join("/");
+                    resolvedHref = `/post-assets/${encodedRel}`;
+                  }
                 }
               }
 
@@ -120,7 +143,7 @@ export default function rehypeBlogContent() {
 
               node.tagName = "a";
               node.properties = {
-                href: href,
+                href: resolvedHref,
                 download: physicalName,
                 className: ["file-asset-card"],
                 target: "_blank",

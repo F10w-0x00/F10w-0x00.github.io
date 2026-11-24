@@ -1,5 +1,5 @@
 // src/pages/rss.xml.js
-import { getAllPosts } from '../utils/posts.js';
+import { getAllPosts } from '../utils/posts';
 
 function escapeXml(str) {
   return String(str ?? '')
@@ -15,7 +15,7 @@ function escapeCdata(str) {
 }
 
 export async function GET(context) {
-  const posts = getAllPosts();
+  const posts = await getAllPosts({ includeDrafts: false });
   const site = context.site ? String(context.site).replace(/\/$/, '') : 'https://f10w-0x00.github.io';
 
   const items = posts

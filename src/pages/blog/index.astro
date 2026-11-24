@@ -1,20 +1,21 @@
 ---
 // src/pages/blog/index.astro
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getAllPosts } from '../../utils/posts.js';
+import { getAllPosts } from '../../utils/posts';
 
-const allPosts = getAllPosts();
+const allPosts = await getAllPosts();
 
 // 提取分类与计数
-const categoryCounts = {};
-allPosts.forEach(p => {
+const categoryCounts: Record<string, number> = {};
+allPosts.forEach((p) => {
   categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
 });
 const categories = Object.keys(categoryCounts);
 
 // 提取年份与计数
-const yearCounts = {};
-allPosts.forEach(p => {
+const yearCounts: Record<number, number> = {};
+allPosts.forEach((p) => {
   yearCounts[p.year] = (yearCounts[p.year] || 0) + 1;
 });
 const years = Object.keys(yearCounts).sort((a, b) => Number(b) - Number(a));
@@ -107,7 +108,13 @@ const years = Object.keys(yearCounts).sort((a, b) => Number(b) - Number(a));
               </div>
               {post.cover && (
                 <div class="post-card-cover">
-                  <img src={post.cover} alt={post.title} width="640" height="320" loading="lazy" decoding="async" />
+                  <Image
+                    src={post.cover}
+                    alt={post.title}
+                    width={Math.min(post.cover.width, 640)}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
               )}
             </a>

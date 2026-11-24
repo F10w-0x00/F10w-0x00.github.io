@@ -1,6 +1,6 @@
 # 博客排版与内容编写全量规范指南 (Typography & Style Guide)
 
-> 本文档由系统自动化生成并已实装至博客站。本文不仅是技术文档，更是一份**全特性的排版活范例**。在日常撰写文章时，可直接参考或复制文中的模板代码。
+> 本文不仅是技术文档，更是一份**全特性的排版活范例**。日常写作**无需在本地运行 `pnpm`**——只需按本文格式把 `.md`（或 `文件夹/index.md + assets/`）放进 `posts/` 推送/上传到 GitHub，云端会自动压缩图片、统计字数并发布上线。
 
 ---
 
@@ -29,8 +29,9 @@ title: "我是怎么使用 Obsidian 的"
 description: "Obsidian 的哲学和缺陷，双链笔记与本地知识库构建"
 date: 2026-10-01
 category: "学习" # 可选: 学习 / 博客站 / 日常 / UP主推荐
-words: 2994
-cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
+cover: ./assets/cover.png # 可选：本文 ./assets/ 下的相对路径，构建时自动优化
+words: 2994               # 可选：留空时自动统计
+draft: false              # 可选：true 时仅本地预览可见，线上自动隐藏
 ---
 ```
 
@@ -38,11 +39,12 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 | 字段 | 类型 | 是否必填 | 说明 |
 | :--- | :--- | :---: | :--- |
 | `title` | `string` | 必填 | 网页标题与卡片主标题，控制在 30 字以内最佳。 |
-| `description` | `string` | 必填 | 用于归档卡片正文摘录及 `<meta name="description">`。 |
-| `date` | `date / string` | 必填 | 格式为 `YYYY-MM-DD`，排序引擎以此为时间戳依据。 |
-| `category` | `string` | 推荐 | 文档页分类过滤器（按类型筛选）的聚合依据。 |
-| `words` | `number` | 可选 | 正文字数统计（如 2994），展示为 "2994 字"；留空时构建期自动统计中文字数与英文词数。 |
-| `cover` | `string` | 可选 | 列表卡片与文章头图（如 `/images/...`），建议比例 `2:1`。 |
+| `description` | `string` | 推荐 | 用于归档卡片正文摘录及 `<meta name="description">`。 |
+| `date` | `date / string` | 必填 | 格式为 `YYYY-MM-DD`，由 Zod 强类型校验并用于排序。 |
+| `category` | `string` | 推荐 | 文档页分类过滤器（按类型筛选）的聚合依据，默认「未分类」。 |
+| `cover` | `image` | 可选 | 指向本文 `./assets/` 下的相对路径图片，建议比例 `2:1`，构建期自动校验与压缩。 |
+| `words` | `number` | 可选 | 正文字数统计（如 2994），留空时构建期自动统计中文字数与英文词数。 |
+| `draft` | `boolean` | 可选 | 设为 `true` 进入草稿态，本地开发可见，生产打包与 RSS 自动过滤。 |
 
 ---
 
@@ -92,27 +94,16 @@ cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 博客推荐两种方式为图片添加居中、柔和灰度的说明小字：
 
 #### 方式一：标准 Markdown 带 `title` 属性（最简洁，推荐）
-只需在独占一行的 Markdown 图片语法中加上引号图注，`rehype-blog-content.mjs` 会在编译期自动将其转为语义化的 `<figure class="post-image-figure">` + `<figcaption class="post-image-caption">`，并补齐 `loading="lazy" decoding="async"`：
+将图片放入当前文章目录的 `./assets/` 下，在独占一行的 Markdown 图片语法中加上引号图注；Astro 会自动压缩图片为 WebP，`rehype-blog-content.mjs` 会自动将其转为语义化的 `<figure class="post-image-figure">` + `<figcaption class="post-image-caption">`：
 ```markdown
-![Obsidian 网状关系图谱](/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Obsidian 网状关系图谱：过早编织的复杂网状图往往沦为视觉摆设")
+![Obsidian 网状关系图谱](./assets/graph.png "Obsidian 网状关系图谱：过早编织的复杂网状图往往沦为视觉摆设")
 ```
 
-#### 方式二：直接编写语义化 HTML 标签
-当需要精确指定宽高或自定义结构时，可直接写 `<figure class="post-image-figure">`：
-```html
-<figure class="post-image-figure">
-  <img
-    src="/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif"
-    alt="Obsidian 网状关系图谱"
-    loading="lazy"
-    decoding="async"
-    width="1024"
-    height="576"
-  />
-  <figcaption class="post-image-caption">Obsidian 网状关系图谱：过早编织的复杂网状图往往沦为视觉摆设</figcaption>
-</figure>
+#### 方式二：无图注标准 Markdown 图片
+```markdown
+![Obsidian 界面截图](./assets/screenshot.png)
 ```
-- **视觉效果**：图片自适应容器，下方带有微距贴合的小字，字体为 `--muted` 灰色，字号为 `0.92rem`，多行居中。
+- **视觉效果**：图片自适应容器，带图注时下方带有微距贴合的小字，字体为 `--muted` 灰色，字号为 `0.92rem`，多行居中。
 
 ---
 
@@ -194,7 +185,7 @@ SELECT title, date FROM posts WHERE category = '学习' ORDER BY date DESC;
 针对你关心的字体选择与定制方案，以下是深度专业分析与实施建议：
 
 ### 10.1 当前博客使用的是什么字体？
-查看全局样式表 `src/styles/global.css`，当前站点的核心字体规则为：
+查看设计变量样式表 `src/styles/tokens.css`，当前站点的核心字体规则为：
 ```css
 /* 正文全局字体栈（自托管西文 Anthropic Sans + 系统原生中文字体） */
 font-family: 'Anthropic Sans', -apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
@@ -279,7 +270,7 @@ Google Fonts 针对部分开源中文字体（如 **Noto Sans SC 思源黑体**�
   font-display: swap; /* 确保字体下载完成前先使用系统字体渲染，避免白屏 */
 }
 ```
-并在 `src/styles/global.css` 中将 `font-family` 赋值给需要的容器或正文。
+并在 `src/styles/tokens.css` 中将 `font-family` 赋值给需要的容器或正文。
 
 ---
 
@@ -288,23 +279,23 @@ Google Fonts 针对部分开源中文字体（如 **Noto Sans SC 思源黑体**�
 博客内置了**极简圆角附件下载卡片**，支持在文章中引用 PDF、Markdown、ZIP、EPUB 等各类附件，并在编译期**全自动读取真实文件大小与格式**，无需手动标注。
 
 ### 11.1 文件存放与目录结构
-推荐将需要提供下载的静态文件存放在博客仓库的 `public/files/` 目录下：
+推荐将文章专属附件直接放进**当前文章盒子**的 `assets/` 子目录下（删文章时自动一并清除，零残留）：
 ```text
-Blog/
-└── public/
-    └── files/
-        ├── wisdom-tooth-care-guide.pdf
-        └── sample-assets.zip
+posts/
+└── 2026-07-20-my-wisdom-tooth-extraction-experience/
+    ├── index.md
+    └── assets/
+        └── wisdom-tooth-care-guide.pdf
 ```
-这样在推送到 GitHub 后，文件会被自动打包到站点根目录下的 `/files/...` 路径。
+编译时由 `post-attachments` 集成自动发布至 `/post-assets/<slug>/assets/...`，开发模式下同样开箱即用。
 
 ### 11.2 编写语法（零配置单行引用）
 
-只需在 Markdown 中**单行独立引用**该文件链接：
+只需在 Markdown 中**单行独立引用**同目录相对路径：
 
 #### 基础用法：纯单行文件名引用
 ```markdown
-[wisdom-tooth-care-guide.pdf](/files/wisdom-tooth-care-guide.pdf)
+[wisdom-tooth-care-guide.pdf](./assets/wisdom-tooth-care-guide.pdf)
 ```
 - **自动效果**：
   - 左侧：柔和蓝灰圆角方块 + 干净的线框折角文档图标；
@@ -313,7 +304,7 @@ Blog/
 
 #### 进阶用法：自定义中文描述标题
 ```markdown
-[拔牙术后全周期护理指南](/files/wisdom-tooth-care-guide.pdf)
+[拔牙术后全周期护理指南](./assets/wisdom-tooth-care-guide.pdf)
 ```
 - **效果**：
   - 第一行主标题显示为中文：`拔牙术后全周期护理指南`；

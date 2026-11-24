@@ -2,7 +2,7 @@
 title: "本博客站的视觉和交互设计"
 description: "对博客站的设计思路的记录，也是对参与博客站建设的人的致谢"
 date: 2026-06-10
-cover: "/images/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-thumb.CigA-ns2.avif"
+cover: "./assets/3C00CB1E-3C8A-48A9-9FE2-BE12F01B7E87-thumb.CigA-ns2.avif"
 category: "博客站"
 words: 3659
 ---
@@ -19,9 +19,9 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 这些主题模版其实都不算好看，但其中有一个相对好看的 [Saral Theme](https://yashjawale.github.io/saral-theme-astro)，所以我就把它作为博客站的设计基调了。
 
-![Saral Theme 的 demo](/images/Screenshot%202026-06-09%20at%2014.05.08@2x-thumb.n6G8qpch_2a1Atg.avif "Saral Theme 的 demo")
+![Saral Theme 的 demo](./assets/Screenshot-2026-06-09-at-14.05.08@2x-thumb.n6G8qpch_2a1Atg.avif "Saral Theme 的 demo")
 
-![我的博客站首页](/images/Screenshot%202026-06-09%20at%2014.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif "我的博客站首页")
+![我的博客站首页](./assets/Screenshot-2026-06-09-at-14.06.20@2x-thumb.DIo6n6gp_1dAbs5.avif "我的博客站首页")
 
 可以明显看出，我剽窃了它的白底黑字，还有「Welcome to」和「Recent Posts」布局。不过对于它，我也有几个不满意的地方：
 
@@ -36,9 +36,9 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 文档页面的设计参考了 [Apple 的 Newsroom 页面](https://www.apple.com.cn/newsroom/archive/)，可以看到我剽窃了它的筛选功能设计，也就是「话题」和「年份」的筛选框。至于「月份」，考虑到我的博文并不密集，所以我觉得还是不给这个筛选更好。此外，我还做了排序功能，这样的话就可以从旧的文档开始看起。
 
-![Apple 的 Newsroom](/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Apple 的 Newsroom")
+![Apple 的 Newsroom](./assets/Screenshot-2026-06-09-at-14.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Apple 的 Newsroom")
 
-![我的博客站文档页](/images/Screenshot%202026-06-09%20at%2014.23.19@2x-thumb.BerPSr9p_132Bwq.avif "我的博客站文档页")
+![我的博客站文档页](./assets/Screenshot-2026-06-09-at-14.23.19@2x-thumb.BerPSr9p_132Bwq.avif "我的博客站文档页")
 
 在文档的筛选和排序区域，我增加了两个小小的动画。
 
@@ -72,7 +72,7 @@ Coding agent 虽然有很强的编码能力，但目前还是缺乏设计的品�
 
 像维基百科这样的网站把外观设置放在了侧边，需要我手动点击才能离去，让我觉得非常麻烦。类似地，很多用国产手机系统的人总是喜欢说手机上的广告「可以关」，这种说辞让我觉得无语，就算可以关，大部分人也是不会想去研究怎么关的。所以我对自己的博文页面的要求是，就算不进行任何探索，就已经是干净的最佳状态。
 
-![维基百科对网页侧面的占用](/images/Screenshot%202026-06-10%20at%2016.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif "维基百科对网页侧面的占用")
+![维基百科对网页侧面的占用](./assets/Screenshot-2026-06-10-at-16.07.52@2x-thumb.CbthJ_iF_Z2jzm4w.avif "维基百科对网页侧面的占用")
 
 ### 图片堆叠
 
@@ -127,7 +127,7 @@ feixqe 觉得需要给页面内增加一个返回按钮，我向 ta 告知，其
 
 我为代码块和引用块设计了专门的样式。当代码块或引用块里包含较多内容时，会被自动折叠。可以通过点击按钮或者渐隐状态的文字来展开。
 
-![触发折叠的引用块示例](/images/Screenshot%202026-06-10%20at%2016.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif "触发折叠的引用块示例：超过行数阈值后呈现渐隐折叠与展开交互")
+![触发折叠的引用块示例](./assets/Screenshot-2026-06-10-at-16.12.54@2x-thumb.CwQaZFXy_1NvsbI.avif "触发折叠的引用块示例：超过行数阈值后呈现渐隐折叠与展开交互")
 
 下面是博客站折叠代码块的实现核心样式规则，当代码超出 10 行时自动触发折叠并生成语言徽标与展开按钮：
 

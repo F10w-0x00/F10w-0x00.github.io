@@ -2,7 +2,7 @@
 title: "我是怎么使用 Obsidian 的"
 description: "Obsidian 的哲学和缺陷，双链笔记与本地知识库构建"
 date: 2026-10-01
-cover: "/images/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
+cover: "./assets/814A9B04-173E-4FFE-AD5C-2A06884329B5-thumb.C1EMAMs5.avif"
 category: "学习"
 words: 2994
 ---
@@ -28,7 +28,7 @@ Obsidian 的哲学彻底反转了这种依附关系：它把笔记还原为纯�
 
 网状结构应该像自然界中的地脉一样，是由多条思路多次交叉后自然沉淀出来的，而不是人为强行编织的假象。如果你不能用一句话概括两个笔记之间的具体逻辑关联，那么这个双链就不应该存在。
 
-![Obsidian 网状关系图谱](/images/Screenshot%202026-06-09%20at%2014.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Obsidian 网状关系图谱：节点密集的图谱若缺乏内在逻辑，极易沦为视觉满足的自嗨")
+![Obsidian 网状关系图谱](./assets/Screenshot-2026-06-09-at-14.19.30@2x-thumb.DkFLZDcN_2khIvz.avif "Obsidian 网状关系图谱：节点密集的图谱若缺乏内在逻辑，极易沦为视觉满足的自嗨")
 
 ### 卡片盒笔记法的改良
 

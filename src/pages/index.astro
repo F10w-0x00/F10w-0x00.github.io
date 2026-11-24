@@ -1,51 +1,271 @@
 ---
 // src/pages/index.astro
-import { Image } from 'astro:assets';
+// 首页：100vh 画廊级物理 3D 书架（实体精装书 + 真实薄纸装订论文叠 + 建筑搁板光影）
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getAllPosts } from '../utils/posts';
+import ShelfCover from '../components/ShelfCover.astro';
+import { getShelfData } from '../utils/posts';
 
-const allPosts = await getAllPosts();
-const recentPosts = allPosts.slice(0, 4);
+const { items, groups } = await getShelfData();
+const isInfinite = items.length >= 7;
+const rawSlots = isInfinite
+  ? [0, 1, 2].flatMap((copy) => items.map((item) => ({ item, copy })))
+  : items.map((item) => ({ item, copy: 0 }));
+
+const renderedSlots = rawSlots.map(({ item, copy }, slotIdx) => {
+  const isInitialActive = isInfinite ? copy === 1 && item.index === 0 : slotIdx === 0;
+  const isSlimBook = item.type === 'book' && item.spineWidth <= 46;
+  const styleVars = [
+    `--band-bg:${item.palette.band}`,
+    `--band-fg:${item.palette.bandFg}`,
+    `--spine-bg:${item.palette.spineBg}`,
+    `--spine-fg:${item.palette.spineFg}`,
+    `--item-t:${item.spineWidth}px`,
+    `--item-h-scale:${item.heightScale}`,
+    `--item-ratio:${item.coverRatio}`,
+  ].join(';');
+  return { item, copy, isInitialActive, isSlimBook, styleVars };
+});
+
+const clientPayload = items.map((item) => ({
+  index: item.index,
+  numberLabel: item.numberLabel,
+  slug: item.slug,
+  url: item.url,
+  type: item.type,
+  typeLabel: item.typeLabel,
+  group: item.group,
+  postTitle: item.postTitle,
+  spineTitle: item.spineTitle,
+  author: item.author,
+  year: item.year,
+  pages: item.pages,
+  spineWidth: item.spineWidth,
+  coverRatio: item.coverRatio,
+  description: item.description,
+  dateFormatted: item.dateFormatted,
+  words: item.words,
+  outline: item.outline,
+}));
 ---
 
 <BaseLayout
-  title="f10w-0x00"
-  description="f10w-0x00 的个人博客与数字空间，记录学习、技术与日常的观察。"
+  title="F10w's Shelf · f10w-0x00"
+  description="f10w-0x00 的 3D 阅读书架与数字空间，自动汇集博客中的读书笔记与论文精读。"
   pageName="home"
   activeNav="home"
 >
-  <section class="home-section home-recent-posts" aria-labelledby="recent-posts-title" style="padding-top: clamp(48px, 6vw, 72px);">
-    <div class="home-section-header">
-      <h2 id="recent-posts-title">Recent Posts</h2>
-      <a class="text-button" href="/blog/">Read All →</a>
+  <section
+    class="shelf-app"
+    aria-labelledby="shelf-page-title"
+    data-shelf-root
+    data-shelf-infinite={String(isInfinite)}
+  >
+    <div class="shelf-topbar">
+      <div class="shelf-heading-group">
+        <h1 id="shelf-page-title" class="shelf-title">F10w's Shelf</h1>
+        {items.length > 0 && (
+          <span class="shelf-count">
+            {items.length} {items.length === 1 ? 'item' : 'items'}
+          </span>
+        )}
+      </div>
+      <a class="shelf-all-link" href="/blog/">
+        <span>All Posts</span>
+        <span class="shelf-all-arrow" aria-hidden="true">↗</span>
+      </a>
     </div>
-    <div class="home-post-grid">
-      {recentPosts.map((post) => (
-        <article class="home-post-card">
-          <a href={`/blog/${post.slug}/`} class="home-post-card-link">
-            {post.cover && (
-              <div class="home-post-cover">
-                <Image
-                  src={post.cover}
-                  alt={post.title}
-                  width={Math.min(post.cover.width, 960)}
-                  loading="lazy"
-                  decoding="async"
-                />
+
+    {items.length > 0 ? (
+      <>
+        <div class="shelf-tabs-wrap">
+          <div class="shelf-tabs" role="tablist" aria-label="书架分类" data-shelf-tabs>
+            <span class="shelf-tabs-indicator" aria-hidden="true" data-shelf-tab-indicator></span>
+            <button
+              type="button"
+              class="shelf-tab"
+              role="tab"
+              aria-selected="false"
+              data-shelf-group="__all__"
+              data-first-index="0"
+            >
+              All
+            </button>
+            {groups.map((grp, idx) => (
+              <button
+                type="button"
+                class:list={['shelf-tab', idx === 0 && 'is-active']}
+                role="tab"
+                aria-selected={idx === 0 ? 'true' : 'false'}
+                data-shelf-group={grp.name}
+                data-first-index={grp.firstIndex}
+              >
+                {grp.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="shelf-stage" data-shelf-stage>
+          <div class="shelf-ledge" aria-hidden="true"></div>
+
+          <div class="shelf-track" data-shelf-track>
+            {renderedSlots.map(({ item, copy, isInitialActive, isSlimBook, styleVars }) => (
+              <div
+                class:list={[
+                  'shelf-slot',
+                  item.type === 'paper' ? 'is-paper' : 'is-book',
+                  isInitialActive && 'is-active',
+                  isSlimBook && 'is-slim-book',
+                ]}
+                style={styleVars}
+                data-shelf-slot
+                data-item-type={item.type}
+                data-logical-index={item.index}
+                data-thickness={item.spineWidth}
+                data-cover-ratio={item.coverRatio}
+                data-height-scale={item.heightScale}
+                aria-hidden={isInfinite && copy !== 1 ? 'true' : undefined}
+              >
+                {item.type === 'paper' ? (
+                  /* === 物理实体 1：真实超薄打印论文叠（多页微错位层叠 + 极薄纸边 + 左上装订钉） === */
+                  <div class="paper-stack" aria-hidden="true">
+                    <div class="paper-sheet-back is-sheet-3"></div>
+                    <div class="paper-sheet-back is-sheet-2"></div>
+                    <div class="paper-edge">
+                      <span class="paper-edge-tape"></span>
+                    </div>
+                    <div class="paper-front">
+                      <ShelfCover item={item} size="shelf" />
+                    </div>
+                  </div>
+                ) : (
+                  /* === 物理实体 2：工作室级闭合精装书（柔光圆柱书脊 + 硬壳凸边 + 细腻乳白书芯切面） === */
+                  <div class="book-object" aria-hidden="true">
+                    <div class="book-front">
+                      <ShelfCover item={item} size="shelf" />
+                    </div>
+                    <div class="book-spine">
+                      <div class="book-spine-cap">
+                        <span class="book-spine-num">{item.numberLabel}</span>
+                      </div>
+                      <div class="book-spine-center">
+                        <span class="book-spine-title">{item.spineTitle}</span>
+                      </div>
+                      <div class="book-spine-footer">
+                        <span class="book-spine-author">{item.author}</span>
+                      </div>
+                    </div>
+                    <div class="book-pages"></div>
+                    <div class="book-top-pages"></div>
+                    <div class="book-back"></div>
+                  </div>
+                )}
+
+                {/* 平面前向交互热区：合拢态选中该项，居中态点击打开沉浸式预览弹窗（零 3D 命中穿透） */}
+                <button
+                  type="button"
+                  class="shelf-hit"
+                  aria-label={
+                    isInitialActive
+                      ? `打开预览：${item.postTitle}`
+                      : `切换到 ${item.typeLabel} ${item.numberLabel}：${item.postTitle}`
+                  }
+                ></button>
+
+                <div class="shelf-contact-shadow" aria-hidden="true"></div>
               </div>
-            )}
-            <div class="home-post-body">
-              <h3>{post.title}</h3>
-              {post.description && <p>{post.description}</p>}
-              <p class="post-meta home-post-meta">
-                <time datetime={post.dateISO}>{post.dateFormatted}</time>
-                <span aria-hidden="true">/</span>
-                <span>{post.words}</span>
-              </p>
-            </div>
-          </a>
-        </article>
-      ))}
-    </div>
+            ))}
+          </div>
+
+          <div class="shelf-cursor" data-shelf-cursor aria-hidden="true">
+            <span class="shelf-cursor-dot"></span>
+            <span class="shelf-cursor-label">Open</span>
+          </div>
+        </div>
+
+        <div class="shelf-footer">
+          <div class="shelf-controls" role="group" aria-label="切换书目">
+            <button type="button" class="shelf-nav-btn" data-shelf-prev aria-label="上一本" title="上一本 (←)">
+              <span aria-hidden="true">←</span>
+            </button>
+            <button type="button" class="shelf-nav-btn" data-shelf-next aria-label="下一本" title="下一本 (→)">
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="shelf-caption" data-shelf-caption aria-live="polite">
+            {items[0].numberLabel} / {String(items.length).padStart(2, '0')} · {items[0].typeLabel} · {items[0].postTitle}
+          </p>
+        </div>
+
+        {items.map((item) => (
+          <template id={`shelf-modal-art-${item.index}`}>
+            <ShelfCover item={item} size="modal" />
+          </template>
+        ))}
+
+        <script
+          id="shelf-items-data"
+          type="application/json"
+          set:html={JSON.stringify(clientPayload).replace(/</g, '\\u003c')}
+        />
+      </>
+    ) : (
+      <div class="shelf-empty" role="status">
+        <h2>书架目前还是空的</h2>
+        <p>
+          在任意博客文章的 Frontmatter 中加上 <code>tags: ["book"]</code> 或 <code>tags: ["paper"]</code>，它就会自动上架到这里。
+        </p>
+        <a class="shelf-modal-cta" href="/blog/">
+          <span>浏览全部文章</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    )}
   </section>
+
+  {items.length > 0 && (
+    <div
+      class="shelf-modal"
+      data-shelf-modal
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="shelf-modal-title"
+      hidden
+    >
+      <div class="shelf-modal-backdrop" data-shelf-modal-close></div>
+      <div class="shelf-modal-shell">
+        <div class="shelf-modal-bar">
+          <button type="button" class="shelf-modal-close" data-shelf-modal-close aria-label="关闭预览">
+            <span aria-hidden="true">×</span>
+            <span>Close</span>
+          </button>
+          <span class="shelf-modal-bar-title">F10w's Shelf</span>
+          <span aria-hidden="true"></span>
+        </div>
+
+        <div class="shelf-modal-body">
+          <div class="shelf-modal-info">
+            <p class="shelf-modal-kicker" data-modal-kicker></p>
+            <h2 id="shelf-modal-title" class="shelf-modal-title" data-modal-title></h2>
+            <p class="shelf-modal-meta" data-modal-meta></p>
+            <p class="shelf-modal-desc" data-modal-desc></p>
+            <div class="shelf-modal-outline-wrap" data-modal-outline-wrap>
+              <p class="shelf-modal-outline-label">Reading Outline</p>
+              <ol class="shelf-modal-outline" data-modal-outline></ol>
+            </div>
+            <div class="shelf-modal-actions">
+              <a class="shelf-modal-cta" href="#" data-modal-link>
+                <span>阅读全文</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="shelf-modal-artwork" data-modal-artwork></div>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <script src="../scripts/shelf.js"></script>
 </BaseLayout>

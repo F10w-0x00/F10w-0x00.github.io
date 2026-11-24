@@ -23,8 +23,8 @@
 
 - **框架**：[Astro 5.x](https://astro.build/)（纯静态模式 `output: 'static'` + Content Layer `src/content.config.ts` + 原生 `sharp` 图片自动优化）。
 - **「一文一盒」内容架构**：文章、封面、正文配图与下载附件全部高内聚收纳于 `posts/YYYY-MM-DD-slug/`（正文 `index.md` + 资源 `assets/`），同时兼容纯文字单文件 `.md`。
-- **模块化原生 CSS**：`src/styles/` 按职责拆分为 `tokens.css`、`base.css`、`archive.css`、`article.css`、`responsive.css`，由 `global.css` 统一引入。
-- **纯粹交互理念**：客户端交互由集中式 Vanilla JavaScript 驱动（`src/scripts/main.js`），无 React/Vue 运行时开销。
+- **模块化原生 CSS**：`src/styles/` 按职责拆分为 `tokens.css`、`base.css`、`archive.css`、`shelf.css`、`article.css`、`responsive.css`，由 `global.css` 统一引入。
+- **纯粹交互理念**：客户端交互由集中式 Vanilla JavaScript 驱动（`src/scripts/main.js` 与首页 3D 书架引擎 `src/scripts/shelf.js`），无 React/Vue 运行时开销。
 - **编译与集成扩展**：
   - `remark-math` + `rehype-katex`：编译期渲染 LaTeX 行内/块级公式（`BaseLayout.astro` 直接引入自托管 `katex/dist/katex.min.css`）；
   - `src/plugins/rehype-blog-content.mjs`：处理同目录附件卡片、图注 Figure、5 种 Callout 与外链 Favicon；

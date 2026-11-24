@@ -2,5 +2,6 @@
 @import './tokens.css';
 @import './base.css';
 @import './archive.css';
+@import './shelf.css';
 @import './article.css';
 @import './responsive.css';

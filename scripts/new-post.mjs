@@ -52,11 +52,12 @@ const input = positional.join(' ').trim();
 
 if (!input && !flags.slug && !flags.title) {
   console.log(`用法:
-  pnpm new <slug-or-title> [--title "文章标题"] [--slug url-slug] [--category 分类] [--draft]
+  pnpm new <slug-or-title> [--title "文章标题"] [--slug url-slug] [--category 分类] [--book | --paper] [--draft]
 
 示例:
   pnpm new my-note --title "我的第一篇笔记" --category 学习
-  pnpm new "2026 年度总结" --slug 2026-review --category 日常
+  pnpm new ddia-notes --book --title "精读 DDIA" --category 学习
+  pnpm new attention-paper --paper --title "精读 Attention Is All You Need" --category 学习
 `);
   process.exit(1);
 }
@@ -74,6 +75,7 @@ if (!safeSlug) {
 const dirName = /^\d{4}-\d{2}-\d{2}-/.test(safeSlug) ? safeSlug : `${dateStr}-${safeSlug}`;
 const category = typeof flags.category === 'string' ? flags.category : '日常';
 const isDraft = Boolean(flags.draft);
+const shelfType = flags.paper ? 'paper' : flags.book ? 'book' : null;
 
 const postsDir = path.resolve(process.cwd(), 'posts');
 const postDir = path.join(postsDir, dirName);
@@ -88,12 +90,26 @@ if (fs.existsSync(postDir)) {
 fs.mkdirSync(assetsDir, { recursive: true });
 
 const escapedTitle = String(title).replace(/"/g, '\\"');
+const shelfLines = shelfType
+  ? [
+      `tags: ["${shelfType}"]`,
+      'shelf:',
+      `  type: ${shelfType}`,
+      `  group: "${shelfType === 'paper' ? 'Papers' : 'Books'}"`,
+      `  title: "${escapedTitle}"`,
+      '  author: ""',
+      `  # pages: ${shelfType === 'paper' ? '15' : '400'}`,
+      `  # cover: ./assets/${shelfType === 'paper' ? 'paper-page1.png' : 'shelf-cover.jpg'}`,
+    ]
+  : ['# tags: ["book"]  # 加上 book / paper 标签即可自动上架首页 F10w\'s Shelf'];
+
 const frontmatter = [
   '---',
   `title: "${escapedTitle}"`,
   'description: ""',
   `date: ${dateStr}`,
   `category: "${category}"`,
+  ...shelfLines,
   '# cover: ./assets/cover.png',
   isDraft ? 'draft: true' : '# draft: true',
   '---',

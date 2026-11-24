@@ -5,7 +5,15 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { countWords, formatChineseDate, normalizePostId, parseDate } from '../src/utils/post-helpers.mjs';
+import {
+  computeShelfDimensions,
+  countWords,
+  extractMarkdownHeadings,
+  formatChineseDate,
+  normalizePostId,
+  parseDate,
+  resolveShelfMeta,
+} from '../src/utils/post-helpers.mjs';
 
 const ROOT = process.cwd();
 const POSTS_DIR = path.join(ROOT, 'posts');
@@ -24,9 +32,11 @@ function parseSimpleFrontmatter(raw) {
   const fmText = match[1];
   const body = raw.slice(match[0].length);
   const data = {};
+  let currentBlock = null;
   for (const line of fmText.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
+    const isIndented = /^[ \t]+/.test(line);
     const kv = trimmed.match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
     if (!kv) continue;
     const key = kv[1];
@@ -38,7 +48,12 @@ function parseSimpleFrontmatter(raw) {
     if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
-    data[key] = val;
+    if (!isIndented) {
+      currentBlock = val === '' ? key : null;
+      data[key] = val;
+    } else if (currentBlock === 'shelf' && key === 'cover' && val) {
+      data.shelfCover = val;
+    }
   }
   return { data, body };
 }
@@ -75,6 +90,7 @@ function extractLocalRefs(fmData, body) {
   };
 
   if (fmData?.cover) inspectUrl(fmData.cover);
+  if (fmData?.shelfCover) inspectUrl(fmData.shelfCover);
 
   // 先剥离 HTML 注释、围栏代码块与行内代码，避免示例代码或注释误报断链
   const activeBody = body
@@ -101,6 +117,19 @@ function runHelperSelfTests() {
   assert.equal(formatChineseDate('2026-10-01', 2026), '10月1日');
   assert.equal(formatChineseDate('2025-10-01', 2026), '2025年10月1日');
   assert.equal(countWords('你好世界 hello world'), 6);
+  assert.deepEqual(
+    extractMarkdownHeadings('## 第一节 `code`\n```md\n## 忽略\n```\n## 第二节 [链接](https://a.com)\n## 第三节'),
+    ['第一节 code', '第二节 链接', '第三节']
+  );
+  assert.equal(resolveShelfMeta({ tags: ['日常'], title: '随笔', date: '2026-11-24' }), null);
+  assert.equal(resolveShelfMeta({ tags: ['paper'], title: 'Transformer', date: '2026-11-24' })?.type, 'paper');
+  assert.equal(resolveShelfMeta({ tags: ['book'], shelf: false, title: 'Ignored', date: '2026-11-24' }), null);
+  assert.ok(computeShelfDimensions({ type: 'paper', pages: 15 }).spineWidth <= 16);
+  assert.ok(
+    computeShelfDimensions({ type: 'book', pages: 1120 }).spineWidth >
+      computeShelfDimensions({ type: 'book', pages: 250 }).spineWidth
+  );
+  assert.equal(computeShelfDimensions({ type: 'book', thickness: 76 }).spineWidth, 76);
 }
 
 runHelperSelfTests();

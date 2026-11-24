@@ -9,8 +9,8 @@
 3. **纯程序层 (`src/` & `scripts/`)**：
    - **Astro 5 Content Layer (`src/content.config.ts`)**：通过 `glob()` loader 托管 `posts/`，配合 Zod 强类型 Schema 与原生 `image()` 校验，编译期拦截缺失封面/非法日期，并由内置 `sharp` 自动将原图优化为现代 WebP。
    - **Markdown 编译扩展**：`remark-math` + `rehype-katex`（编译期零 JS 渲染 LaTeX 公式，自托管 `katex` CSS/字体）+ 自定义 `rehype-blog-content.mjs`（极简下载卡片、图注、5 种 Callout、外链图标）+ `post-attachments.mjs` 附件集成。
-   - **模块化原生 CSS (`src/styles/`)**：拆分为 `tokens.css`、`base.css`、`archive.css`、`article.css`、`responsive.css` 五层，构建期自动合并压缩。
-   - **集中式轻量化交互 (`src/scripts/main.js`)**：零前端框架依赖，仅负责设置抽屉、View Transitions 主题扫光、已读打勾与代码块一键复制。
+   - **模块化原生 CSS (`src/styles/`)**：拆分为 `tokens.css`、`base.css`、`archive.css`、`shelf.css`、`article.css`、`responsive.css` 六层，构建期自动合并压缩。
+   - **集中式轻量化交互 (`src/scripts/`)**：零前端框架依赖，`main.js` 负责设置抽屉、View Transitions 主题扫光、已读打勾与代码块一键复制；`shelf.js` 驱动首页 `F10w's Shelf` 100vh 3D 书架与沉浸式预览弹窗。
    - **自动化防劣化脚手架 (`scripts/`)**：`pnpm new` 标准化创建文章盒子，`pnpm check` 一键检查断链、孤儿文件、超大图片与 Frontmatter 完整性。
 
 ---

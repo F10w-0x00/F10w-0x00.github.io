@@ -24,13 +24,15 @@
 │   ├── new-post.mjs                            # pnpm new：一键创建标准文章盒子
 │   └── check-blog.mjs                          # pnpm check：断链、孤儿资源与大文件体检
 ├── src/
-│   ├── content.config.ts                       # Astro 5 Content Layer Schema（含图片存在性校验）
+│   ├── components/
+│   │   └── ShelfCover.astro                    # 书架实体封面（实图 / 莫兰迪精装书 / 学术论文抽印本）
+│   ├── content.config.ts                       # Astro 5 Content Layer Schema（含图片与书架字段校验）
 │   ├── integrations/
 │   │   └── post-attachments.mjs                # 同目录下载附件 dev 服务与 build 自动拷贝
 │   ├── layouts/
 │   │   └── BaseLayout.astro                    # 全局骨架（防闪烁偏好脚本、顶栏、设置抽屉）
 │   ├── pages/
-│   │   ├── index.astro                         # 首页（Recent Posts 最新 4 篇）
+│   │   ├── index.astro                         # 首页（F10w's Shelf 100vh 沉浸式 3D 书架 + 预览弹窗）
 │   │   ├── rss.xml.js                          # RSS 2.0 订阅端点（含 XML/CDATA 转义，自动过滤草稿）
 │   │   └── blog/
 │   │       ├── index.astro                     # 文档归档页（分类/年份过滤 + 60°旋转排序）
@@ -38,12 +40,14 @@
 │   ├── plugins/
 │   │   └── rehype-blog-content.mjs             # 编译期插件（极简下载卡片、图注、Callout、外链图标）
 │   ├── scripts/
-│   │   └── main.js                             # 客户端交互（设置抽屉、已读标记、代码一键复制）
+│   │   ├── main.js                             # 客户端主交互（设置抽屉、已读标记、代码一键复制）
+│   │   └── shelf.js                            # 首页 3D 书架引擎（滚轮/键盘/触屏/光标/预览弹窗）
 │   ├── styles/
 │   │   ├── global.css                          # 样式总入口
 │   │   ├── tokens.css                          # 莫兰迪亮/暗色 Design Tokens 与字体栈
 │   │   ├── base.css                            # 基础重置、容器、顶栏与设置抽屉
-│   │   ├── archive.css                         # 首页卡片与文档归档页
+│   │   ├── archive.css                         # 文档归档页样式
+│   │   ├── shelf.css                           # 首页 3D 书架与沉浸式预览弹窗样式
 │   │   ├── article.css                         # 正文排版、代码块、Callout 与下载卡片
 │   │   └── responsive.css                      # 响应式断点
 │   └── utils/
@@ -126,9 +130,20 @@ pnpm preview
 ```yaml
 ---
 title: "文章标题"
-description: "文章摘要，用于首页卡片和文章副标题展示"
+description: "文章摘要，用于书架弹窗、归档卡片与文章副标题展示"
 date: 2026-10-25
 category: "学习"
+tags: ["book"]             # 可选：包含 book / paper / 书 / 论文 即自动上架首页 F10w's Shelf
+shelf:                     # 可选：书架精细配置（不写全部自动兜底）
+  type: book               # book | paper
+  group: "Books"           # 书架顶部分组胶囊名称（默认 Books / Papers）
+  title: "短书名"           # 书脊与封面标题（默认取文章 title）
+  author: "作者 / 会议年份"  # 书脊与封面底部落款（默认取年份）
+  pages: 611               # 可选：真实页数，自动映射物理厚度（论文纤薄纸叠 10–18px，精装书脊 38–86px）
+  # thickness: medium      # 可选：也可直接填 paper / thin / medium / thick 或具体像素数
+  color: "#4a6b7c"         # 可选：自定义莫兰迪书脊色带
+  cover: ./assets/book.jpg # 可选：书架竖版封面（图书原封面 / 论文第 1 页图，独立于文章横版头图）
+  order: 1                 # 可选：手动编号排序（不填按日期倒序）
 cover: ./assets/cover.png  # 可选：相对路径，构建时自动校验存在性并压缩优化
 words: 2500                # 可选：留空时构建期自动统计中文字数与英文词数
 draft: false               # 可选：设为 true 时本地开发可见，生产构建与 RSS 自动隐藏

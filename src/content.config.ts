@@ -19,6 +19,28 @@ const blog = defineCollection({
       cover: image().optional(),
       words: z.number().int().positive().optional(),
       draft: z.boolean().default(false),
+      tags: z.array(z.string()).default([]),
+      shelf: z
+        .union([
+          z.boolean(),
+          z.enum(['book', 'paper']),
+          z.object({
+            type: z.enum(['book', 'paper']).optional(),
+            group: z.string().optional(),
+            title: z.string().optional(),
+            author: z.string().optional(),
+            venue: z.string().optional(),
+            year: z.union([z.string(), z.number()]).optional(),
+            pages: z.number().int().positive().optional(),
+            thickness: z
+              .union([z.enum(['paper', 'thin', 'medium', 'thick']), z.number().min(8).max(110)])
+              .optional(),
+            color: z.string().optional(),
+            cover: image().optional(),
+            order: z.number().int().optional(),
+          }),
+        ])
+        .optional(),
     }),
 });
 

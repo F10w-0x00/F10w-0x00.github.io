@@ -1,4 +1,6 @@
 import { defineConfig } from 'astro/config';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import postAttachments from './src/integrations/post-attachments.mjs';
 import rehypeBlogContent from './src/plugins/rehype-blog-content.mjs';
 
@@ -18,6 +20,7 @@ export default defineConfig({
       },
       wrap: false,
     },
-    rehypePlugins: [rehypeBlogContent],
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex, rehypeBlogContent],
   },
 });

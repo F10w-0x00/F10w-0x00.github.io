@@ -20,7 +20,8 @@ export async function GET(context) {
 
   const items = posts
     .map((post) => {
-      const link = `${site}/blog/${encodeURIComponent(post.slug)}/`;
+      const encodedSlug = post.slug.split('/').map(encodeURIComponent).join('/');
+      const link = `${site}/blog/${encodedSlug}/`;
       const pubDate = new Date(post.dateISO).toUTCString();
       return `    <item>
       <title><![CDATA[${escapeCdata(post.title)}]]></title>

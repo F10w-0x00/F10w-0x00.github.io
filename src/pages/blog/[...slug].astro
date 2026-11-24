@@ -1,5 +1,6 @@
 ---
-// src/pages/blog/[slug].astro
+// src/pages/blog/[...slug].astro
+// 支持单段（/blog/my-post/）与多段子目录（/blog/folder/my-post/）静态路由
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -37,6 +38,7 @@ interface Props {
 
 const { post, prevPost, nextPost, categoryPosts } = Astro.props;
 const { Content } = await render(post.entry);
+const safeListId = `post-category-list-${post.slug.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
 ---
 
 <BaseLayout
@@ -85,7 +87,7 @@ const { Content } = await render(post.entry);
             本文所属分类：<a href={`/blog/?category=${encodeURIComponent(post.category)}`}>{post.category}</a><span class="post-category-directory-count">（{categoryPosts.length}）</span>
           </h2>
         </div>
-        <ol id={`post-category-list-${post.slug}`} class="post-category-directory-list">
+        <ol id={safeListId} class="post-category-directory-list">
           {categoryPosts.map((cp) => (
             <li class={`post-category-directory-item ${cp.slug === post.slug ? 'is-current' : ''}`} data-post-id={cp.slug} data-reading-post-slug={cp.slug}>
               <div class="post-category-directory-item-reveal">

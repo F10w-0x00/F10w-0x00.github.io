@@ -8,7 +8,7 @@
 2. **全站公共资产层 (`public/`)**：仅存放站点级共享资产（头像、Favicon、自托管字体、外链 Favicon），永不混入单篇文章配图或附件。
 3. **纯程序层 (`src/` & `scripts/`)**：
    - **Astro 5 Content Layer (`src/content.config.ts`)**：通过 `glob()` loader 托管 `posts/`，配合 Zod 强类型 Schema 与原生 `image()` 校验，编译期拦截缺失封面/非法日期，并由内置 `sharp` 自动将原图优化为现代 WebP。
-   - **同目录附件自动集成 (`src/integrations/post-attachments.mjs`)**：配合 `rehype-blog-content.mjs` 将 `./assets/*.pdf` 等相对附件重写为 `/post-assets/<slug>/...`——开发模式由 Vite 中间件直出，生产构建仅将已发布页面实际引用的附件拷贝进 `dist/post-assets/`（草稿与孤儿文件绝不泄露）。
+   - **Markdown 编译扩展**：`remark-math` + `rehype-katex`（编译期零 JS 渲染 LaTeX 公式，自托管 `katex` CSS/字体）+ 自定义 `rehype-blog-content.mjs`（极简下载卡片、图注、5 种 Callout、外链图标）+ `post-attachments.mjs` 附件集成。
    - **模块化原生 CSS (`src/styles/`)**：拆分为 `tokens.css`、`base.css`、`archive.css`、`article.css`、`responsive.css` 五层，构建期自动合并压缩。
    - **集中式轻量化交互 (`src/scripts/main.js`)**：零前端框架依赖，仅负责设置抽屉、View Transitions 主题扫光、已读打勾与代码块一键复制。
    - **自动化防劣化脚手架 (`scripts/`)**：`pnpm new` 标准化创建文章盒子，`pnpm check` 一键检查断链、孤儿文件、超大图片与 Frontmatter 完整性。
@@ -35,7 +35,7 @@
 │   │   ├── index.astro                   # 首页（Recent Posts）
 │   │   ├── blog/
 │   │   │   ├── index.astro               # 文档归档页（分类/年份过滤、60° 排序、已读打勾）
-│   │   │   └── [slug].astro              # 动态文章详情页
+│   │   │   └── [...slug].astro           # 动态文章详情页（兼容任意子目录路径）
 │   │   └── rss.xml.js                    # RSS 2.0 订阅源（自动过滤草稿、XML/CDATA 转义）
 │   ├── plugins/
 │   │   └── rehype-blog-content.mjs       # Rehype 插件（下载卡片、图注、Callout、外链图标）

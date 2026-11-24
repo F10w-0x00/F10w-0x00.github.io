@@ -35,7 +35,7 @@
 │   │   ├── rss.xml.js                          # RSS 2.0 订阅端点（含 XML/CDATA 转义，自动过滤草稿）
 │   │   └── blog/
 │   │       ├── index.astro                     # 文档归档页（分类/年份过滤 + 60°旋转排序）
-│   │       └── [slug].astro                    # 动态文章详情页
+│   │       └── [...slug].astro                 # 动态文章详情页（兼容单段与子目录路径）
 │   ├── plugins/
 │   │   └── rehype-blog-content.mjs             # 编译期插件（极简下载卡片、图注、Callout、外链图标）
 │   ├── scripts/
@@ -157,13 +157,28 @@ draft: false               # 可选：设为 true 时本地开发可见，生产
 
 ### 4. 提示框 (Callouts)
 
+原生支持 5 种 GitHub / Obsidian Alert 提示框（`NOTE` / `TIP` / `IMPORTANT` / `WARNING` / `CAUTION`，浅/深双色莫兰迪配色），以及 `[!NOTE CALLOUT-ICON-ONLY]` 纯图标样式：
+
 ```markdown
-> [!NOTE] 提示框标题
-> 支持 NOTE / TIP / IMPORTANT / WARNING / CAUTION，也支持 `[!NOTE CALLOUT-ICON-ONLY]` 纯图标样式。
+> [!TIP] 实用技巧
+> 这里写提示内容，支持粗体、行内代码、链接与数学公式。
 ```
 
-### 5. 代码块、表格与外链
+### 5. LaTeX 数学公式（KaTeX 编译期渲染）
 
-- **代码块**：原生 Shiki 双主题高亮 + 左上角语言徽标 + 右上角一键复制（全文完整展示，不折叠）。
+由 `remark-math` + `rehype-katex` 在静态编译期渲染为纯 HTML，零客户端 JS 开销，支持行内与块级公式：
+
+```markdown
+行内公式：$E = mc^2$、$\mathcal{O}(n \log n)$
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
+$$
+```
+
+### 6. 代码块、表格与外链
+
+- **代码块**：原生 Shiki 双主题高亮（浅色 GitHub Light / 深色 GitHub Dark）+ 左上角语言徽标 + 右上角一键复制（全文完整展示，不折叠）。
 - **外链**：非本站 `https://` 链接自动新标签页打开并转为莫兰迪棕色，白名单站点自动附带本地 Favicon。
-- **表格**：标准 GFM 表格语法即可。
+- **表格**：标准 GFM 表格语法，窄屏自动横向滚动。
+- **全特性活范例**：可直接参考 `posts/2026-11-24-style-and-syntax-showcase/index.md`。

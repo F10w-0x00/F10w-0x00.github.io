@@ -6,7 +6,7 @@ import { normalizePostId } from './utils/post-helpers.mjs';
 
 const blog = defineCollection({
   loader: glob({
-    pattern: '**/*.md',
+    pattern: ['**/*.md', '!**/assets/**'],
     base: './posts',
     generateId: ({ entry }) => normalizePostId(entry),
   }),

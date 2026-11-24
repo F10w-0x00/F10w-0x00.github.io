@@ -290,14 +290,6 @@
     padding: 15px 16px 10px;
   }
 
-  .prose img:not(.external-link-favicon) {
-    max-height: 220px;
-  }
-
-  .post-video-loop {
-    width: calc(220px * var(--post-video-aspect-ratio, 1.5));
-  }
-
   .prose pre {
     padding: 18px;
   }

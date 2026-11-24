@@ -26,7 +26,8 @@
 - **模块化原生 CSS**：`src/styles/` 按职责拆分为 `tokens.css`、`base.css`、`archive.css`、`article.css`、`responsive.css`，由 `global.css` 统一引入。
 - **纯粹交互理念**：客户端交互由集中式 Vanilla JavaScript 驱动（`src/scripts/main.js`），无 React/Vue 运行时开销。
 - **编译与集成扩展**：
-  - `src/plugins/rehype-blog-content.mjs`：处理同目录附件卡片、图注 Figure、Callout 与外链 Favicon；
+  - `remark-math` + `rehype-katex`：编译期渲染 LaTeX 行内/块级公式（`BaseLayout.astro` 直接引入自托管 `katex/dist/katex.min.css`）；
+  - `src/plugins/rehype-blog-content.mjs`：处理同目录附件卡片、图注 Figure、5 种 Callout 与外链 Favicon；
   - `src/integrations/post-attachments.mjs`：开发态直出 `/post-assets/` 附件、生产态仅拷贝已发布文章实际引用的附件至 `dist/post-assets/`。
 - **长期防劣化脚手架**：`scripts/new-post.mjs`（`pnpm new`）与 `scripts/check-blog.mjs`（`pnpm check`）。
 - **运行与构建环境**：标准 Node.js（22+）+ `pnpm@10.5.2`（支持 Windows / macOS / Linux / NixOS）。
@@ -57,7 +58,7 @@
 │   │   ├── rss.xml.js                    # RSS 2.0 订阅端点（过滤草稿、XML/CDATA 转义）
 │   │   └── blog/
 │   │       ├── index.astro               # 文档归档页（分类/年份筛选、60° 旋转排序、已读小勾）
-│   │       └── [slug].astro              # 动态博文渲染页（ Astro 5 render() + <Image> ）
+│   │       └── [...slug].astro           # 动态博文渲染页（Astro 5 render() + <Image>，支持多段路径）
 │   ├── plugins/
 │   │   └── rehype-blog-content.mjs       # Markdown 编译期插件
 │   ├── scripts/

@@ -98,7 +98,8 @@ function runHelperSelfTests() {
   assert.equal(normalizePostId('2026-10-01-demo/index.md'), '2026-10-01-demo');
   assert.equal(normalizePostId('2026-11-24-note.md'), '2026-11-24-note');
   assert.equal(parseDate('invalid').toISOString(), '2026-01-01T00:00:00.000Z');
-  assert.equal(formatChineseDate('2026-10-01'), '10月1日');
+  assert.equal(formatChineseDate('2026-10-01', 2026), '10月1日');
+  assert.equal(formatChineseDate('2025-10-01', 2026), '2025年10月1日');
   assert.equal(countWords('你好世界 hello world'), 6);
 }
 
@@ -115,7 +116,11 @@ if (!fs.existsSync(POSTS_DIR)) {
 }
 
 const allFilesInPosts = walkFiles(POSTS_DIR);
-const mdFiles = allFilesInPosts.filter((f) => f.endsWith('.md'));
+const mdFiles = allFilesInPosts.filter((f) => {
+  if (!f.endsWith('.md')) return false;
+  const relParts = path.relative(POSTS_DIR, f).split(path.sep);
+  return !relParts.includes('assets');
+});
 
 for (const mdPath of mdFiles) {
   postCount++;
@@ -170,13 +175,16 @@ for (const mdPath of mdFiles) {
     }
   }
 
-  // 若该文章是独立目录盒子（index.md），检查盒内孤儿文件
-  if (path.basename(mdPath).toLowerCase() === 'index.md' && postDir !== POSTS_DIR) {
-    const bundleFiles = walkFiles(postDir).filter((f) => path.normalize(f) !== path.normalize(mdPath));
-    for (const bf of bundleFiles) {
-      if (!resolvedReferenced.has(path.normalize(bf))) {
-        const relOrphan = path.relative(ROOT, bf).replace(/\\/g, '/');
-        warnings.push(`[${relMd}] 发现未被引用的孤儿资源: ${relOrphan}`);
+  // 若该文章位于独立子目录盒子（该目录仅含这 1 篇 .md，无论是否叫 index.md），检查盒内孤儿文件
+  if (postDir !== POSTS_DIR) {
+    const siblingMds = fs.readdirSync(postDir).filter((f) => f.endsWith('.md'));
+    if (siblingMds.length === 1) {
+      const bundleFiles = walkFiles(postDir).filter((f) => path.normalize(f) !== path.normalize(mdPath));
+      for (const bf of bundleFiles) {
+        if (!resolvedReferenced.has(path.normalize(bf))) {
+          const relOrphan = path.relative(ROOT, bf).replace(/\\/g, '/');
+          warnings.push(`[${relMd}] 发现未被引用的孤儿资源: ${relOrphan}`);
+        }
       }
     }
   }

@@ -24,12 +24,13 @@ export function parseDate(dateInput) {
   return new Date(FALLBACK_DATE_ISO);
 }
 
-export function formatChineseDate(dateInput) {
+export function formatChineseDate(dateInput, referenceYear = new Date().getUTCFullYear()) {
   if (!dateInput) return '';
   const d = parseDate(dateInput);
+  const y = d.getUTCFullYear();
   const m = d.getUTCMonth() + 1;
   const day = d.getUTCDate();
-  return `${m}月${day}日`;
+  return y === referenceYear ? `${m}月${day}日` : `${y}年${m}月${day}日`;
 }
 
 export function formatISODate(dateInput) {

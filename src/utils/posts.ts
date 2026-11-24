@@ -79,9 +79,9 @@ const BOOK_PALETTES: ShelfPalette[] = [
   {
     band: '#4a6b7c',
     bandFg: '#f7f8f9',
-    spineBg: '#f3f1eb',
+    spineBg: '#f8f7f4',
     spineFg: '#1f2529',
-    coverBg: '#f4f2ec',
+    coverBg: '#f6f5f1',
     coverFg: '#1c2328',
     coverMuted: '#586670',
     accent: '#4a6b7c',

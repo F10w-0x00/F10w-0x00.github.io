@@ -10,9 +10,6 @@
   const track = root.querySelector('[data-shelf-track]');
   const tabsWrap = root.querySelector('[data-shelf-tabs]');
   const tabIndicator = root.querySelector('[data-shelf-tab-indicator]');
-  const prevBtn = root.querySelector('[data-shelf-prev]');
-  const nextBtn = root.querySelector('[data-shelf-next]');
-  const captionEl = root.querySelector('[data-shelf-caption]');
   const cursorEl = root.querySelector('[data-shelf-cursor]');
   const modal = document.querySelector('[data-shelf-modal]');
   const dataScript = document.getElementById('shelf-items-data');
@@ -129,14 +126,7 @@
     const activeItem = items[getLogicalIndex(activeSlot)];
     if (activeItem) {
       syncTabs(activeItem.group);
-      if (captionEl) {
-        const pageStr = activeItem.pages ? ` · ${activeItem.pages} 页` : '';
-        captionEl.textContent = `${activeItem.numberLabel} / ${String(N).padStart(2, '0')} · ${activeItem.typeLabel}${pageStr} · ${activeItem.postTitle}`;
-      }
     }
-
-    if (prevBtn) prevBtn.disabled = N <= 1;
-    if (nextBtn) nextBtn.disabled = N <= 1;
   }
 
   function syncTabs(activeGroupName) {
@@ -232,7 +222,7 @@
   });
 
   // ==========================================
-  // 2. 顶部胶囊分组切换 & 左右按钮
+  // 2. 顶部胶囊分组切换
   // ==========================================
   tabs.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -247,9 +237,6 @@
       }
     });
   });
-
-  prevBtn?.addEventListener('click', () => stepBy(-1));
-  nextBtn?.addEventListener('click', () => stepBy(1));
 
   // ==========================================
   // 3. 滚轮横向拨动 + 触摸轻扫 + 键盘方向键

@@ -183,20 +183,6 @@ const clientPayload = items.map((item) => ({
           </div>
         </div>
 
-        <div class="shelf-footer">
-          <div class="shelf-controls" role="group" aria-label="切换书目">
-            <button type="button" class="shelf-nav-btn" data-shelf-prev aria-label="上一本" title="上一本 (←)">
-              <span aria-hidden="true">←</span>
-            </button>
-            <button type="button" class="shelf-nav-btn" data-shelf-next aria-label="下一本" title="下一本 (→)">
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-          <p class="shelf-caption" data-shelf-caption aria-live="polite">
-            {items[0].numberLabel} / {String(items.length).padStart(2, '0')} · {items[0].typeLabel} · {items[0].postTitle}
-          </p>
-        </div>
-
         {items.map((item) => (
           <template id={`shelf-modal-art-${item.index}`}>
             <ShelfCover item={item} size="modal" />

@@ -34,17 +34,18 @@ html[data-page="home"] .site-shell > main {
 }
 
 .shelf-app {
-  --base-book-h: clamp(316px, 50dvh, 424px);
+  --base-book-h: clamp(332px, 53dvh, 446px);
   --shelf-scale: 1;
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.065'/%3E%3C/svg%3E");
 
   position: relative;
   flex: 1 1 auto;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr);
   align-items: center;
   width: 100%;
   min-height: calc(100dvh - var(--site-header-height));
-  padding: clamp(16px, 2.5dvh, 26px) 0 clamp(18px, 2.6dvh, 28px);
+  padding: clamp(16px, 2.5dvh, 26px) 0 clamp(22px, 3dvh, 34px);
   overflow: hidden;
   user-select: none;
 }
@@ -243,14 +244,16 @@ html[data-page="home"] .site-shell > main {
   content: "";
   position: absolute;
   top: 1px;
-  left: 6%;
-  right: 6%;
-  height: 16px;
+  left: 0;
+  right: 0;
+  height: 18px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--text) 4.5%, transparent) 0%,
+    color-mix(in srgb, var(--text) 4%, transparent) 0%,
     transparent 100%
   );
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
 }
 
 .shelf-track {
@@ -396,7 +399,9 @@ html[data-theme="dark"] .shelf-contact-shadow {
 }
 
 /* ==========================================================================
-   5. Physical Entity A: Studio-Grade Hardcover Book (.book-object)
+   5. Physical Entity A: Studio-Grade Matte Hardcover Book (.book-object)
+   Unified single-key-light PBR shading (Front-Top-Left softbox), zero plastic glare,
+   watertight corners, and genuine subtle paper grain.
    ========================================================================== */
 .book-object {
   position: relative;
@@ -412,94 +417,93 @@ html[data-theme="dark"] .shelf-contact-shadow {
 }
 
 .shelf-slot.is-book.is-left .book-object {
-  transform: rotateY(76deg);
+  transform: rotateY(75deg);
 }
 
 .shelf-slot.is-book.is-right .book-object {
-  transform: rotateY(80deg);
+  transform: rotateY(79deg);
 }
 
 .shelf-slot.is-book.is-hovered:not(.is-active) .book-object {
-  transform: rotateY(62deg);
+  transform: rotateY(61deg);
 }
 
-/* Sculptural Apple/Stripe Press hero pose: vivid cover + deeply recessed page block framed by boards */
+/* Sculptural Apple/Stripe Press hero pose: clean front cover + watertight silky page block */
 .shelf-slot.is-book.is-active .book-object {
-  transform: rotateY(-19deg) rotateX(1.6deg);
+  transform: rotateY(-18deg) rotateX(1.2deg);
 }
 
-/* --- Face 1: Hardcover Front Cover (+Z) --- */
+/* --- Face 1: Matte Coated Front Cover (+Z) --- */
 .book-front {
   position: absolute;
   inset: 0;
-  border-radius: 1px 4px 4px 1px;
+  border-radius: 1px 3px 3px 1px;
   overflow: hidden;
   transform: translateZ(calc(0.5 * var(--t)));
   backface-visibility: hidden;
   box-shadow:
-    inset -1.5px 0 0 rgba(255, 255, 255, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-    0 24px 48px -18px rgba(0, 0, 0, 0.34);
+    inset 0 0 0 0.75px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 22px 46px -18px rgba(0, 0, 0, 0.28);
 }
 
-/* Subtle single-crease French groove (10px from spine) + silky angled gallery specular sheen */
+/* Authentic single spine-hinge score line (9px in) + ultra-gentle matte key-light falloff (no zebra stripes!) */
 .book-front::before {
   content: "";
   position: absolute;
   inset: 0;
   background:
+    /* Single realistic pressed opening groove 9px from spine */
     linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.14) 0%,
-      rgba(255, 255, 255, 0.24) 1.4%,
-      rgba(0, 0, 0, 0.05) 3.4%,
-      rgba(0, 0, 0, 0.11) 4%,
-      rgba(255, 255, 255, 0.22) 4.6%,
-      transparent 6.2%,
-      transparent 97.5%,
-      rgba(0, 0, 0, 0.08) 100%
+      rgba(255, 255, 255, 0.08) 0px,
+      transparent 4px,
+      transparent 7px,
+      rgba(0, 0, 0, 0.085) 8.5px,
+      rgba(255, 255, 255, 0.14) 10px,
+      transparent 13px
     ),
+    /* Gentle front-top-left to bottom-right diffuse falloff */
     linear-gradient(
-      128deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      rgba(255, 255, 255, 0.03) 34%,
-      transparent 52%,
-      rgba(0, 0, 0, 0.04) 100%
+      142deg,
+      rgba(255, 255, 255, 0.07) 0%,
+      transparent 42%,
+      rgba(0, 0, 0, 0.045) 100%
     );
   pointer-events: none;
   z-index: 2;
 }
 
-/* Gentle ambient occlusion when shelved; full studio luminance when active */
+/* Tactile paper grain + subtle shelved ambient dim (opens to crisp clear matte paper when centered) */
 .book-front::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.12);
+  background-color: rgba(18, 16, 14, 0.08);
+  background-image: var(--paper-grain);
+  background-size: 140px 140px;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 3;
   transition: background-color 0.45s ease;
 }
 
 .shelf-slot.is-book.is-active .book-front::after {
-  background: rgba(0, 0, 0, 0);
+  background-color: transparent;
 }
 
-/* --- Face 2: Hardcover Back Board (-Z, overhangs 2px behind page block for authentic board sandwich!) --- */
+/* --- Face 2: Flush Matte Back Cover (-Z) --- */
 .book-back {
   position: absolute;
   inset: 0;
-  border-radius: 4px 1px 1px 4px;
-  background: color-mix(in srgb, var(--spine-bg) 82%, #111);
+  border-radius: 3px 1px 1px 3px;
+  background: color-mix(in srgb, var(--spine-bg) 88%, #1a1918);
   transform: translateZ(calc(-0.5 * var(--t))) rotateY(180deg);
   backface-visibility: hidden;
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, 0.18),
-    -12px 18px 34px -8px rgba(0, 0, 0, 0.28);
+  box-shadow: -14px 18px 36px -10px rgba(0, 0, 0, 0.24);
 }
 
-/* --- Face 3: Studio-Lit Hardcover Spine (-X) --- */
+/* --- Face 3: Matte Paper / Cloth Spine (-X) --- */
 .book-spine {
   position: absolute;
   top: 0;
@@ -510,18 +514,18 @@ html[data-theme="dark"] .shelf-contact-shadow {
   grid-template-rows: auto minmax(0, 1fr) auto;
   align-items: center;
   justify-items: center;
-  border-radius: 2px;
+  border-radius: 1.5px;
   background: var(--spine-bg);
   color: var(--spine-fg);
   overflow: hidden;
   transform: translateX(calc(-0.5 * var(--t))) rotateY(-90deg);
   backface-visibility: hidden;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.48),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* Seamless cylindrical softbox light wrap across the spine (no harsh fake CSS stripes!) */
+/* Soft Lambertian matte paper diffuse shading (gentle ~8% roll, ZERO metallic tube glare!) */
 .book-spine::before {
   content: "";
   position: absolute;
@@ -529,33 +533,34 @@ html[data-theme="dark"] .shelf-contact-shadow {
   background:
     linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.18) 0%,
-      rgba(0, 0, 0, 0.04) 9%,
-      rgba(255, 255, 255, 0.26) 24%,
-      rgba(255, 255, 255, 0.08) 48%,
-      rgba(0, 0, 0, 0.02) 72%,
-      rgba(0, 0, 0, 0.1) 91%,
-      rgba(0, 0, 0, 0.22) 100%
+      rgba(0, 0, 0, 0.09) 0%,
+      rgba(0, 0, 0, 0.02) 10%,
+      rgba(255, 255, 255, 0.09) 34%,
+      rgba(255, 255, 255, 0.02) 64%,
+      rgba(0, 0, 0, 0.03) 88%,
+      rgba(0, 0, 0, 0.09) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      transparent 10%,
-      transparent 90%,
-      rgba(0, 0, 0, 0.1) 100%
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 14%,
+      transparent 86%,
+      rgba(0, 0, 0, 0.07) 100%
     );
   pointer-events: none;
   z-index: 2;
 }
 
+/* Fine uncoated paper/linen surface grain */
 .book-spine::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.02);
+  background-image: var(--paper-grain);
+  background-size: 140px 140px;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 3;
-  transition: background-color 0.45s ease;
 }
 
 /* Cohesive top publisher band matching real book cover top wrap */
@@ -643,67 +648,67 @@ html[data-theme="dark"] .shelf-contact-shadow {
   text-overflow: ellipsis;
 }
 
-/* --- Face 4: Silky Recessed Ivory Page Block (+X, sandwiched between overhanging hardcover boards!) --- */
+/* --- Face 4: Watertight Silky Archival Ivory Page Block (+X) ---
+   Flush-sealed with front/back boards (zero jagged corner notches, zero floating box-shadow rims!) */
 .book-pages {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  right: 3px;
-  width: calc(var(--t) - 6px);
+  top: 1.5px;
+  bottom: 1.5px;
+  right: 1px;
+  width: calc(var(--t) - 2px);
   background:
-    /* Inner board contact shadows from front cover (left) and back cover (right) */
+    /* Subtle cover-board shadow hugging left (front board) and right (back board) edges */
     linear-gradient(
       90deg,
-      rgba(68, 56, 42, 0.24) 0%,
-      rgba(68, 56, 42, 0.05) 14%,
-      rgba(255, 255, 255, 0.32) 48%,
-      rgba(68, 56, 42, 0.04) 84%,
-      rgba(68, 56, 42, 0.28) 100%
+      rgba(48, 42, 34, 0.16) 0%,
+      rgba(48, 42, 34, 0.03) 10%,
+      rgba(255, 255, 255, 0.16) 44%,
+      rgba(48, 42, 34, 0.02) 86%,
+      rgba(48, 42, 34, 0.14) 100%
     ),
-    /* Top and bottom board overhang shadow */
+    /* Soft vertical overhead light attenuation */
     linear-gradient(
       180deg,
-      rgba(42, 34, 26, 0.22) 0%,
-      transparent 4.5%,
-      transparent 95.5%,
-      rgba(42, 34, 26, 0.26) 100%
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 16%,
+      transparent 82%,
+      rgba(36, 30, 22, 0.12) 100%
     ),
-    /* Whisper-fine real paper leaf texture */
+    /* Whisper-fine natural paper leaf striations (organic, never barcode-striped) */
     repeating-linear-gradient(
       90deg,
-      #f8f5ee 0px,
-      #f8f5ee 1.2px,
-      #eae4d8 1.2px,
-      #eae4d8 2px
+      #f2efe8 0px,
+      #f2efe8 1.4px,
+      #e8e3d9 1.4px,
+      #e8e3d9 2.2px
     );
   transform: translateX(50%) rotateY(90deg);
   backface-visibility: hidden;
   box-shadow:
-    /* Crisp front & back hardcover board overhang rim! */
-    -2px 0 0 0 #e6e2da,
-    2px 0 0 0 #cbc5ba;
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* --- Face 5: Top Recessed Ivory Page Block (-Y) --- */
+/* --- Face 5: Watertight Top Archival Page Block (-Y) --- */
 .book-top-pages {
   position: absolute;
-  top: 4px;
-  left: 3px;
-  right: 4px;
-  height: calc(var(--t) - 6px);
+  top: 1.5px;
+  left: 1px;
+  right: 1px;
+  height: calc(var(--t) - 2px);
   background:
     linear-gradient(
       180deg,
-      rgba(68, 56, 42, 0.2) 0%,
-      rgba(255, 255, 255, 0.25) 50%,
-      rgba(68, 56, 42, 0.18) 100%
+      rgba(48, 42, 34, 0.1) 0%,
+      rgba(255, 255, 255, 0.2) 52%,
+      rgba(48, 42, 34, 0.1) 100%
     ),
     repeating-linear-gradient(
       0deg,
-      #f8f5ee 0px,
-      #f8f5ee 1.2px,
-      #ece6db 1.2px,
-      #ece6db 2px
+      #f5f2eb 0px,
+      #f5f2eb 1.4px,
+      #ebe6dc 1.4px,
+      #ebe6dc 2.2px
     );
   transform: translateY(-50%) rotateX(90deg);
   backface-visibility: hidden;
@@ -1180,75 +1185,8 @@ html[data-theme="dark"] .shelf-contact-shadow {
 }
 
 /* ==========================================================================
-   9. Bottom Controls, Caption & Empty State
+   9. Empty State
    ========================================================================== */
-.shelf-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 4px var(--content-gutter) 0;
-  z-index: 6;
-}
-
-.shelf-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.shelf-nav-btn {
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--border-soft);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--muted-strong);
-  font-size: 1rem;
-  cursor: pointer;
-  transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    background-color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.shelf-nav-btn:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--accent) 44%, var(--border));
-  background: var(--bg-soft);
-  color: var(--text);
-  transform: translateY(-1px);
-}
-
-.shelf-nav-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.shelf-nav-btn:disabled {
-  opacity: 0.36;
-  cursor: default;
-}
-
-.shelf-nav-btn:focus-visible {
-  outline: 2px solid var(--link-internal);
-  outline-offset: 2px;
-}
-
-.shelf-caption {
-  margin: 0;
-  max-width: min(560px, calc(100vw - 48px));
-  color: var(--muted);
-  font-size: 0.84rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .shelf-empty {
   grid-row: 3;
   max-width: 460px;

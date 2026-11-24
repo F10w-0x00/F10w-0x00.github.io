@@ -257,8 +257,12 @@ export async function getShelfData(options: { includeDrafts?: boolean } = {}): P
     rawItems.push({ post, meta, shelfCover });
   }
 
-  // 排序：显式设置 order 的优先（升序），其余按发布日期降序
+  // 分区排序：所有书籍集中在一侧，所有论文集中在另一侧；同区内部优先按显式 order 升序，其余按日期降序
   rawItems.sort((a, b) => {
+    const aTypeRank = a.meta.type === 'paper' ? 1 : 0;
+    const bTypeRank = b.meta.type === 'paper' ? 1 : 0;
+    if (aTypeRank !== bTypeRank) return aTypeRank - bTypeRank;
+
     const aHas = a.meta.order !== null;
     const bHas = b.meta.order !== null;
     if (aHas && bHas) {

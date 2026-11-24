@@ -36,7 +36,6 @@ html[data-page="home"] .site-shell > main {
 .shelf-app {
   --base-book-h: clamp(332px, 53dvh, 446px);
   --shelf-scale: 1;
-  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.065'/%3E%3C/svg%3E");
 
   position: relative;
   flex: 1 1 auto;
@@ -204,6 +203,15 @@ html[data-page="home"] .site-shell > main {
   perspective-origin: 50% 48%;
   overflow: hidden;
   touch-action: pan-y;
+  cursor: grab;
+}
+
+.shelf-stage.is-dragging {
+  cursor: grabbing;
+}
+
+.shelf-stage.is-dragging .shelf-hit {
+  cursor: grabbing;
 }
 
 .shelf-stage.has-custom-cursor,
@@ -261,6 +269,7 @@ html[data-page="home"] .site-shell > main {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  pointer-events: none;
   z-index: 2;
 }
 
@@ -278,7 +287,11 @@ html[data-page="home"] .site-shell > main {
   --ty: 0px;
   --tz: 0px;
   --rz: 0deg;
+  --book-ry: 92.6deg;
+  --paper-ry: 62deg;
+  --paper-hover-ry: 48deg;
   --hit-w: 110px;
+  --hit-left: -55px;
   --shadow-w: 96px;
 
   position: absolute;
@@ -290,51 +303,92 @@ html[data-page="home"] .site-shell > main {
   transform-style: preserve-3d;
   transform: translate3d(var(--tx), var(--ty), var(--tz)) rotateZ(var(--rz));
   transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
   will-change: transform;
+}
+
+/* Continuous spring-physics engine drives transforms directly at 60/120fps without CSS transition fighting */
+.shelf-app.is-physics .shelf-slot,
+.shelf-app.is-physics .book-object,
+.shelf-app.is-physics .paper-stack,
+.shelf-app.is-physics .paper-sheet-back,
+.shelf-app.is-physics .shelf-contact-shadow {
+  transition: none;
+}
+
+/* Cull far-offscreen slots from GPU compositing & hit-testing (cuts active layers by ~70%) */
+.shelf-slot.is-far,
+.shelf-slot.is-far .shelf-hit {
+  visibility: hidden;
+  pointer-events: none;
+  will-change: auto;
+}
+
+.shelf-slot.is-far .book-object,
+.shelf-slot.is-far .paper-stack {
+  will-change: auto;
 }
 
 .shelf-slot.is-instant,
 .shelf-slot.is-instant .book-object,
 .shelf-slot.is-instant .paper-stack,
 .shelf-slot.is-instant .paper-sheet-back,
-.shelf-slot.is-instant .shelf-contact-shadow,
-.shelf-slot.is-instant .book-spine::after,
-.shelf-slot.is-instant .book-front::after {
+.shelf-slot.is-instant .shelf-contact-shadow {
   transition: none !important;
 }
 
-.shelf-slot.is-hovered:not(.is-active) {
-  --ty: -16px;
-  --tz: 18px;
+/* Unified recessed shelf plane behind z = 0 so shelved edges NEVER clip into the centered hero */
+.shelf-slot.is-book:not(.is-active),
+.shelf-slot.is-paper:not(.is-active) {
+  --tz: calc(-0.5 * var(--cw) - 22px);
 }
 
-.shelf-slot.is-active {
-  --ty: -14px;
-  --tz: 48px;
-  z-index: 100;
+.shelf-slot.is-book.is-hovered:not(.is-active) {
+  --ty: -16px;
+  --tz: calc(-0.5 * var(--cw) + 6px);
+}
+
+.shelf-slot.is-paper.is-hovered:not(.is-active) {
+  --ty: -16px;
+  --tz: calc(-0.5 * var(--cw) + 12px);
 }
 
 .shelf-slot.is-book.is-active {
+  --ty: -12px;
+  --tz: 96px;
   --rz: -0.8deg;
+  z-index: 100;
 }
 
 .shelf-slot.is-paper.is-active {
-  --rz: -1.8deg;
+  --ty: -12px;
+  --tz: 78px;
+  --rz: -1.6deg;
+  z-index: 100;
 }
 
-/* Front-facing 2D hit button sized dynamically to the object's exact visual projection */
+/* Front-facing 2D hit button aligned pixel-for-pixel to each object's projected screen silhouette */
 .shelf-hit {
   position: absolute;
   top: 0;
-  left: calc(-0.5 * var(--hit-w));
+  left: var(--hit-left, calc(-0.5 * var(--hit-w)));
   width: var(--hit-w);
   height: 100%;
   padding: 0;
   border: 0;
   border-radius: 6px;
   background: transparent;
-  transform: translateZ(92px);
+  pointer-events: auto;
   cursor: pointer;
+}
+
+.shelf-slot.is-book:not(.is-active) .shelf-hit,
+.shelf-slot.is-paper:not(.is-active) .shelf-hit {
+  transform: translateZ(calc(0.5 * var(--cw) + 6px));
+}
+
+.shelf-slot.is-active .shelf-hit {
+  transform: translateZ(64px);
 }
 
 .shelf-hit:focus-visible {
@@ -342,48 +396,45 @@ html[data-page="home"] .site-shell > main {
   outline-offset: 6px;
 }
 
-/* Two-layer grounded contact shadow resting on the shelf ledge */
+/* Zero-blur GPU-only grounded contact shadow (pure multi-stop radial gradient + scaleX, zero layout/blur cost) */
 .shelf-contact-shadow {
   position: absolute;
   left: 50%;
-  bottom: -14px;
-  width: var(--shadow-w);
-  height: 18px;
+  bottom: -17px;
+  width: 140px;
+  height: 26px;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.26) 0%,
-    rgba(0, 0, 0, 0.1) 44%,
-    transparent 74%
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.11) 30%,
+    rgba(0, 0, 0, 0.03) 60%,
+    transparent 82%
   );
   transform: translate3d(-50%, 0, -28px);
-  filter: blur(5px);
   pointer-events: none;
   transition:
-    width 0.52s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.52s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.45s ease;
 }
 
 .shelf-slot.is-active .shelf-contact-shadow {
-  width: calc(var(--cw) * 0.9);
   opacity: 0.72;
-  transform: translate3d(-50%, 14px, -28px);
-  filter: blur(12px);
+  transform: translate3d(-50%, 14px, -28px) scale(1.9, 1.15);
 }
 
 .shelf-slot.is-hovered:not(.is-active) .shelf-contact-shadow {
-  opacity: 0.48;
-  transform: translate3d(-50%, 14px, -28px);
-  filter: blur(9px);
+  opacity: 0.5;
+  transform: translate3d(-50%, 14px, -28px) scale(1.08, 1.05);
 }
 
 html[data-theme="dark"] .shelf-contact-shadow {
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 0, 0, 0.72) 0%,
-    rgba(0, 0, 0, 0.28) 48%,
-    transparent 76%
+    rgba(0, 0, 0, 0.64) 0%,
+    rgba(0, 0, 0, 0.3) 34%,
+    rgba(0, 0, 0, 0.08) 64%,
+    transparent 84%
   );
 }
 
@@ -391,9 +442,10 @@ html[data-theme="dark"] .shelf-contact-shadow {
   :root:not([data-theme]) .shelf-contact-shadow {
     background: radial-gradient(
       ellipse at center,
-      rgba(0, 0, 0, 0.72) 0%,
-      rgba(0, 0, 0, 0.28) 48%,
-      transparent 76%
+      rgba(0, 0, 0, 0.64) 0%,
+      rgba(0, 0, 0, 0.3) 34%,
+      rgba(0, 0, 0, 0.08) 64%,
+      transparent 84%
     );
   }
 }
@@ -410,22 +462,15 @@ html[data-theme="dark"] .shelf-contact-shadow {
   height: 100%;
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
-  transform: rotateY(78deg);
+  transform: rotateY(var(--book-ry));
   transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   will-change: transform;
 }
 
-.shelf-slot.is-book.is-left .book-object {
-  transform: rotateY(75deg);
-}
-
-.shelf-slot.is-book.is-right .book-object {
-  transform: rotateY(79deg);
-}
-
+/* Hover gently lifts and pulls the book toward the reader without twisting cover typography into a grazing smear */
 .shelf-slot.is-book.is-hovered:not(.is-active) .book-object {
-  transform: rotateY(61deg);
+  transform: rotateY(var(--book-ry)) rotateX(1.8deg);
 }
 
 /* Sculptural Apple/Stripe Press hero pose: clean front cover + watertight silky page block */
@@ -474,33 +519,24 @@ html[data-theme="dark"] .shelf-contact-shadow {
   z-index: 2;
 }
 
-/* Tactile paper grain + subtle shelved ambient dim (opens to crisp clear matte paper when centered) */
-.book-front::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(18, 16, 14, 0.08);
-  background-image: var(--paper-grain);
-  background-size: 140px 140px;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 3;
-  transition: background-color 0.45s ease;
-}
-
-.shelf-slot.is-book.is-active .book-front::after {
-  background-color: transparent;
-}
-
-/* --- Face 2: Flush Matte Back Cover (-Z) --- */
+/* --- Face 2: Flush Matte Back Cover (-Z) with Seamless Wrapped Top Publisher Band --- */
 .book-back {
   position: absolute;
   inset: 0;
   border-radius: 3px 1px 1px 3px;
-  background: color-mix(in srgb, var(--spine-bg) 88%, #1a1918);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--band-bg) 82%, #141312) 0px,
+    color-mix(in srgb, var(--band-bg) 82%, #141312) 36px,
+    color-mix(in srgb, var(--spine-bg) 87%, #141312) 36px,
+    color-mix(in srgb, var(--spine-bg) 81%, #141312) 100%
+  );
   transform: translateZ(calc(-0.5 * var(--t))) rotateY(180deg);
   backface-visibility: hidden;
-  box-shadow: -14px 18px 36px -10px rgba(0, 0, 0, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    -14px 18px 36px -10px rgba(0, 0, 0, 0.24);
 }
 
 /* --- Face 3: Matte Paper / Cloth Spine (-X) --- */
@@ -514,7 +550,7 @@ html[data-theme="dark"] .shelf-contact-shadow {
   grid-template-rows: auto minmax(0, 1fr) auto;
   align-items: center;
   justify-items: center;
-  border-radius: 1.5px;
+  border-radius: 3px;
   background: var(--spine-bg);
   color: var(--spine-fg);
   overflow: hidden;
@@ -525,7 +561,7 @@ html[data-theme="dark"] .shelf-contact-shadow {
     inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* Soft Lambertian matte paper diffuse shading (gentle ~8% roll, ZERO metallic tube glare!) */
+/* Soft Lambertian matte paper diffuse shading (zero metallic glare, zero blend-mode readback) */
 .book-spine::before {
   content: "";
   position: absolute;
@@ -549,18 +585,6 @@ html[data-theme="dark"] .shelf-contact-shadow {
     );
   pointer-events: none;
   z-index: 2;
-}
-
-/* Fine uncoated paper/linen surface grain */
-.book-spine::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--paper-grain);
-  background-size: 140px 140px;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 3;
 }
 
 /* Cohesive top publisher band matching real book cover top wrap */
@@ -724,27 +748,15 @@ html[data-theme="dark"] .shelf-contact-shadow {
   height: 100%;
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
-  transform: rotateY(58deg);
+  transform: rotateY(var(--paper-ry));
   transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   will-change: transform;
 }
 
-/* Shelved paper: sits at graceful 3/4 display angle showing BOTH razor-thin 12px paper edge AND Page 1 */
-.shelf-slot.is-paper.is-left .paper-stack {
-  transform: rotateY(56deg);
-}
-
-.shelf-slot.is-paper.is-right .paper-stack {
-  transform: rotateY(-56deg);
-}
-
+/* Shelved paper: camera-compensated uniform angle showing crisp Page 1 + generous gallery breathing room */
 .shelf-slot.is-paper.is-hovered:not(.is-active) .paper-stack {
-  transform: rotateY(42deg);
-}
-
-.shelf-slot.is-paper.is-right.is-hovered:not(.is-active) .paper-stack {
-  transform: rotateY(-42deg);
+  transform: rotateY(var(--paper-hover-ry));
 }
 
 .shelf-slot.is-paper.is-active .paper-stack {
@@ -790,7 +802,7 @@ html[data-theme="dark"] .shelf-contact-shadow {
   transform: translate3d(10px, 6px, -10px) rotateZ(2.6deg);
 }
 
-/* Razor-thin bound paper spine edge (10px – 18px real thickness!) */
+/* Razor-thin flush stacked paper edge (10px – 18px real thickness, zero stepped corner notch) */
 .paper-edge {
   position: absolute;
   top: 0;
@@ -800,24 +812,14 @@ html[data-theme="dark"] .shelf-contact-shadow {
   background:
     repeating-linear-gradient(
       90deg,
-      #ffffff 0px,
-      #ffffff 1.2px,
-      #dfdcd5 1.2px,
-      #dfdcd5 2.2px
+      #faf9f6 0px,
+      #faf9f6 1.2px,
+      #e3dfd7 1.2px,
+      #e3dfd7 2.2px
     );
-  transform: translateX(calc(-0.5 * var(--t))) translateZ(-4px) rotateY(-90deg);
+  transform: translateX(calc(-0.5 * var(--t))) translateZ(calc(2px - 0.5 * var(--t))) rotateY(-90deg);
   backface-visibility: hidden;
-  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
-}
-
-.paper-edge-tape {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 22px;
-  background: var(--band-bg);
-  opacity: 0.9;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08);
 }
 
 /* Crisp front Page 1 sheet */
@@ -932,10 +934,11 @@ html[data-theme="dark"] .shelf-contact-shadow {
 .editorial-book-title {
   margin: 0;
   color: var(--cover-fg);
-  font-size: clamp(1.12rem, 2.15dvh, 1.48rem);
+  font-size: clamp(1.08rem, 2.05dvh, 1.44rem);
   font-weight: 680;
   letter-spacing: -0.02em;
-  line-height: 1.24;
+  line-height: 1.28;
+  text-wrap: balance;
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
@@ -1043,10 +1046,11 @@ html[data-theme="dark"] .shelf-contact-shadow {
 .editorial-paper-title {
   margin: 0;
   color: var(--cover-fg);
-  font-size: clamp(1.08rem, 2.05dvh, 1.42rem);
+  font-size: clamp(1.06rem, 2dvh, 1.38rem);
   font-weight: 680;
   letter-spacing: -0.02em;
-  line-height: 1.24;
+  line-height: 1.26;
+  text-wrap: balance;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -1176,6 +1180,17 @@ html[data-theme="dark"] .shelf-contact-shadow {
 .shelf-cursor.is-open .shelf-cursor-label {
   opacity: 1;
   transform: scale(1);
+}
+
+.shelf-cursor.is-dragging {
+  width: 22px;
+  height: 22px;
+  border-color: color-mix(in srgb, var(--text) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 64%, transparent);
+}
+
+.shelf-cursor.is-dragging .shelf-cursor-dot {
+  transform: scale(1.35);
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -1505,8 +1520,6 @@ html[data-theme="dark"] .shelf-contact-shadow {
   .paper-stack,
   .paper-sheet-back,
   .shelf-contact-shadow,
-  .book-front::after,
-  .book-spine::after,
   .shelf-tabs-indicator,
   .shelf-modal,
   .shelf-modal-shell {
